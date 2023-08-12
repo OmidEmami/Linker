@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import axios from "axios"
 import { notify } from "../toast";
 import Modal from 'react-modal';
+import 'react-toastify/dist/ReactToastify.css';
 const SignUp = () =>{
     const customStyles = {
         content: {
