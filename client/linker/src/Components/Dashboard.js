@@ -5,6 +5,7 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import axios from 'axios';
+import { notify } from "./toast";
 export default function Dashboard() {
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('')
@@ -51,9 +52,10 @@ export default function Dashboard() {
         Room : inputFields
       })
       console.log(response)
+      notify( "لینک ارسال شد", "success")
     }
     catch(error){
-
+      notify( "خطا", "error")
     }
         
   }

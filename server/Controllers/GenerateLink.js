@@ -1,7 +1,7 @@
 import Reserves from "../Models/Reserves.js";
 export const stLinkGenerator = async(req,res)=>{
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
-    console.log(req.body.Room)
+    
         try{
             for(let i = 0 ; i < req.body.Room.length ; i++){
             const response = await Reserves.create({
@@ -23,4 +23,18 @@ export const stLinkGenerator = async(req,res)=>{
             }
     
     
+}
+export const toPay = async(req,res)=>{
+    const reserveId= req.body.ReserveId;
+    try{
+        const response = await Reserves.findAll({
+            where:{
+                ReserveId : reserveId,
+                Status : "pending"
+            }
+        })
+        res.json(response)
+    }catch(error){
+        res.json(error)
+    }
 }
