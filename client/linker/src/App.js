@@ -4,11 +4,15 @@ import Login from "./Components/Login&Signup/Login";
 import SignUp from "./Components/Login&Signup/SignUp";
 import Dashboard from "./Components/Dashboard";
 import GuestView from "./Components/GuestView";
+import CheckOut from "./Components/CheckOut";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+      <Route exact path ="/checkout">
+        <CheckOut />
+      </Route>
       <Route exact path="/pay/:param">
         <GuestView />
         

@@ -10,9 +10,11 @@ export const stLinkGenerator = async(req,res)=>{
             CheckIn : req.body.CheckIn,
             CheckOut : req.body.CheckOut,
             RoomType : req.body.Room[i].value,
+            RoomName : req.body.Room[i].roomname,
             Status : "pending",
             Price : req.body.Room[i].price,
-            ReserveId : ReserveId
+            ReserveId : ReserveId,
+            AccoCount : req.body.AccoCount
                 })
               }
               res.json("ok")  

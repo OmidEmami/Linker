@@ -4,7 +4,7 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { notify } from "./toast";
 export default function Dashboard() {
   const [guestName, setGuestName] = useState('');
@@ -13,11 +13,51 @@ export default function Dashboard() {
   const [values, setValues] = useState([])
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   const [allDates, setAllDates] = useState([])
-  const [inputFields, setInputFields] = useState([{ value: '',price:'' }]);
+  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
 
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
     values[index].value = event.target.value;
+    switch (event.target.value) {
+      case '2':
+        values[index].roomname = 'یک تخته';
+        break;
+      case '5':
+        values[index].roomname = 'دوتخته';
+        break;
+      case '24':
+        values[index].roomname = 'دابل - تخت کویین';
+        break;
+        case '7':
+          values[index].roomname = 'دابل - تخت کویین';
+        break;
+        case '18':
+          values[index].roomname = 'صفویه';
+        break;
+        case '21':
+          values[index].roomname = 'آینه';
+        break;
+        case '19':
+          values[index].roomname = 'قاجار';
+        break;
+        case '25':
+          values[index].roomname = 'قیصریه';
+        break;
+        case '22':
+          values[index].roomname = 'زندیه';
+        break;
+        case '20026':
+          values[index].roomname = 'افشاریه';
+        break;
+        case '20':
+          values[index].roomname = 'دلنشین';
+        break;
+        case '10026':
+          values[index].roomname = 'کانکت';
+        break;
+      default:
+        console.log('Unknown selection');
+    }
     setInputFields(values);
     
   };
@@ -27,10 +67,11 @@ export default function Dashboard() {
     setInputFields(values);
     
   };
+ 
 
   const handleAddInput = () => {
     const values = [...inputFields];
-    values.push({ value: '',price:'' });
+    values.push({ value: '',price:'',roomname:'' });
     setInputFields(values);
   };
 
@@ -43,13 +84,16 @@ export default function Dashboard() {
     e.preventDefault();
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
+    const accoCount = allDates.length - 1
+    console.log(allDates.length - 1)
     try{
       const response = await axios.post("http://localhost:3001/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
         CheckOut : checkOutDateServer,
-        Room : inputFields
+        Room : inputFields,
+        AccoCount : accoCount
       })
       console.log(response)
       notify( "لینک ارسال شد", "success")
@@ -60,7 +104,7 @@ export default function Dashboard() {
         
   }
   return (
-    <div>
+    <div style={{display:"flex", flexDirection:"column", direction:"rtl"}}>
       <form onSubmit={(e)=>generateLink(e)} >
         <label>نام مهمان
           <input required type='text' value={guestName} onChange={(e)=>setGuestName(e.target.value)} />

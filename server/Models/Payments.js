@@ -1,40 +1,38 @@
 import { Sequelize } from "sequelize";
 import db from "../Config/Database.js";
 
- 
+
 const { DataTypes } = Sequelize;
  
-const Reserves = db.define('Reserves',{ 
-    FullName :{
+const Payments = db.define('Payments',{ 
+    ClientName :{
         type:DataTypes.TEXT
     },
-    Phone: {
+    ClientEmail: {
         type : DataTypes.TEXT
     },
-    CheckIn:{
+    ClientPhone:{
         type: DataTypes.TEXT,
     },
-    CheckOut:{
+    ClientAmount:{
         type:DataTypes.TEXT
     },
-    RoomName:{
+    ClientDescription:{
         type :DataTypes.TEXT
     },
-    RoomType:{
+    payDate:{
         type :DataTypes.TEXT
     },
-    Status:{
+    AuthCode:{
         type :DataTypes.TEXT
     },
-    Price:{
-        type: DataTypes.TEXT
-    },
-    AccoCount:{
+    TransactionCode:{
         type: DataTypes.TEXT
     },
     ReserveId:{
         type: DataTypes.TEXT
-    }
+    },
+    
     
     
 },{
@@ -44,4 +42,4 @@ const Reserves = db.define('Reserves',{
 (async () => {
     await db.sync();
 })();
-export default Reserves;
+export default Payments;
