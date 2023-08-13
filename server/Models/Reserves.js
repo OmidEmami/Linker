@@ -34,6 +34,9 @@ const Reserves = db.define('Reserves',{
     },
     ReserveId:{
         type: DataTypes.TEXT
+    },
+    Tariana:{
+        type: DataTypes.TEXT
     }
     
     

@@ -100,6 +100,7 @@ export default function Dashboard() {
     }
     catch(error){
       notify( "خطا", "error")
+      console.log(error)
     }
         
   }
