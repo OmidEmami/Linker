@@ -36,6 +36,7 @@ export default function GuestView() {
                       ClientName : payData[0].FullName,
                       ReserveDetails : payData,
                     });
+                    console.log(response)
                     if(response.data.data.code === 100){
                 
                         

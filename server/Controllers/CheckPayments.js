@@ -3,6 +3,7 @@ import Payments from "../Models/Payments.js"
 import axios from "axios";
 import moment from 'jalali-moment' 
 export const toPaySt = async(req,res)=>{
+  try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
         merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
         callback_url: 'http://localhost:3000/checkout',
@@ -12,7 +13,7 @@ export const toPaySt = async(req,res)=>{
 
       });
       if(response.data.data.code === 100 && response.data.data.message === "Success" ){
-        res.json(response.data)
+        
         await Payments.create({
           ClientName : req.body.ClientName,
           ClientEmail: req.body.metadata.email,
@@ -25,4 +26,71 @@ export const toPaySt = async(req,res)=>{
           ReserveId : req.body.ReserveDetails[0].ReserveId
         })
       }
+      res.json(response.data)
+    }catch(error){
+      res.json(error)
+    }
+}
+export const toPaynd = async(req,res)=>{
+  try {
+      
+    const findPay = await Payments.findOne({
+      where:{
+        
+        AuthCode : req.body.authority
+      }
+    
+    })    
+    if(findPay !== null){
+      
+      const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/verify.json', 
+      {
+        merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
+        amount: findPay.ClientAmount,
+        authority:req.body.authority
+      }
+      );
+      if(response.data.data.code === 100){
+        const findReserveRequests = await Reserves.findAll({
+          where:{
+            ReserveId : findPay.ReserveId,
+            Status : "pending"
+          }
+        })
+        if(findReserveRequests !== null){
+          for(let i = 0 ; i < findReserveRequests.length ; i++){
+            const response = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx', 
+  `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+      <postingPaymnets xmlns="http://tempuri.org/">
+      <bookingNumber>${findReserveRequests[i].Tariana}</bookingNumber>
+      <postingCode>121212</postingCode>
+      <price>${(findReserveRequests[i].Price * findReserveRequests[i].AccoCount)}</price>
+    </postingPaymnets>
+      </soap:Body>
+  </soap:Envelope>`, {
+  headers: {
+      'Content-Type': 'text/xml; charset=utf-8',
+      'SOAPAction': 'http://tempuri.org/postingPaymnets'
+  }
+})
+console.log(response.data)
+          }
+        }
+      }
+      res.json({status : "ok", ref_id : response.data.data.ref_id})
+      
+    }
+    
+    else{
+
+      res.json('fail')
+    }
+    
+  } catch (error) {
+
+    
+    res.status(500).json({ error: 'An error occurred while making the request.' });
+  }
 }

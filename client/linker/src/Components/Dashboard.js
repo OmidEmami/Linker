@@ -95,8 +95,11 @@ export default function Dashboard() {
         Room : inputFields,
         AccoCount : accoCount
       })
-      console.log(response)
+      if(response.data.length !== 0){
       notify( "لینک ارسال شد", "success")
+    }else{
+      notify( "خطا", "error")
+    }
     }
     catch(error){
       notify( "خطا", "error")
