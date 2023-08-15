@@ -13,12 +13,13 @@ import axios from "axios";
 
 dotenv.config();
 const app = express();
+app.use(cors({credentials:true, origin:['http://localhost:3000']}));
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 app.use(cookieParser());
 app.use(express.json());
 app.use(router);
-app.use(cors({credentials:true, origin:['http://localhost:3000']}));
+
 app.use('/images', express.static('images'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
