@@ -32,6 +32,9 @@ const Payments = db.define('Payments',{
     ReserveId:{
         type: DataTypes.TEXT
     },
+    CardPan:{
+        type: DataTypes.TEXT
+    }
     
     
     

@@ -6,6 +6,7 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import axios, { all } from 'axios';
 import { notify } from "./toast";
+import LoadingComp from "./LoadingComp"
 export default function Dashboard() {
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('')
@@ -14,7 +15,7 @@ export default function Dashboard() {
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   const [allDates, setAllDates] = useState([])
   const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
-
+  const [isLoading, setIsLoading] = useState(false)
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
     values[index].value = event.target.value;
@@ -85,7 +86,7 @@ export default function Dashboard() {
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const accoCount = allDates.length - 1
-    console.log(allDates.length - 1)
+    setIsLoading(true)
     try{
       const response = await axios.post("http://localhost:3001/sendGuestLink",{
         Name : guestName,
@@ -96,18 +97,25 @@ export default function Dashboard() {
         AccoCount : accoCount
       })
       if(response.data.length !== 0){
+        setIsLoading(false)
       notify( "لینک ارسال شد", "success")
+      
     }else{
+      setIsLoading(false)
       notify( "خطا", "error")
+      
     }
     }
     catch(error){
+      setIsLoading(false)
       notify( "خطا", "error")
-      console.log(error)
+      
     }
         
   }
   return (
+    <>
+    {isLoading && <LoadingComp />}
     <div style={{display:"flex", flexDirection:"column", direction:"rtl"}}>
       <form onSubmit={(e)=>generateLink(e)} >
         <label>نام مهمان
@@ -165,5 +173,6 @@ export default function Dashboard() {
       <button type='submit'>ارسال لینک</button>
       </form>
     </div>
+    </>
   )
 }

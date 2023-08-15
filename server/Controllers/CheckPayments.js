@@ -25,10 +25,13 @@ export const toPaySt = async(req,res)=>{
           TransactionCode : "Pending",
           ReserveId : req.body.ReserveDetails[0].ReserveId
         })
+        res.json(response.data)
+      }else{
+        res.status(404).json({ error: 'An error occurred while making the request.' });
       }
-      res.json(response.data)
+      
     }catch(error){
-      res.json(error)
+      res.status(500).json({ error: 'An error occurred while making the request.' });
     }
 }
 export const toPaynd = async(req,res)=>{
@@ -75,22 +78,50 @@ export const toPaynd = async(req,res)=>{
       'SOAPAction': 'http://tempuri.org/postingPaymnets'
   }
 })
-console.log(response.data)
-          }
+
+      await Reserves.update({
+        Status :"Paid",
+      },{
+        where:{
+          ReserveId:findReserveRequests[i].ReserveId,
+          Tariana : findReserveRequests[i].Tariana
         }
       }
-      res.json({status : "ok", ref_id : response.data.data.ref_id})
+      )
+          }
+        }
+        else{
+          res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+        }
+      }else{
+        res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+      }
+      await Payments.update({
+        Status : "Paid",
+        TransactionCode:response.data.data.ref_id,
+        CardPan : response.data.data.card_pan
+
+      },
+        {
+          where:{
+            AuthCode:req.body.authority
+          }
+        })
+        
+      
+      
+      res.json({status : "ok", ref_id : response.data.data.ref_id}).end()
       
     }
     
     else{
 
-      res.json('fail')
+      res.status(404).json({ error: 'An error occurred while making the request.' }).end();
     }
     
   } catch (error) {
 
-    
-    res.status(500).json({ error: 'An error occurred while making the request.' });
+    res.status(404)
+    // res.status(404).json({ error: 'An error occurred while making the request.' }).end();
   }
 }

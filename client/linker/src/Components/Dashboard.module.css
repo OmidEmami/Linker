@@ -1,0 +1,39 @@
+
+.menurightcontanier{
+    font-family: yekan;
+    direction:rtl ;
+    margin: 10px !important;
+    background-color: #e6e6e6;
+    padding: 30px 0 50px 0;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px #5d5d5d;
+    width: 30%;
+
+}
+.list{
+    list-style: none;
+    margin:30px 0 0 30px;
+}
+.list li{
+    margin : 20px 0 0 0;
+    padding: 5px 20px 5px 20px;
+    color: rgb(0, 0, 0);
+    border-radius: 15px;
+    transition-duration: 0.5s;
+    background-color: rgb(127, 172, 255);
+    font-size: 20px;
+}
+.list li:hover{
+    color: black;
+    background-color: #5d5d5d;
+}
+
+.majorcontainer{
+    display: flex;
+    width: 100%;
+}
+.list li button{
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 20px;
+}

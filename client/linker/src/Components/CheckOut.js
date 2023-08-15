@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation,useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import axios from "axios"
-import { useSelector } from 'react-redux';
+import LoadingComp from "./LoadingComp";
+import { notify } from "./toast";
 
 const CheckOut = () =>{
     const location = useLocation();
@@ -12,6 +13,8 @@ const CheckOut = () =>{
     const [reserveId, setReserveId] = useState();
     const [paymentId , setPaymentId] = useState();
     const [randomreservenumber ,setrandomreservenumber ] = useState();
+    const [isLoading , setIsLoading] = useState(false);
+    const [paymentData, setPaymentData] = useState([])
     // Access individual query parameters
     const authority = queryParams.Authority;
     const status = queryParams.Status;
@@ -20,18 +23,20 @@ const CheckOut = () =>{
 const fetchData=async()=>{
     
     try{
-      
+      setIsLoading(true)
         const getPaymentData = await axios.post("http://localhost:3001/toPaynd",{
             authority : authority,
 
         })
         console.log(getPaymentData)
-        
-           
+        setPaymentData(getPaymentData.data)
+        setIsLoading(false)
+        notify( "پرداخت موفق", "success")
         
         
         }catch(error){
-        console.log(error)
+       setIsLoading(false)
+       notify( "خطا", "error")
     }
     }
         fetchData();
@@ -47,17 +52,16 @@ const fetchData=async()=>{
       }
     return(
         <>
-        {showSuccess ?
-         <div>
-            <br></br><p>پرداخت با موفقیت انجام شد</p>
-            <p>شماره پیگیری پرداخت :{paymentId} </p>
-            <p>شماره رزرو  هتل : {reserveId.map((value,index)=>(
-                <p key={index}>شماره رزرو اتاق : {value}</p>
-            ))}</p>
-            <button onClick={generatePdf}>دریافت تاییدیه</button>
-        </div> : <p>در حال ثبت رزرو</p>}
+        {isLoading && <LoadingComp />}
+        {paymentData.status === "ok"
+            ? <><div>پرداخت موفق</div>
+        شماره پیگیری : {paymentData.ref_id}
+            </>:<div></div>
+        }
         
         </>
     )
 }
 export default CheckOut;
+
+

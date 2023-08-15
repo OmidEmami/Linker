@@ -1,25 +1,35 @@
 import React,{useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import LoadingComp from "./LoadingComp";
+import { notify } from "./toast";
 export default function GuestView() {
     const { param } = useParams();
     const [payData, setPayData] = useState([])
     const [totalPrice ,setTotalPrice] = useState(0);
+    const [isLoading , setIsLoading] = useState(false);
     useEffect(() => {
         const getDatetopay = async()=>{
+          setIsLoading(true)
+          try{
           const response = await axios.post("http://localhost:3001/topay", {
             ReserveId : param
           })
-          console.log(response)
+         
           if(response.data.length < 1){
-
+            setIsLoading(false)
+            notify( "خطا", "error")
           }else if(response.data.length > 0){
             setPayData(response.data)
             for(let i = 0 ; i < response.data.length ; i++){
                 setTotalPrice((prevSum) => prevSum + (parseInt(response.data[i].Price) * parseInt(response.data[i].AccoCount)) )
             }
+            setIsLoading(false)
           }
-          
+        }catch(error){
+          setIsLoading(false)
+          notify( "خطا", "error")
+        }
         }
         getDatetopay();
         
@@ -28,6 +38,8 @@ export default function GuestView() {
       
       }, []);
       const toPay = async()=>{
+        try{
+          setIsLoading(true)
         const response = await axios.post('http://localhost:3001/toPaySt', {
 
                       amount: totalPrice,
@@ -36,17 +48,25 @@ export default function GuestView() {
                       ClientName : payData[0].FullName,
                       ReserveDetails : payData,
                     });
-                    console.log(response)
+                    
                     if(response.data.data.code === 100){
                 
-                        
+                      setIsLoading(true)
                             window.location.href="https://www.zarinpal.com/pg/StartPay/"+response.data.data.authority
                           
                         
+                    }else{
+                      setIsLoading(false)
+                      notify( "خطا", "error")
                     }
+                  }catch(error){
+                    setIsLoading(false)
+                    notify( "خطا", "error")
+                  }
       }
   return (
     <div>
+      {isLoading && <LoadingComp />}
       <table style={{direction:"rtl", borderCollapse: 'collapse',
     border: '1px solid #ddd',}}>
         <tr>

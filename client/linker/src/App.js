@@ -5,11 +5,15 @@ import SignUp from "./Components/Login&Signup/SignUp";
 import Dashboard from "./Components/Dashboard";
 import GuestView from "./Components/GuestView";
 import CheckOut from "./Components/CheckOut";
+import MainDashboard from "./Components/MainDashboard";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+      <Route exact path = "/home">
+    <MainDashboard />
+      </Route>
       <Route exact path ="/checkout">
         <CheckOut />
       </Route>
