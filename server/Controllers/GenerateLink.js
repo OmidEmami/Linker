@@ -1,5 +1,6 @@
 import Reserves from "../Models/Reserves.js";
-import axios from "axios"
+import axios from "axios";
+import schedule from "node-schedule";
 export const stLinkGenerator = async(req,res)=>{
     
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
@@ -67,8 +68,10 @@ try{
             //     })
            
               }
+              
                res.json(tarianaResponse)
             //   res.json("ok")  
+            
             }
             
             catch(error){
@@ -76,7 +79,42 @@ try{
                 console.log(error)
             }
     
-    
+            const taskScheduleTime = new Date();
+            taskScheduleTime.setSeconds(taskScheduleTime.getSeconds() + 30);
+        
+            const job = schedule.scheduleJob(taskScheduleTime, async () => {
+              try {
+                // Your task to run after 30 minutes
+                for(let i = 0 ; i < tarianaResponse.length ; i++){
+                const responseFinal = await Reserves.findAll({
+                    where:{
+                        Tariana : tarianaResponse[i],
+                        Status:"pending"
+                    }
+                })
+                if(responseFinal.length !== 0){
+                    const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+                    PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+                    BookingNumber : tarianaResponse[i]
+                    
+                  })
+                  console.log(responseTarianaFinal + "omidtariana")
+                  const responseFinalCancel = await Reserves.update({
+                    Status : "cancel"
+                  },{
+                    where:{
+                        Tariana : tarianaResponse[i],
+                        Status:"pending"
+                    }
+                }
+                )
+                console.log(responseFinalCancel + "cancel")
+                }
+            }
+              } catch (error) {
+                console.error('Error in scheduled task:', error);
+              }
+            });
 }
 export const toPay = async(req,res)=>{
     const reserveId= req.body.ReserveId;
