@@ -24,7 +24,7 @@ const fetchData=async()=>{
     
     try{
       setIsLoading(true)
-        const getPaymentData = await axios.post("http://localhost:3001/toPaynd",{
+        const getPaymentData = await axios.post("http://87.248.152.131/api/toPaynd",{
             authority : authority,
 
         })
@@ -43,7 +43,7 @@ const fetchData=async()=>{
       
       }, []);
       const generatePdf = async() =>{
-        const getDataReserves = await axios.post("http://localhost:3001/getReserveInfoToGeneratePdf",{
+        const getDataReserves = await axios.post("http://87.248.152.131/api/getReserveInfoToGeneratePdf",{
             authority : authority
         })
         const temp = JSON.parse(getDataReserves.data[0].ReserveObj);

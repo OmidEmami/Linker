@@ -88,7 +88,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("http://localhost:3001/sendGuestLink",{
+      const response = await axios.post("http://87.248.152.131/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,

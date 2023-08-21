@@ -13,7 +13,13 @@ import axios from "axios";
 
 dotenv.config();
 const app = express();
-app.use(cors({credentials:true, origin:['http://localhost:3000']}));
+const corsOptions = {
+    origin: 'http://87.248.152.131', // Replace with your frontend domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // If you're using cookies or sessions
+  };
+  
+  app.use(cors(corsOptions));
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 app.use(cookieParser());
@@ -23,7 +29,7 @@ app.use(router);
 app.use('/images', express.static('images'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-server.listen(PORT, ()=> console.log('Server running at port 3001'));
+server.listen(PORT,'0.0.0.0', ()=> console.log('Server running at port 3001'));
 
 
 
