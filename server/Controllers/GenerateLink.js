@@ -1,8 +1,9 @@
 import Reserves from "../Models/Reserves.js";
 import axios from "axios";
 import schedule from "node-schedule";
+import { farazSendPattern } from "@aspianet/faraz-sms";
 export const stLinkGenerator = async(req,res)=>{
-    
+  
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
     var tarianaResponse = []
         try{
@@ -68,7 +69,8 @@ try{
             //     })
            
               }
-              
+              const patternCodeToGuestGenerateLink = "b4rnjphxqpno0pk";
+              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", phoneNumber, { link : "http://87.248.152.131/pay/"+ReserveId});
                res.json(tarianaResponse)
             //   res.json("ok")  
             
