@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import axios from "axios"
 import LoadingComp from "./LoadingComp";
 import { notify } from "./toast";
-import CheckOutMain from "./CheckOutMain";
+
 
 const CheckOut = () =>{
     const location = useLocation();
