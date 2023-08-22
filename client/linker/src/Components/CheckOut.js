@@ -19,47 +19,48 @@ const CheckOut = () =>{
     // Access individual query parameters
     const authority = queryParams.Authority;
     const status = queryParams.Status;
-//     useEffect(() => {
-//       console.log(authority)
-// const fetchData=async()=>{
+    useEffect(() => {
+      console.log(authority)
+        const fetchData=async()=>{
     
-//     try{
-//       setIsLoading(true)
-//         const getPaymentData = await axios.post("http://87.248.152.131/api/toPaynd",{
-//             authority : authority,
+    try{
+      setIsLoading(true)
+        const getPaymentData = await axios.post("http://87.248.152.131/api/payfinal",{
+            authority : authority,
 
-//         })
-//         console.log(getPaymentData)
-//         setPaymentData(getPaymentData.data)
-//         setIsLoading(false)
-//         notify( "پرداخت موفق", "success")
+        })
+        console.log(getPaymentData)
+        setPaymentData(getPaymentData.data)
+        setIsLoading(false)
+        notify( "پرداخت موفق", "success")
         
         
-//         }catch(error){
-//        setIsLoading(false)
-//        notify( "خطا", "error")
-//     }
-//     }
-//         fetchData();
+        }catch(error){
+            console.log(error)
+       setIsLoading(false)
+       notify( "خطا", "error")
+    }
+    }
+        fetchData();
       
-//       }, []);
-//       const generatePdf = async() =>{
-//         const getDataReserves = await axios.post("http://87.248.152.131/api/getReserveInfoToGeneratePdf",{
-//             authority : authority
-//         })
-//         const temp = JSON.parse(getDataReserves.data[0].ReserveObj);
-//         console.log(temp)
-//         history.push("./pdf/"+ randomreservenumber)
-//       }
+      }, []);
+      const generatePdf = async() =>{
+        const getDataReserves = await axios.post("http://87.248.152.131/api/getReserveInfoToGeneratePdf",{
+            authority : authority
+        })
+        const temp = JSON.parse(getDataReserves.data[0].ReserveObj);
+        console.log(temp)
+        history.push("./pdf/"+ randomreservenumber)
+      }
     return(
         <>
-        {/* {isLoading && <LoadingComp />}
+        {isLoading && <LoadingComp />}
         {paymentData.status === "ok"
             ? <><div>پرداخت موفق</div>
         شماره پیگیری : {paymentData.ref_id}
             </>:<div></div>
-        } */}
-        <CheckOutMain data={queryParams} />
+        }
+        {/* <CheckOutMain data={queryParams} /> */}
         </>
     )
 }
