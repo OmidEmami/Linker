@@ -125,3 +125,11 @@ export const toPaynd = async(req,res)=>{
     // res.status(404).json({ error: 'An error occurred while making the request.' }).end();
   }
 }
+export const getpayments = async(req,res) => {
+  try{
+    const response = await Payments.findAll({})
+    res.json(response)
+  }catch{
+    res.status(404)
+  }
+}

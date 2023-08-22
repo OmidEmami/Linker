@@ -3,6 +3,7 @@ import styles from "./Dashboard.module.css"
 import ListOfPayments from "./ListOfPayments";
 import ListOfReserves from "./ListOfReserves";
 import Dashboard from "./Dashboard";
+import PaymentTableComponent from "./PaymentTableComponent";
 
  const MainDashboard = () =>{
     const [item, setItem] = useState(false);
@@ -28,7 +29,7 @@ import Dashboard from "./Dashboard";
          <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><Dashboard /></div>
           : null}
         {item === 2 ?
-         <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><ListOfReserves /></div>
+         <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><PaymentTableComponent /></div>
           : null}
         {item === 3 ?
          <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><ListOfPayments /></div>
