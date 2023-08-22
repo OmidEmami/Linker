@@ -1,12 +1,13 @@
 import Reserves from "../Models/Reserves.js";
 import Payments from "../Models/Payments.js"
 import axios from "axios";
-import moment from 'jalali-moment' 
+import moment from 'jalali-moment' ;
+import { farazSendPattern } from "@aspianet/faraz-sms";
 export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
         merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
-        callback_url: 'http://localhost:3000/checkout',
+        callback_url: 'http://87.248.152.131/checkout',
         amount : req.body.amount,
         description : req.body.description,
         metadata : req.body.metadata
@@ -36,7 +37,7 @@ export const toPaySt = async(req,res)=>{
 }
 export const toPaynd = async(req,res)=>{
   try {
-      
+      console.log("omid")
     const findPay = await Payments.findOne({
       where:{
         
@@ -54,6 +55,9 @@ export const toPaynd = async(req,res)=>{
       }
       );
       if(response.data.data.code === 100){
+        const patternCode = "y606cvhv1bx07g9";
+        await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, { reserve: findPay.ReserveId, link :"http://87.248.152.131/check/"+findPay.ReserveId});
+        
         const findReserveRequests = await Reserves.findAll({
           where:{
             ReserveId : findPay.ReserveId,
@@ -89,12 +93,14 @@ export const toPaynd = async(req,res)=>{
       }
       )
           }
+          const patternCodeToOperator = "y606cvhv1bx07g9";
+        await farazSendPattern( patternCodeToOperator, "+983000505", "09909327409", { reserve: findPay.ReserveId});
         }
         else{
-          res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+          res.status(404).json({ error: 'An error occurred while making the request.' });
         }
       }else{
-        res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+        res.status(404).json({ error: 'An error occurred while making the request.' });
       }
       await Payments.update({
         Status : "Paid",
@@ -110,13 +116,13 @@ export const toPaynd = async(req,res)=>{
         
       
       
-      res.json({status : "ok", ref_id : response.data.data.ref_id}).end()
+      res.json({status : "ok", ref_id : response.data.data.ref_id})
       
     }
     
     else{
 
-      res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+      res.status(404).json({ error: 'An error occurred while making the request.' });
     }
     
   } catch (error) {
