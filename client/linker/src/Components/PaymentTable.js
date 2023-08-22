@@ -7,7 +7,7 @@ const PaymentTable = () => {
       
         const fetchData=async()=>{
             try{
-                const response = await axios.get("http://localhost:3001/getpayments")
+                const response = await axios.get("http://87.248.152.131/api/getpayments")
                 setData(response.data)
             }catch(error){
     
