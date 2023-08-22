@@ -5,6 +5,7 @@ import axios from "axios"
 import LoadingComp from "./LoadingComp";
 import { notify } from "./toast";
 
+
 const CheckOut = () =>{
     const location = useLocation();
     const history = useHistory();
@@ -19,12 +20,12 @@ const CheckOut = () =>{
     const authority = queryParams.Authority;
     const status = queryParams.Status;
     useEffect(() => {
-      
-const fetchData=async()=>{
+      console.log(authority)
+        const fetchData=async()=>{
     
     try{
       setIsLoading(true)
-        const getPaymentData = await axios.post("http://87.248.152.131/api/toPaynd",{
+        const getPaymentData = await axios.post("http://87.248.152.131/api/payfinal",{
             authority : authority,
 
         })
@@ -35,6 +36,7 @@ const fetchData=async()=>{
         
         
         }catch(error){
+            console.log(error)
        setIsLoading(false)
        notify( "خطا", "error")
     }
@@ -58,7 +60,7 @@ const fetchData=async()=>{
         شماره پیگیری : {paymentData.ref_id}
             </>:<div></div>
         }
-        
+        {/* <CheckOutMain data={queryParams} /> */}
         </>
     )
 }

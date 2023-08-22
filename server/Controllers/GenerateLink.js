@@ -9,7 +9,7 @@ export const stLinkGenerator = async(req,res)=>{
         try{
             console.log(req.body.Room.length)
             for(let i = 0 ; i < req.body.Room.length ; i++){
-console.log("omid")
+
 try{
                const responseTariana = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/NewBooking',{
                     PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
@@ -26,8 +26,7 @@ try{
                     Rate:req.body.Room[i].price,
                     
                   })
-                  console.log("omid2")
-                  console.log(responseTariana.data)
+                  
                   if(responseTariana.data.d !== "No available room"){
                   tarianaResponse.push(responseTariana.data.d.slice(26,32))
                   try{
@@ -69,10 +68,16 @@ try{
             //     })
            
               }
+              try{
+                
               const patternCodeToGuestGenerateLink = "b4rnjphxqpno0pk";
               await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "http://87.248.152.131/pay/"+ReserveId});
-              const patternCodeToOperator = "b5ydvmj9wxggr80" 
-              await farazSendPattern( patternCodeToOperator, "+983000505", "09909327409", { name :req.body.Name, phone :req.body.Phone, reserve :ReserveId });
+              const patternCodeToOperator = "b5ydvmj9wxggr80"
+              
+              const smsName = req.body.Name
+              const smsPhone = req.body.Phone
+              await farazSendPattern( patternCodeToOperator, "+983000505", "09909327409", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
+             }catch(error){console.log(error)}
               res.json(tarianaResponse)
             //   res.json("ok")  
             
@@ -84,7 +89,7 @@ try{
             }
     
             const taskScheduleTime = new Date();
-            taskScheduleTime.setSeconds(taskScheduleTime.getSeconds() + 30);
+            taskScheduleTime.setMinutes(taskScheduleTime.getMinutes() + 4);
         
             const job = schedule.scheduleJob(taskScheduleTime, async () => {
               try {

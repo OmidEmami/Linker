@@ -40,7 +40,7 @@ export default function GuestView() {
       const toPay = async()=>{
         try{
           setIsLoading(true)
-        const response = await axios.post('http://87.248.152.131/api/toPaySt', {
+        const response = await axios.post('http://87.248.152.131/api/topayfirst', {
 
                       amount: totalPrice,
                       description: 'Transaction description.',

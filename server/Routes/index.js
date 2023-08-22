@@ -11,6 +11,6 @@ router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
 router.post("/api/sendGuestLink",stLinkGenerator)
 router.post("/api/topay",toPay)
-router.post("/api/toPaySt", toPaySt)
-router.post("/api/toPaynd",toPaynd)
+router.post("/api/topayfirst", toPaySt)
+router.post("/api/payfinal",toPaynd)
 export default router;
