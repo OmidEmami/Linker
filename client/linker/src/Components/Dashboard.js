@@ -88,7 +88,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("http://87.248.152.131/api/sendGuestLink",{
+      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -116,15 +116,18 @@ export default function Dashboard() {
   return (
     <>
     {isLoading && <LoadingComp />}
-    <div style={{display:"flex", flexDirection:"column", direction:"rtl"}}>
+    <div style={{display:"flex", flexDirection:"column", direction:"rtl", alignItems:"center", padding:"10px"}}>
       <form onSubmit={(e)=>generateLink(e)} >
-        <label>نام مهمان
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
+        <label>نام مهمان</label>
           <input required type='text' value={guestName} onChange={(e)=>setGuestName(e.target.value)} />
-        </label>
-        <label>شماره تماس
+        </div>
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
+        <label>شماره تماس</label>
           <input required type='text' value={guestPhone} onChange={(e)=>setGuestPhone(e.target.value)}  />
-        </label>
-        <label>تاریخ ورود و خروج
+        </div>
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
+        <label>تاریخ ورود و خروج</label>
         <DatePicker 
            digits={digits}
             value={values}
@@ -144,9 +147,9 @@ export default function Dashboard() {
                 <DatePanel eachDaysInRange position="left" />
               ]}
            ></DatePicker>
-        </label>
+        </div>
         {inputFields.map((inputField, index) => (
-        <div key={index}>
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px",columnGap:"10px"}} key={index}>
           <select required  value={inputField.value} onChange={(e) => handleInputChange(index, e)}>
                                         <option  enabled >نوع اتاق</option>
                                         <option value="2">یک تخته</option>
@@ -168,9 +171,9 @@ export default function Dashboard() {
           <button onClick={() => handleRemoveInput(index)}>حذف</button>
         </div>
       ))}
-
+      <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
       <button onClick={handleAddInput}>اضافه کردن اتاق</button>
-      <button type='submit'>ارسال لینک</button>
+      <button type='submit'>ارسال لینک</button></div>
       </form>
     </div>
     </>

@@ -34,6 +34,7 @@ export const toPaySt = async(req,res)=>{
       
     }catch(error){
       res.status(500).json({ error: 'An error occurred while making the request.' });
+      return;
     }
 }
 export const toPaynd = async(req,res)=>{
@@ -46,7 +47,7 @@ export const toPaynd = async(req,res)=>{
       }
     
     })
-    console.log(findPay.length)    
+    
     if(findPay !== null){
       
       const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/verify.json', 
@@ -138,6 +139,7 @@ export const toPaynd = async(req,res)=>{
 
     res.status(404)
     // res.status(404).json({ error: 'An error occurred while making the request.' }).end();
+    return;
   }
 }
 export const getpayments = async(req,res) => {
@@ -145,6 +147,14 @@ export const getpayments = async(req,res) => {
     const response = await Payments.findAll({})
     res.json(response)
   }catch{
+    res.status(404)
+  }
+}
+export const getReserves = async(req,res) =>{
+  try{
+    const response =await Reserves.findAll({})
+    res.json(response)
+  }catch(error){
     res.status(404)
   }
 }

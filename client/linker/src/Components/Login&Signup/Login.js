@@ -29,7 +29,7 @@ const Login =()=>{
         if(errorPass === false && errorUser === false && user !== "" && pass !== ""){
             setFinalError(false)
         try{
-            const response = await axios.post("http://87.248.152.131/api/loginUser",{
+            const response = await axios.post("https://gmhotel.ir/api/loginUser",{
                 user : user,
                 pass : pass
             })

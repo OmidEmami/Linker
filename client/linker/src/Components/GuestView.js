@@ -3,16 +3,33 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import LoadingComp from "./LoadingComp";
 import { notify } from "./toast";
+import Modal from 'react-modal';
+import moment from 'jalali-moment'
 export default function GuestView() {
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };      
+    const [initialPopup, setInitialPopup] = useState(false)
     const { param } = useParams();
     const [payData, setPayData] = useState([])
     const [totalPrice ,setTotalPrice] = useState(0);
     const [isLoading , setIsLoading] = useState(false);
+    
+    moment.locale('fa');
     useEffect(() => {
+      console.log(moment.from('2018-04-04', 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD'))
+
         const getDatetopay = async()=>{
           setIsLoading(true)
           try{
-          const response = await axios.post("http://87.248.152.131/api/topay", {
+          const response = await axios.post("https://gmhotel.ir/api/topay", {
             ReserveId : param
           })
          
@@ -40,7 +57,7 @@ export default function GuestView() {
       const toPay = async()=>{
         try{
           setIsLoading(true)
-        const response = await axios.post('http://87.248.152.131/api/topayfirst', {
+        const response = await axios.post('https://gmhotel.ir/api/topayfirst', {
 
                       amount: totalPrice,
                       description: 'Transaction description.',
@@ -64,8 +81,31 @@ export default function GuestView() {
                     notify( "خطا", "error")
                   }
       }
+      const showRules = () =>{
+        setInitialPopup(true)
+      }
   return (
-    <div>
+    <>
+    <Modal
+        isOpen={initialPopup}
+        //onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setInitialPopup(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div style={{direction:"rtl"}}>
+        <h4>لطفا شرایط رزرو و اقامت در هتل قصرمنشی را مطالعه  کنید، بعد از موافقت با قوانین به درگاه پرداخت منتقل می شوید</h4>
+        <ul>
+          <li>شرایط کنسلی بعد از پرداخت</li>
+          <li>سیگار کشیدن در اتاق ها ممنوع است</li>
+          <li>ورود حیوان خانگی به هتل قصرمنشی است</li>
+          <li>شئونات اسلامی را رعایت کنید</li>
+          <li>پذیرش زوجین با مدرک محرمیت</li>
+        </ul>
+        <button onClick={toPay}>موافقت با قوانین وانتقال به درگاه پرداخت</button>
+      </div>
+      </Modal>
+    <div style={{display:"flex",flexDirection:"column"}}>
       {isLoading && <LoadingComp />}
       <table style={{direction:"rtl", borderCollapse: 'collapse',
     border: '1px solid #ddd',}}>
@@ -110,9 +150,9 @@ export default function GuestView() {
               <td style={{ padding: '8px',
     border: '1px solid #ddd'}}>{val.FullName}</td>
               <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{val.CheckIn}</td>
+    border: '1px solid #ddd'}}>{moment.from(val.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
               <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{val.CheckOut}</td>
+    border: '1px solid #ddd'}}>{moment.from(val.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
               
               
               
@@ -121,7 +161,7 @@ export default function GuestView() {
         })}
         <h4>جمع کل : {totalPrice}</h4>
       </table>
-      <button onClick={toPay}>موارد فوق تایید است</button>
-    </div>
+      <button onClick={showRules}>مطالعه شرایط و پرداخت</button>
+    </div></>
   )
 }

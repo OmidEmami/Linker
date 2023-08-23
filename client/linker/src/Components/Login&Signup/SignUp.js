@@ -52,7 +52,7 @@ const SignUp = () =>{
                     
                     setEmptyError(false)
                     try{
-                            const response = await axios.post('http://87.248.152.131/api/newuser',{
+                            const response = await axios.post('https://gmhotel.ir/api/newuser',{
                                 fullName  : fullName,
                                 email : email,
                                 phone : phone,

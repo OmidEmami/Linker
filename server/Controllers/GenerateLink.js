@@ -51,8 +51,9 @@ try{
                     
                   }
                 }catch(error){
-                    res.status(500).json({ error: 'An error occurred while making the request.' , error2 : error});
+                    res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
                     console.log(error)
+                    return;
                 }
             // const response = await Reserves.create({
             // FullName : req.body.Name,
@@ -86,10 +87,11 @@ try{
             catch(error){
                 res.status(500).json({ error: 'An error occurred while making the request.' , error2 : error});
                 console.log(error)
+                return;
             }
     
             const taskScheduleTime = new Date();
-            taskScheduleTime.setMinutes(taskScheduleTime.getMinutes() + 4);
+            taskScheduleTime.setMinutes(taskScheduleTime.getMinutes() + 35);
         
             const job = schedule.scheduleJob(taskScheduleTime, async () => {
               try {

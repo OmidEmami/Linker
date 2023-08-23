@@ -1,13 +1,13 @@
 import React,{useEffect,useState} from 'react';
-import PaymentTableComponent from './PaymentTableComponent';
+import ReservesTableComponent from './ReservesTableComponent';
 import axios from "axios"
-const PaymentTable = () => {
+const ReservesTable = () => {
     const [data,setData] = useState([]);
       useEffect(() => {
       
         const fetchData=async()=>{
             try{
-                const response = await axios.get("https://gmhotel.ir/api/getpayments")
+                const response = await axios.get("https://gmhotel.ir/api/getReserves")
                 setData(response.data)
             }catch(error){
     
@@ -19,10 +19,10 @@ const PaymentTable = () => {
               }, []);
   return (
     <div>
-     <h3>تمامی پرداخت های انجام شده</h3>
-      {data.length > 0 ? <PaymentTableComponent data={data} /> : <p>Loading...</p>}
+    <h3>لینک های ارسال شده</h3>
+      {data.length > 0 ? <ReservesTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );
 };
 
-export default PaymentTable;
+export default ReservesTable;

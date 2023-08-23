@@ -1,10 +1,9 @@
 import React,{useState} from "react";
 import styles from "./Dashboard.module.css"
-import ListOfPayments from "./ListOfPayments";
-import ListOfReserves from "./ListOfReserves";
+import stylesNd from "./MainDashboard.module.css"
 import Dashboard from "./Dashboard";
-import PaymentTableComponent from "./PaymentTableComponent";
-
+import PaymentTable from "./PaymentTable";
+import ReservesTable from "./ReservesTable";
  const MainDashboard = () =>{
     const [item, setItem] = useState(false);
     const showItem = (e) => {
@@ -15,26 +14,26 @@ import PaymentTableComponent from "./PaymentTableComponent";
         <div style={{
                     backgroundColor:"blue"
         }}>header</div>
-        <div style={{display:"flex",justifyContent: "center",direction:"rtl"}}>
-        <div style={{backgroundColor:"wheat", width:"20%"}}>
+        <div className={stylesNd.ViewContainer}>
+        <div  className={stylesNd.RightContainer}>
             <ul className={styles.list}>
                 <li value={1} onClick={(e)=>showItem(e.target.value)}>ارسال لینک</li>
-                <li value={2} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
-                <li value={3} onClick={(e)=>showItem(e.target.value)}>پرداخت ها</li>
+                <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
+                <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 
             </ul>
 
         </div>
         {item === 1 ?
-         <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><Dashboard /></div>
+         <div className={stylesNd.MainContent}><Dashboard /></div>
           : null}
         {item === 2 ?
-         <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><PaymentTableComponent /></div>
+         <div className={stylesNd.MainContent}><PaymentTable /></div>
           : null}
         {item === 3 ?
-         <div style={{backgroundColor:"#F9F9F9", width:"80%", direction:"ltr"}}><ListOfPayments /></div>
+         <div className={stylesNd.MainContent}><ReservesTable /></div>
           : null}
-          {item === false && <div style={{backgroundColor:"orange", width:"80%", direction:"rtl"}}>
+          {item === false && <div className={stylesNd.MainContent}>
             <h3>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}
         </div>
         </>

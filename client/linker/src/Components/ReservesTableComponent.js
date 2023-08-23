@@ -1,32 +1,44 @@
 import React from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import { parseISO, isDate, isValid } from 'date-fns';
-const PaymentTableComponent = ({ data }) => {
+const ReservesTableComponent = ({ data }) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: 'Transaction Code',
-            accessor: 'TransactionCode',
+            Header: 'Full Name',
+            accessor: 'FullName',
           },
           {
-            Header: 'Client Name',
-            accessor: 'ClientName',
+            Header: 'Phone',
+            accessor: 'Phone',
           },
           {
-            Header: 'Client Email',
-            accessor: 'ClientEmail',
+            Header: 'Check in date',
+            accessor: 'CheckIn',
           },
           {
-            Header: 'Client Phone',
-            accessor: 'ClientPhone',
+            Header: 'check out date',
+            accessor: 'CheckOut',
           },
           {
-            Header: 'Client Amount',
-            accessor: 'ClientAmount',
+            Header: 'Room Type',
+            accessor: 'RoomName',
           },
           {
-            Header: 'Pay Date',
-            accessor: 'payDate',
+            Header:'Price',
+            accessor :'Price'
+        },
+        {
+            Header:'Nights',
+            accessor :'AccoCount'
+        },
+        {
+            Header:'Tariana',
+            accessor :'Tariana'
+        },
+          {
+            Header: 'Status',
+            accessor: 'Status',
             sortType: (rowA, rowB, columnId) => {
               const dateA = parseISO(rowA.original.payDate);
               const dateB = parseISO(rowB.original.payDate);
@@ -39,8 +51,8 @@ const PaymentTableComponent = ({ data }) => {
             },
           },
           {
-            Header: 'Card Number',
-            accessor: 'CardPan',
+            Header: 'Reserve id',
+            accessor: 'ReserveId',
           },
         ],
         []
@@ -92,7 +104,7 @@ const PaymentTableComponent = ({ data }) => {
             return (
               <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} key={cell.column.id} style={{ border: '1px solid black', padding: '8px' }}>
+                  <td {...cell.getCellProps()} key={cell.column.id} style={{ border: '1px solid black', padding: '2px' }}>
                     {cell.render('Cell')}
                   </td>
                 ))}
@@ -150,7 +162,7 @@ const PaymentTableComponent = ({ data }) => {
   );
 };
 
-export default PaymentTableComponent;
+export default ReservesTableComponent;
 
 
 
