@@ -4,7 +4,7 @@ import { parseISO, isDate, isValid } from 'date-fns';
 import moment from 'jalali-moment'
 const ReservesTableComponent = ({ data }) => {
     moment.locale('fa');
-moment.from('2018-04-04', 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')
+
     const columns = React.useMemo(
         () => [
           {

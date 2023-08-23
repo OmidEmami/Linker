@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [allDates, setAllDates] = useState([])
   const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
   const [isLoading, setIsLoading] = useState(false)
+  moment.locale('en');
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
     values[index].value = event.target.value;
@@ -165,7 +166,7 @@ export default function Dashboard() {
                                         <option value="20">دلنشین</option>
                                         <option value="10026">کانکت</option>
                                     </select>
-          <input required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
+          <input placeholder='قیمت هر شب به ریال' required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
           <label>اتاق {index + 1}</label>
           
           <button onClick={() => handleRemoveInput(index)}>حذف</button>

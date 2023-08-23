@@ -26,7 +26,7 @@ try{
                     Rate:req.body.Room[i].price,
                     
                   })
-                  
+                  console.log(responseTariana)
                   if(responseTariana.data.d !== "No available room"){
                   tarianaResponse.push(responseTariana.data.d.slice(26,32))
                   try{
