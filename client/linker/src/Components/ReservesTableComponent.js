@@ -1,7 +1,10 @@
 import React from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import { parseISO, isDate, isValid } from 'date-fns';
+import moment from 'jalali-moment'
 const ReservesTableComponent = ({ data }) => {
+    moment.locale('fa');
+moment.from('2018-04-04', 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')
     const columns = React.useMemo(
         () => [
           {
@@ -15,10 +18,24 @@ const ReservesTableComponent = ({ data }) => {
           {
             Header: 'Check in date',
             accessor: 'CheckIn',
+            Cell: ({ cell }) => {
+              const dateValue = parseISO(cell.value);
+              if (isValid(dateValue)) {
+                return moment.from(dateValue, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD') // Customize the format as needed
+              }
+              return '';
+            },
           },
           {
             Header: 'check out date',
             accessor: 'CheckOut',
+            Cell: ({ cell }) => {
+              const dateValue = parseISO(cell.value);
+              if (isValid(dateValue)) {
+                return moment.from(dateValue, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD') // Customize the format as needed
+              }
+              return '';
+            },
           },
           {
             Header: 'Room Type',
