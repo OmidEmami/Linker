@@ -72,12 +72,12 @@ try{
               try{
                 
               const patternCodeToGuestGenerateLink = "b4rnjphxqpno0pk";
-              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "http://87.248.152.131/pay/"+ReserveId});
+              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId});
               const patternCodeToOperator = "b5ydvmj9wxggr80"
               
               const smsName = req.body.Name
               const smsPhone = req.body.Phone
-              await farazSendPattern( patternCodeToOperator, "+983000505", "09909327409", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
+              await farazSendPattern( patternCodeToOperator, "+983000505", "09120086619", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
              }catch(error){console.log(error)}
               res.json(tarianaResponse)
             //   res.json("ok")  

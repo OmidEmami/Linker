@@ -63,7 +63,7 @@ export const toPaynd = async(req,res)=>{
 
         try{
         const patternCode = "xxgdc4qh2euhqbl";
-        const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"http://87.248.152.131/c/"+findPay.ReserveId, reserve:findPay.ReserveId });
+        const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"https://gmhotel.ir/c/"+findPay.ReserveId, reserve:findPay.ReserveId });
        
       }catch(error){console.log(error) 
         }
@@ -104,7 +104,7 @@ export const toPaynd = async(req,res)=>{
       )
           }
           const patternCodeToOperator = "y606cvhv1bx07g9";
-        await farazSendPattern( patternCodeToOperator, "+983000505", "09909327409", { reserve: findPay.ReserveId});
+        await farazSendPattern( patternCodeToOperator, "+983000505", "09120086619", { reserve: findPay.ReserveId});
         }
         else{
           res.status(404).json({ error: 'An error occurred while making the request.' });
