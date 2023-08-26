@@ -104,7 +104,7 @@ export const toPaynd = async(req,res)=>{
       )
           }
           const patternCodeToOperator = "y606cvhv1bx07g9";
-        await farazSendPattern( patternCodeToOperator, "+983000505", "09120086619", { reserve: findPay.ReserveId});
+        await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { reserve: findPay.ReserveId});
         }
         else{
           res.status(404).json({ error: 'An error occurred while making the request.' });
@@ -154,6 +154,46 @@ export const getReserves = async(req,res) =>{
   try{
     const response =await Reserves.findAll({})
     res.json(response)
+  }catch(error){
+    res.status(404)
+  }
+}
+
+export const manualcancel = async(req,res) =>{
+  try{
+    const response = await Reserves.update({
+      Status : "cancel by operator"
+    },{
+      where:{
+        ReserveId : req.body.reserveId,
+        Status : "pending"
+      }
+    }
+    )
+    //res.json(response)
+    if(response[0] === 1){
+      const findtarianacode = await Reserves.findAll({
+        where:{
+          ReserveId : req.body.reserveId
+        }
+      })
+      const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+                      PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+                      BookingNumber : findtarianacode[0].Tariana
+                      
+                    })
+                    console.log(responseTarianaFinal.data.d)
+                   if(responseTarianaFinal.data.d === "Succeeded"){
+                    res.json(1)
+                    console.log("nomid2")
+                   }else{
+                    console.log("nomid")
+                    res.json(0)
+                   }
+    }else{
+      res.json(0)
+      console.log("mingikl")
+    }
   }catch(error){
     res.status(404)
   }

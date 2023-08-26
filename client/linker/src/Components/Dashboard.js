@@ -16,7 +16,6 @@ export default function Dashboard() {
   const [allDates, setAllDates] = useState([]);
   const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeMetric, setTimeMetric] = useState('')
   const [timeValue, setTimeValue] = useState()
   moment.locale('en');
   const handleInputChange = (index, event) => {
@@ -91,14 +90,13 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
         CheckOut : checkOutDateServer,
         Room : inputFields,
         AccoCount : accoCount,
-        TimeMetric : timeMetric,
         TimeValue : timeValue
       })
       if(response.data.length !== 0){
@@ -178,39 +176,14 @@ export default function Dashboard() {
       ))}
        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
         <label>اعتبار رزرو</label>
-       <select required  value={timeMetric} onChange={(e) => setTimeMetric(e.target.value)}>
-                                        <option  enabled >واحد زمان</option>
-                                        <option value="1">ساعت</option>
-                                        <option value="2">روز</option>
-                                    </select>
-          {timeMetric === "2" && <select required  value={timeValue} onChange={(e) => setTimeValue(e.target.value)}>
-                                        <option  enabled >معتبر بعد از چند روز</option>
-                                        <option value="1">1 روز</option>
-                                        <option value="2">2 روز</option>
-                                        <option value="3">3 روز</option>
-                                        <option value="4">4 روز</option>
-                                        <option value="5">5 روز</option>
-                                        <option value="6">6 روز</option>
-                                        <option value="7">7 روز</option>
-                                        <option value="8">8 روز</option>
-                                        <option value="9">9 روز</option>
-                                        <option value="10">10 روز</option>
-                                    </select>}
-          {timeMetric === "1" && <select required  value={timeValue} onChange={(e) => setTimeValue(e.target.value)}>
-                                        <option  enabled >معتبر بعد از چند ساعت</option>
+       
+          <select required  value={timeValue} onChange={(e) => setTimeValue(e.target.value)}>
+                                        <option  enabled >اعتبار رزرو</option>
                                         <option value="1">1 ساعت</option>
-                                        <option value="2">2 ساعت</option>
-                                        <option value="3">3 ساعت</option>
-                                        <option value="4">4 ساعت</option>
-                                        <option value="5">5 ساعت</option>
-                                        <option value="6">6 ساعت</option>
-                                        <option value="7">7 ساعت</option>
-                                        <option value="8">8 ساعت</option>
-                                        <option value="9">9 ساعت</option>
-                                        <option value="10">10 ساعت</option>
-                                        <option value="11">11 ساعت</option>
-                                        <option value="12">12 ساعت</option>
-                                    </select>}
+                                        <option value="2">12 ساعت</option>
+                                        <option value="3">24 ساعت</option>
+                                    </select>
+         
        </div>
       <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
       <button onClick={handleAddInput}>اضافه کردن اتاق</button>

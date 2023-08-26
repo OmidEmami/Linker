@@ -77,7 +77,7 @@ try{
               
               const smsName = req.body.Name
               const smsPhone = req.body.Phone
-              await farazSendPattern( patternCodeToOperator, "+983000505", "09120086619", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
+              await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
              }catch(error){console.log(error)}
               res.json(tarianaResponse)
             //   res.json("ok")  
@@ -91,41 +91,116 @@ try{
             }
     
             const taskScheduleTime = new Date();
-            taskScheduleTime.setMinutes(taskScheduleTime.getMinutes() + 35);
+            if(req.body.TimeValue === "1"){
+              taskScheduleTime.setHours(taskScheduleTime.getHours() + 1);
         
-            const job = schedule.scheduleJob(taskScheduleTime, async () => {
-              try {
-                // Your task to run after 30 minutes
-                for(let i = 0 ; i < tarianaResponse.length ; i++){
-                const responseFinal = await Reserves.findAll({
-                    where:{
-                        Tariana : tarianaResponse[i],
-                        Status:"pending"
-                    }
-                })
-                if(responseFinal.length !== 0){
-                    const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
-                    PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
-                    BookingNumber : tarianaResponse[i]
-                    
+              const job = schedule.scheduleJob(taskScheduleTime, async () => {
+                try {
+                  
+                  for(let i = 0 ; i < tarianaResponse.length ; i++){
+                  const responseFinal = await Reserves.findAll({
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
                   })
-                  console.log(responseTarianaFinal + "omidtariana")
-                  const responseFinalCancel = await Reserves.update({
-                    Status : "cancel"
-                  },{
-                    where:{
-                        Tariana : tarianaResponse[i],
-                        Status:"pending"
-                    }
-                }
-                )
-                console.log(responseFinalCancel + "cancel")
-                }
-            }
-              } catch (error) {
-                console.error('Error in scheduled task:', error);
+                  if(responseFinal.length !== 0){
+                      const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+                      PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+                      BookingNumber : tarianaResponse[i]
+                      
+                    })
+                    
+                    const responseFinalCancel = await Reserves.update({
+                      Status : "cancel"
+                    },{
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
+                  }
+                  )
+                  console.log(responseFinalCancel + "cancel")
+                  }
               }
-            });
+                } catch (error) {
+                  console.error('Error in scheduled task:', error);
+                }
+              });
+            }else if(req.body.TimeValue === "2"){
+              taskScheduleTime.setHours(taskScheduleTime.getHours() + 12);
+        
+              const job = schedule.scheduleJob(taskScheduleTime, async () => {
+                try {
+                  
+                  for(let i = 0 ; i < tarianaResponse.length ; i++){
+                  const responseFinal = await Reserves.findAll({
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
+                  })
+                  if(responseFinal.length !== 0){
+                      const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+                      PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+                      BookingNumber : tarianaResponse[i]
+                      
+                    })
+                    
+                    const responseFinalCancel = await Reserves.update({
+                      Status : "cancel"
+                    },{
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
+                  }
+                  )
+                  console.log(responseFinalCancel + "cancel")
+                  }
+              }
+                } catch (error) {
+                  console.error('Error in scheduled task:', error);
+                }
+              });
+            }else if(req.body.TimeValue === "3"){
+              taskScheduleTime.setHours(taskScheduleTime.getHours() + 24);
+        
+              const job = schedule.scheduleJob(taskScheduleTime, async () => {
+                try {
+                  
+                  for(let i = 0 ; i < tarianaResponse.length ; i++){
+                  const responseFinal = await Reserves.findAll({
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
+                  })
+                  if(responseFinal.length !== 0){
+                      const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+                      PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+                      BookingNumber : tarianaResponse[i]
+                      
+                    })
+                    
+                    const responseFinalCancel = await Reserves.update({
+                      Status : "cancel"
+                    },{
+                      where:{
+                          Tariana : tarianaResponse[i],
+                          Status:"pending"
+                      }
+                  }
+                  )
+                  console.log(responseFinalCancel + "cancel")
+                  }
+              }
+                } catch (error) {
+                  console.error('Error in scheduled task:', error);
+                }
+              });
+            }
+            
 }
 export const toPay = async(req,res)=>{
     const reserveId= req.body.ReserveId;
