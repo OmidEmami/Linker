@@ -2,12 +2,14 @@ import React,{useState} from "react";
 import { useHistory,Link } from "react-router-dom";
 import axios from "axios";
 import { notify } from "../toast";
+import LoadingComp from "../LoadingComp";
 const Login =()=>{
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
     const [errorUser, setErrorUser] = useState(false)
     const [errorPass, setErrorPass] = useState(false)
     const [finalError, setFinalError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
     let history = useHistory();
     const checkBlurUser = () =>{
         
@@ -28,14 +30,18 @@ const Login =()=>{
     const login = async()=>{
         if(errorPass === false && errorUser === false && user !== "" && pass !== ""){
             setFinalError(false)
+            setIsLoading(true)
         try{
+            setIsLoading(true)
             await axios.post("https://gmhotel.ir/api/loginUser",{
                 user : user,
                 pass : pass
             })
+            setIsLoading(false)
             history.push("/home");
             notify( "با موفقیت وارد شدید", "success")
         }catch(error){
+            setIsLoading(false)
             setFinalError(true)
             notify( "خطا", "error")
         }

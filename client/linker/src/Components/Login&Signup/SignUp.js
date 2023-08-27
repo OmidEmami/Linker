@@ -3,6 +3,7 @@ import axios from "axios"
 import { notify } from "../toast";
 import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingComp from "../LoadingComp";
 const SignUp = () =>{
     const customStyles = {
         content: {
@@ -14,6 +15,7 @@ const SignUp = () =>{
           transform: 'translate(-50%, -50%)',
         },
       }; 
+    const [isLoading, setIsLoading] = useState(false);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -52,6 +54,7 @@ const SignUp = () =>{
                     
                     setEmptyError(false)
                     try{
+                        setIsLoading(true)
                             const response = await axios.post('https://gmhotel.ir/api/newuser',{
                                 fullName  : fullName,
                                 email : email,
@@ -59,15 +62,19 @@ const SignUp = () =>{
                                 pass : pass
                             })
                             if(response.data === "success"){
+                                setIsLoading(false)
                                 notify( "ثبت نام با موفقیت انجام شد", "success")
                                 setInitialPopup(true)
                             }else{
+                                setIsLoading(false)
                                 notify( "خطا", "error")
                             }
                         }catch(error){
-                
+                            setIsLoading(false)
+                            notify( "خطا", "error")
                         }
                 }else{
+                    
                     setEmptyError(true)
                     notify( "خطا", "error")
                 }
