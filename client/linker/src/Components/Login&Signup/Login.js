@@ -52,6 +52,8 @@ const Login =()=>{
     }
     }
     return(
+        <>
+        {isLoading && <LoadingComp />}
         <div style={{display:"flex", flexDirection:"column", padding:"10px", margin:"10px", direction:"rtl", alignItems:"center"}}>
                 <label>نام کاربری</label>
                     
@@ -69,6 +71,7 @@ const Login =()=>{
                 {finalError && <label>خطا</label>}
                 <Link to="/signup">حساب ندارم، ثبت نام میکنم</Link>
         </div>
+        </>
     )
 }
 export default Login;

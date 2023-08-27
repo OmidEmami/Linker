@@ -207,6 +207,7 @@ const SignUp = () =>{
     }
     return(
         <>
+        {isLoading && <LoadingComp />}
         <Modal
         isOpen={initialPopup}
         onRequestClose={()=>setInitialPopup(false)}
