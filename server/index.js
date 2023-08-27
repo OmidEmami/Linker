@@ -13,8 +13,9 @@ import axios from "axios";
 
 dotenv.config();
 const app = express();
+app.use(cookieParser());
 const corsOptions = {
-    origin: 'http://localhost:3000'
+    origin: 'http://87.248.152.131'
     , // Replace with your frontend domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you're using cookies or sessions

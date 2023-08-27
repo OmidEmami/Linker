@@ -7,17 +7,20 @@ const [reserveId, setReserveId] = useState('');
 const [loading, setIsLoading] = useState(false)
     const cancelReserve = async(e)=>{
         e.preventDefault();
+        setIsLoading(true)
         try{
-            const response = await axios.post("http://localhost:3001/api/manualcancel",{
+            const response = await axios.post("https://gmhotel.ir/api/manualcancel",{
                 reserveId : reserveId
             })
-            
-            if(response.data[0] === "1"){
+            console.log(typeof(response.data))
+            if(response.data === 1){
                 notify( "موفق", "success")
             }else{
                 notify("ناموفق", "error")
             }
+            setIsLoading(false)
         }catch(error){
+            setIsLoading(false)
             notify("ناموفق", "error")
         }
     }

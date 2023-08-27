@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory,Link } from "react-router-dom";
 import axios from "axios";
 import { notify } from "../toast";
 const Login =()=>{
@@ -29,11 +29,11 @@ const Login =()=>{
         if(errorPass === false && errorUser === false && user !== "" && pass !== ""){
             setFinalError(false)
         try{
-            const response = await axios.post("http://localhost:3001/api/loginUser",{
+            await axios.post("https://gmhotel.ir/api/loginUser",{
                 user : user,
                 pass : pass
             })
-            history.push("/dashboard");
+            history.push("/home");
             notify( "با موفقیت وارد شدید", "success")
         }catch(error){
             setFinalError(true)
@@ -46,21 +46,22 @@ const Login =()=>{
     }
     }
     return(
-        <div>
-                <label>نام کاربری
+        <div style={{display:"flex", flexDirection:"column", padding:"10px", margin:"10px", direction:"rtl", alignItems:"center"}}>
+                <label>نام کاربری</label>
                     
                 <input type="text" value={user} onBlur={checkBlurUser} onChange={(e)=>setUser(e.target.value)} placeholder="نام کاربری" />
                 
-            </label>{errorUser === true && <label>خطا</label>}<br></br>
-                 <label>رمز عبور
+            {errorUser === true && <label>خطا</label>}<br></br>
+                 <label>رمز عبور</label>
 
             <input type="password" value={pass} onBlur={checkBlurPass} onChange={(e)=>setPass(e.target.value)} placeholder="رمز عبور" />
-                </label>
+                
                 {errorPass === true && <label>خطا</label>}
                 <br>
                 </br>
                 <button onClick={login}>ورود</button>
                 {finalError && <label>خطا</label>}
+                <Link to="/signup">حساب ندارم، ثبت نام میکنم</Link>
         </div>
     )
 }

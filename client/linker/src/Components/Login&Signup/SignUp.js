@@ -52,7 +52,7 @@ const SignUp = () =>{
                     
                     setEmptyError(false)
                     try{
-                            const response = await axios.post('http://localhost:3001/api/newuser',{
+                            const response = await axios.post('https://gmhotel.ir/api/newuser',{
                                 fullName  : fullName,
                                 email : email,
                                 phone : phone,
@@ -193,7 +193,7 @@ const SignUp = () =>{
         const passwordRegex = /^(?=.*[A-Za-z]{4,})(?=.*\d).+$/;
         if(rePass === ''){
             setErrorRePass(true)
-            showPassError(false)
+            setShowPassError(false)
         }else{
             setErrorRePass(false)
         }
@@ -214,28 +214,28 @@ const SignUp = () =>{
       </Modal>
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", direction:"rtl",padding:"10px",margin:"10px"}}> 
             <label>
-                نام کامل
+                نام کامل</label>
                 <input required type="text" value={fullName} onBlur={fullNameBlur} onChange={(e)=>setFullName(e.target.value)} />
-            </label>
+            
             {errorfullName && <label>لطفا نام خود را وارد کنید</label>}
-            <label> ایمیل
+            <label> ایمیل</label>
                 <input required type="text" value={email} onBlur={emailBlur} onChange={(e)=>setEmail(e.target.value)} />
-            </label>
+            
             {errorEmail && <label>لطفا ایمیل خود را وارد کنید</label>}
             {errorRegexEmail && <label>ایمیل معتبر نیست</label>}
-            <label> موبایل 
+            <label> موبایل  </label>
               <input required type="text" value={phone} onBlur={phoneBlur} onChange={(e)=>setPhone(e.target.value)} />
-            </label>
+           
             {errorPhone && <label>لطفا شماره موبایل خود را وارد کنید</label>}
             {errorRegexPhone && <label>شماره موبایل معتبر نیست</label>}
-            <label>رمز عبور
+            <label>رمز عبور</label>
                 <input type="password" value={pass} onBlur={passBlur} onChange={(e)=>setPass(e.target.value)} />
-            </label>
+            
             {errorPass && <label>لطفا رمز عبور خود را وارد کنید</label>}
             {errorRegexPass && <label>رمز عبور باید شامل حداقل 4 حرف و یک عدد باشد</label>}
-            <label>تکرار رمز عبور{showPassError && <label>تکرار رمز عبور صحیح نیست</label>}
+            <label>تکرار رمز عبور</label>{showPassError && <label>تکرار رمز عبور صحیح نیست</label>}
                 <input required type="password" value={rePass} onBlur={rePassBlur} onChange={(e)=>checkPass(e.target.value)} />
-            </label>
+            
             {errorRePass && <label>لطفا رمز عبور خود را تکرار کنید</label>}
             {emptyError && <label>لطفا همه موارد را به درستی تکمیل کنید</label>}
             <button onClick={confirm}>ثبت نام</button>

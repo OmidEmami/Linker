@@ -25,7 +25,7 @@ const CheckOut = () =>{
     
     try{
       setIsLoading(true)
-        const getPaymentData = await axios.post("http://localhost:3001/api/payfinal",{
+        const getPaymentData = await axios.post("https://gmhotel.ir/api/payfinal",{
             authority : authority,
 
         })
@@ -45,7 +45,7 @@ const CheckOut = () =>{
       
       }, []);
       const generatePdf = async() =>{
-        const getDataReserves = await axios.post("http://localhost:3001/api/getReserveInfoToGeneratePdf",{
+        const getDataReserves = await axios.post("https://gmhotel.ir/api/getReserveInfoToGeneratePdf",{
             authority : authority
         })
         const temp = JSON.parse(getDataReserves.data[0].ReserveObj);

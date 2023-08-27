@@ -182,17 +182,17 @@ export const manualcancel = async(req,res) =>{
                       BookingNumber : findtarianacode[0].Tariana
                       
                     })
-                    console.log(responseTarianaFinal.data.d)
+                    
                    if(responseTarianaFinal.data.d === "Succeeded"){
                     res.json(1)
-                    console.log("nomid2")
+                    
                    }else{
-                    console.log("nomid")
+                    
                     res.json(0)
                    }
     }else{
       res.json(0)
-      console.log("mingikl")
+      
     }
   }catch(error){
     res.status(404)

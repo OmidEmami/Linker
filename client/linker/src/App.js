@@ -2,7 +2,6 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./Components/Login&Signup/Login";
 import SignUp from "./Components/Login&Signup/SignUp";
-import Dashboard from "./Components/Dashboard";
 import GuestView from "./Components/GuestView";
 import CheckOut from "./Components/CheckOut";
 import MainDashboard from "./Components/MainDashboard";
@@ -21,14 +20,11 @@ function App() {
         <GuestView />
         
       </Route>
-    <Route exact path="/login" >
+    <Route exact path="/" >
     <Login />
       </Route>
       <Route exact path="/signup" >
     <SignUp />
-      </Route>
-      <Route exact path="/dashboard" >
-    <Dashboard />
       </Route>
       </Switch>
       </BrowserRouter>
