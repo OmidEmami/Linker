@@ -8,11 +8,13 @@ import Dashboard from "./Dashboard";
 import PaymentTable from "./PaymentTable";
 import ReservesTable from "./ReservesTable";
 import ManualCancel from "./ManualCancel";
+import ManageUsers from "./ManageUsers";
  const MainDashboard = () =>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [token, setToken] = useState('');
+    const [accessType, setAccessType] = useState('')
     const [expire, setExpire] = useState('');
 
     const history = useHistory();
@@ -24,7 +26,7 @@ import ManualCancel from "./ManualCancel";
  
     const refreshToken = async () => {
         try {
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             console.log(response)
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -32,6 +34,7 @@ import ManualCancel from "./ManualCancel";
             setEmail(decoded.email);
             setPhone(decoded.phone)
             setExpire(decoded.exp);
+            setAccessType(decoded.accessType)
         } catch (error) {
             console.log(error)
             if (error.response) {
@@ -45,7 +48,7 @@ import ManualCancel from "./ManualCancel";
     axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -53,6 +56,7 @@ import ManualCancel from "./ManualCancel";
             setPhone(decoded.phone)
             setEmail(decoded.email);
             setExpire(decoded.exp);
+            setAccessType(decoded.accessType)
         }
         return config;
     }, (error) => {
@@ -74,7 +78,7 @@ import ManualCancel from "./ManualCancel";
                 <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
-                
+                {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
                 
                 
             </ul>
@@ -91,6 +95,9 @@ import ManualCancel from "./ManualCancel";
           : null}
           {item === 4 ?
          <div className={stylesNd.MainContent}><ManualCancel /></div>
+          : null}
+          {item === 5 ?
+         <div className={stylesNd.MainContent}><ManageUsers /></div>
           : null}
           {item === false && <div className={stylesNd.MainContent}>
             <h3>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}

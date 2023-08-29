@@ -19,10 +19,11 @@ export const loginUser = async(req,res) =>{
         const name = response[0].FullName;
         const email = response[0].UserName;
         const phone = response[0].Phone
-        const accessToken = jwt.sign({userId, name, email,phone}, process.env.ACCESS_TOKEN_SECRET,{
+        const accessType = response[0].AccessType
+        const accessToken = jwt.sign({userId, name, email,phone, accessType}, process.env.ACCESS_TOKEN_SECRET,{
             expiresIn: '15s'
         });
-        const refreshToken = jwt.sign({userId, name, email,phone}, process.env.REFRESH_TOKEN_SECRET,{
+        const refreshToken = jwt.sign({userId, name, email,phone, accessType}, process.env.REFRESH_TOKEN_SECRET,{
             expiresIn: '1d'
         });
         

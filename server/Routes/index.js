@@ -6,6 +6,7 @@ import { stLinkGenerator, toPay } from "../Controllers/GenerateLink.js";
 import {toPaySt, toPaynd, getpayments, getReserves, manualcancel} from "../Controllers/CheckPayments.js";
 import { farazSMS } from '@aspianet/faraz-sms';
 import { refreshToken } from "../Controllers/RefreshToken.js";
+import { getUsersToManage } from "../Controllers/ManageUsers.js";
 
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
@@ -18,4 +19,5 @@ router.get("/api/getpayments", getpayments)
 router.get("/api/getReserves",getReserves);
 router.post("/api/manualcancel",manualcancel)
 router.get("/api/token", refreshToken)
+router.get("/api/getusermanager", getUsersToManage)
 export default router;
