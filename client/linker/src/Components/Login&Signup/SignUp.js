@@ -4,6 +4,7 @@ import { notify } from "../toast";
 import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingComp from "../LoadingComp";
+import { Link } from "react-router-dom";
 const SignUp = () =>{
     const customStyles = {
         content: {
@@ -246,7 +247,7 @@ const SignUp = () =>{
             
             {errorRePass && <label>لطفا رمز عبور خود را تکرار کنید</label>}
             {emptyError && <label>لطفا همه موارد را به درستی تکمیل کنید</label>}
-            <button onClick={confirm}>ثبت نام</button>
+            <button onClick={confirm}>ثبت نام</button> <Link to="/">ورود</Link>
         </div>
         </>
     )

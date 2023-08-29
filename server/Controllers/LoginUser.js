@@ -15,6 +15,7 @@ export const loginUser = async(req,res) =>{
         const match = await bcrypt.compare(pass, response[0].Password);
         
         if(!match) return res.status(400).json({msg: "Wrong Password"});
+        if(response[0].AccessType === null) res.status(400).json({msg:"not auth"})
         const userId = response[0].id;
         const name = response[0].FullName;
         const email = response[0].UserName;
