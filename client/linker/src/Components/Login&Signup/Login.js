@@ -33,7 +33,7 @@ const Login =()=>{
             setIsLoading(true)
         try{
             setIsLoading(true)
-            await axios.post("http://localhost:3001/api/loginUser",{
+            await axios.post("https://gmhotel.ir/api/loginUser",{
                 user : user,
                 pass : pass
             })
