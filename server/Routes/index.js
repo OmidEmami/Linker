@@ -7,6 +7,7 @@ import {toPaySt, toPaynd, getpayments, getReserves, manualcancel} from "../Contr
 import { farazSMS } from '@aspianet/faraz-sms';
 import { refreshToken } from "../Controllers/RefreshToken.js";
 import { changeaccesstype, getUsersToManage } from "../Controllers/ManageUsers.js";
+import { findReserveForPdf } from "../Controllers/GeneratePdf.js";
 
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
@@ -21,4 +22,5 @@ router.post("/api/manualcancel",manualcancel)
 router.get("/api/token", refreshToken)
 router.get("/api/getusermanager", getUsersToManage)
 router.post("/api/changeaccesstype", changeaccesstype)
+router.post("/api/findReserveForPdf", findReserveForPdf)
 export default router;

@@ -5,11 +5,15 @@ import SignUp from "./Components/Login&Signup/SignUp";
 import GuestView from "./Components/GuestView";
 import CheckOut from "./Components/CheckOut";
 import MainDashboard from "./Components/MainDashboard";
+import PdfGenerator from "./Components/PdfGenerator";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+    <Route exact path = "/pdf/:param">
+    <PdfGenerator />
+      </Route>
       <Route exact path = "/home">
     <MainDashboard />
       </Route>
