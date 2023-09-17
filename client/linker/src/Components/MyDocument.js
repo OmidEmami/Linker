@@ -54,7 +54,8 @@ alignContent:"center"
   }
 });
 
-const MyDocument = ({ data }) => {
+const MyDocument = ({ data, price }) => {
+  
   moment.locale('fa');
 
     return (
@@ -116,8 +117,8 @@ const MyDocument = ({ data }) => {
      
       </View>
    
-            
-           
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }} >کل مبلغ پرداخت شده : </Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }} >ریال{price} </Text>
           </View>
         </Page>
       </Document>
