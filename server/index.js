@@ -14,14 +14,14 @@ import axios from "axios";
 dotenv.config();
 const app = express();
 app.use(cookieParser());
-// const corsOptions = {
-//     origin: 'http://localhost:3000'
-//     , // Replace with your frontend domain
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     credentials: true, // If you're using cookies or sessions
-//   };
+const corsOptions = {
+    origin: 'http://localhost:3000'
+    , // Replace with your frontend domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // If you're using cookies or sessions
+  };
   
-  app.use(cors());
+  app.use(cors(corsOptions));
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 app.use(cookieParser());
