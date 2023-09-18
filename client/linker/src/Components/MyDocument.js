@@ -116,10 +116,33 @@ const MyDocument = ({ data, price }) => {
         </View> 
      
       </View>
-   
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }} >کل مبلغ پرداخت شده : </Text>
+            
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px",textAlign:"center" }} >کل مبلغ پرداخت شده : </Text>
             <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }} >ریال{price} </Text>
-          </View>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}>شرایط انصراف</Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>تا 8 روز قبل از تاریخ ورود بدون جریمه , از 3 تا 7 روز قبل از ورود جریمه معادل 05 درصد هزینه کل اقامت *</Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>در صورت تمایل برای کنسلی
+اتاق تا 84 ساعت قبل از ورود جریمه معادل 001 درصد از هزینه کل دریافتی می باشد* </Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize: "13", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>شرایط پذیرش در بوتیک هتل قصر منشی:</Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
+            </View>
+            
+        
         </Page>
       </Document>
     );
