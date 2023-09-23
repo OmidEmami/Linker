@@ -7,7 +7,7 @@ const ReservesTable = () => {
       
         const fetchData=async()=>{
             try{
-                const response = await axios.get("http://localhost:3001/api/getReserves")
+                const response = await axios.get("https://gmhotel.ir/api/getReserves")
                 setData(response.data)
             }catch(error){
     
