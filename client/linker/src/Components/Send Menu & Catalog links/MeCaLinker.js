@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import axios from "axios"
 import LoadingComp from "../LoadingComp.js"
 import { notify } from "../toast";
-import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picker";
+import DatePicker, { DateObject}from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
@@ -51,16 +51,21 @@ const MeCaLinker = ()=> {
     }
     
     const sendRoomCatalog = async(e)=>{
+        setLoading(true)
         e.preventDefault();
         const entrydate = values[0].format();
         try{
-            const response = await axios.post('https://gmhotel.ir/api/sendroomcatalog',{
+            const response = await axios.post('http://localhost:3001/api/sendroomcatalog',{
                 date : entrydate,
                 name : guestName,
                 phone : roomPhone 
             })
-        }catch(error){
 
+            setLoading(false)
+            notify( "لینک ارسال شد", "success")
+        }catch(error){
+            setLoading(false)
+            notify( "خطا", "error")
         }
         
     }
