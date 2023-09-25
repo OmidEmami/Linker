@@ -40,7 +40,7 @@ export const loginUser = async(req,res) =>{
         });
         
       console.log("ta inja 1")
-        // res.json({ accessToken });
+        res.json({ accessToken });
         
     
     }catch(error){

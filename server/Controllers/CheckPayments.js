@@ -8,7 +8,7 @@ export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
         merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
-        callback_url: 'http://87.248.152.131/checkout',
+        callback_url: 'https://gmhotel.ir/checkout',
         amount : req.body.amount,
         description : req.body.description,
         metadata : req.body.metadata
@@ -63,7 +63,7 @@ export const toPaynd = async(req,res)=>{
 
         try{
         const patternCode = "xxgdc4qh2euhqbl";
-        const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"https://gmhotel.ir/c/"+findPay.ReserveId, reserve:findPay.ReserveId });
+        const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"https://gmhotel.ir/pdf/"+findPay.ReserveId, reserve:findPay.ReserveId });
        
       }catch(error){console.log(error) 
         }
