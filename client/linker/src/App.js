@@ -6,11 +6,15 @@ import GuestView from "./Components/GuestView";
 import CheckOut from "./Components/CheckOut";
 import MainDashboard from "./Components/MainDashboard";
 import PdfGenerator from "./Components/PdfGenerator";
+import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+      <Route exact path="/sendlinks">
+        <MeCaLinker />
+      </Route>
     <Route exact path = "/pdf/:param">
     <PdfGenerator />
       </Route>
