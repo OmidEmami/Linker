@@ -8,7 +8,7 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import styles from "./MeCaLinker.module.css"
-
+import Logo from "../../assests/logo.png"
 const MeCaLinker = ()=> {
     const [restaurantPhone, setRestaurantPhone] = useState('');
     const [hamamPhone, setHamamPhone] = useState('');
@@ -28,10 +28,17 @@ const MeCaLinker = ()=> {
                 Phone : hamamPhone
             }
             )
-
+            if(response.data === "ok"){
             setLoading(false)
+            notify( "لینک ارسال شد", "success")
+            setHamamPhone('')
+            }else{
+            setLoading(false)
+            notify( "خطا", "error")
+            }
         }catch(error){
             setLoading(false)
+            notify( "خطا", "error")
         }
     }
     const sendRestaurantSms = async(e)=>{
@@ -43,10 +50,17 @@ const MeCaLinker = ()=> {
                 Phone : restaurantPhone
             }
             )
-
-            setLoading(false)
+            if(response.data === "ok"){
+                setLoading(false)
+                notify( "لینک ارسال شد", "success")
+                setRestaurantPhone('')
+                }else{
+                setLoading(false)
+                notify( "خطا", "error")
+                }
         }catch(error){
             setLoading(false)
+            notify( "خطا", "error")
         }
     }
     
@@ -55,14 +69,23 @@ const MeCaLinker = ()=> {
         e.preventDefault();
         const entrydate = values[0].format();
         try{
-            const response = await axios.post('http://localhost:3001/api/sendroomcatalog',{
+            const response = await axios.post('https://gmhotel.ir/api/sendroomcatalog',{
                 date : entrydate,
                 name : guestName,
                 phone : roomPhone 
             })
-
+            if(response.data === "ok"){
             setLoading(false)
             notify( "لینک ارسال شد", "success")
+            setRoomPhone('')
+            setGuestName('')
+            setValues('')
+            
+        }
+            else{
+                setLoading(false)
+                notify( "خطا", "error")
+            }
         }catch(error){
             setLoading(false)
             notify( "خطا", "error")
@@ -71,6 +94,7 @@ const MeCaLinker = ()=> {
     }
   return (
     <>
+    <div className={styles.header}><img src={Logo} alt='قصرمنشی'/></div>
         {loading && <LoadingComp />}
         <div className={styles.mainDiv}>
     <div className={styles.formContainer}>
