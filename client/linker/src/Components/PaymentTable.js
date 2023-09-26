@@ -7,7 +7,7 @@ const PaymentTable = () => {
       
         const fetchData=async()=>{
             try{
-                const response = await axios.get("https://gmhotel.ir/api/getpayments")
+                const response = await axios.get("http://localhost:3001/api/getpayments")
                 setData(response.data)
             }catch(error){
     

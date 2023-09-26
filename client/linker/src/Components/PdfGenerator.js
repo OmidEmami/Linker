@@ -1,16 +1,27 @@
 import React,{useEffect,useState} from 'react'
-import { PDFViewer } from '@react-pdf/renderer';
 import MyDocument from './MyDocument';
 import { useParams } from 'react-router-dom';
-import axios from "axios"
+import axios from "axios";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 export default function PdfGenerator() {
     const [reserveData, setReserveData] = useState("false")
     const { param } = useParams();
-    const [totalPrice, setTotalPrice] = useState(0)
+    const [totalPrice, setTotalPrice] = useState(0);
+    const generatePDF = async() => {
+      const input = document.getElementById('componentToPDF'); // Replace with the ID of your component
+      await document.fonts.ready;
+      html2canvas(input, { scale: 1 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('portrait','mm','a4');
+        pdf.addImage(imgData, 'JPEG', 5, 5);
+        pdf.save('component.pdf'); // Specify the desired file name
+      });
+    }
     useEffect(() => {
       const getDateForPdf = async()=>{
         try{
-        const response = await axios.post("https://gmhotel.ir/api/findReserveForPdf", {
+        const response = await axios.post("http://localhost:3001/api/findReserveForPdf", {
           ReserveKey : param
         })
         for(let i = 0 ; i < response.data.length ; i++){
@@ -33,10 +44,11 @@ export default function PdfGenerator() {
   return (
     <div>
       <div style={{ width: '100vw', height: '100vh' }}>
-        
-        {reserveData === "false" ? null : <PDFViewer style={{ width: '100%', height: '100%' }}>
-        <MyDocument data={reserveData} price={totalPrice}/>
-      </PDFViewer>}
+       {/* <PDFViewer style={{ width: '100%', height: '100%' }}>  </PDFViewer> */}
+        {reserveData === "false" ? null : 
+        <MyDocument data={reserveData} price={totalPrice} id="componentToPDF" />
+     }
+     <button onClick={generatePDF}>pdf</button>
       
     </div>
     </div>

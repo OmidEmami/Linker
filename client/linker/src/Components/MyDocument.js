@@ -1,151 +1,74 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet,Image } from '@react-pdf/renderer';
-import logo from "./ghasr.png"
-import { Font } from '@react-pdf/renderer';
-import persian from "./Yekan.ttf";
-import moment from 'jalali-moment'
-Font.register({ family: 'PersianFont', src: persian });
-const styles = StyleSheet.create({
-  page: {
-    backgroundColor: '#ffffff',
-    full: true,
-    border : "1px solid black",
-    display:"flex",
-    flexDirection:"column",
-    
-    justifyContent:"center",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-    border : "1px solid black",
-    display:"flex",
-    flexDirection:"column",
-alignItems:"center",
-justifyContent:"flex-start",
-alignContent:"center"
-  },
-  table: { 
-    display: "table", 
-    width: "auto", 
-    borderStyle: "solid", 
-    borderWidth: 1, 
-    borderRightWidth: 0, 
-    borderBottomWidth: 0,
-    marginTop:"10px"
-  }, 
-  tableRow: { 
-    margin: "auto", 
-    flexDirection: "row" 
-  }, 
-  tableCol: { 
-    width: "20%", 
-    borderStyle: "solid", 
-    borderWidth: 1, 
-    borderLeftWidth: 0, 
-    borderTopWidth: 0 
-  }, 
-  tableCell: { 
-    margin: "auto", 
-    marginTop: 5, 
-    fontSize: 10 ,
-    fontFamily: 'PersianFont'
-  }
-});
 
-const MyDocument = ({ data, price }) => {
+import logo from "./ghasr.png"
+
+import moment from 'jalali-moment';
+import styles from "./MyDocument.module.css"
+
+
+const MyDocument = ({ data, price,id }) => {
   
   moment.locale('fa');
 
-    return (
-      <Document
-      author="Ghasr Monshi Hotel"
-    keywords="Ghasr Monshi"
-    subject="Reserve Confirmation"
-    title="ووچر رزرو هتل قصرمنشی">
-        <Page size="A4" orientation="portrait" style={styles.page}>
-          <View style={styles.section}>
-            <View style={{width:"10%", display:"flex"}}>
-            <Image src={logo} />
-            </View>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }}>ووچر رزرو هتل قصرمنشی</Text>
-            <View style={{display:"flex", flexDirection:"row", alignContent:"space-between"}}>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }}>{data[0].FullName}نام مهمان : </Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }}>{data[0].Phone}شماره تماس : </Text>
-            </View>
-      <View style={styles.table}> 
-        <View style={styles.tableRow}> 
-        <View style={styles.tableCol}> 
-            <Text style={styles.tableCell}>ردیف</Text>
-          </View>
-          <View style={styles.tableCol}> 
-            <Text style={styles.tableCell}>نام اتاق</Text> 
-          </View> 
-          <View style={styles.tableCol}> 
-            <Text style={styles.tableCell}>قیمت هر شب به ریال</Text> 
-          </View> 
-          <View style={styles.tableCol}> 
-            <Text style={styles.tableCell}>تاریخ ورود و خروج</Text> 
-          </View> 
-          <View style={styles.tableCol}> 
-            <Text style={styles.tableCell}>مدت اقامت</Text> 
-          </View> 
-        </View>
-        <View style={styles.tableRow}>
-          {data.length > 0 && data.map((info,index)=>(
-            <>
-            <View style={styles.tableCol} key={index} > 
-            <Text style={styles.tableCell}>{index + 1}</Text> 
-          </View>
-            <View style={styles.tableCol} > 
-            <Text style={styles.tableCell}>{info.RoomName}</Text> 
-          </View> 
-          <View style={styles.tableCol} key={index}> 
-            <Text style={styles.tableCell}>{info.Price}</Text> 
-          </View> 
-          <View style={styles.tableCol} key={index}>
-            <Text style={styles.tableCell}>{moment.from(info.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')} - {moment.from(info.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</Text> 
-          </View>
-          <View style={styles.tableCol} key={index}> 
-            <Text style={styles.tableCell}>  شب  {info.AccoCount}</Text> 
-          </View></>
-          ))} 
-          
-           
-        </View> 
-     
-      </View>
-            
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px",textAlign:"center" }} >کل مبلغ پرداخت شده : </Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"15" , margin:"10px" }} >ریال{price} </Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}>شرایط انصراف</Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>تا 8 روز قبل از تاریخ ورود بدون جریمه , از 3 تا 7 روز قبل از ورود جریمه معادل 05 درصد هزینه کل اقامت *</Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>در صورت تمایل برای کنسلی
-اتاق تا 84 ساعت قبل از ورود جریمه معادل 001 درصد از هزینه کل دریافتی می باشد* </Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize: "13", wordWrap: 'break-word', width: '100%', textAlign:"right" }}>شرایط پذیرش در بوتیک هتل قصر منشی:</Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize: "11", wordWrap: 'break-word', width: '100%', textAlign:"right" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            <Text style={{ fontFamily: 'PersianFont', fontSize:"13" , margin:"10px" }}></Text>
-            </View>
-            
-        
-        </Page>
-      </Document>
-    );
+    return (      
+<div id={id} className={styles.mainContainer}>
+  <img src={logo} alt='logo' style={{width:"10%"}} />
+<h3 style={{fontSize:"15" , margin:"10px" }}>ووچر رزرو هتل قصرمنشی</h3>
+            <div style={{display:"flex", flexDirection:"row", alignContent:"space-between"}}>
+            <p style={{fontSize:"15" , margin:"10px" }}>نام مهمان : {data[0].FullName} </p>
+             <p style={{fontSize:"15" , margin:"10px" }}> شماره تماس : {data[0].Phone}</p>
+</div>
+<table className={styles.tableStyles}>
+      <thead>
+        <tr>
+          <th className={styles.thStyles}>ردیف</th>
+          <th className={styles.thStyles}>نام اتاق</th>
+          <th className={styles.thStyles}>قیمت هر شب به ریال</th>
+          <th className={styles.thStyles}>تاریخ ورود و خروج</th>
+          <th className={styles.thStyles}>مدت اقامت</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.length > 0 && data.map((info,index)=> (
+          <tr key={info.id}>
+            <td className={styles.tdStyles}>{index + 1}</td>
+            <td className={styles.tdStyles}>{info.RoomName}</td>
+            <td className={styles.tdStyles}>{info.Price}</td>
+            <td className={styles.tdStyles}>{moment.from(info.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')} - {moment.from(info.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
+            <td className={styles.tdStyles}>  شب  {info.AccoCount}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>کل مبلغ پرداخت شده : {price} ریال</p>
+    <div style={{width:"80%", direction:"rtl"}}>
+      <h4> شرایط انصراف: </h4>
+    <p style={{direction:"rtl", textAlign: "justify"}}>
+   
+تا 8 روز قبل از تاریخ ورود بدون جریمه , از 7 تا 3 روز قبل از ورود جریمه معادل 50 درصد هزینه کل اقامت و در نهایت در صورت تمایل برای کنسلی
+اتاق تا 48 ساعت قبل از ورود جریمه معادل 100 درصد از هزینه کل دریافتی می باشد.
+    </p>
+    <h4>شرایط پذیرش در بوتیک هتل قصر منشی:</h4>
+    <p>1 - پذیرش مهمانان گرامی پیرو ضوابط و قوانین جمهوری اسلمی ایران می باشد, از این رو داشتن تمامی مدارک و اسناد مرتبط و مورد نیاز , طبق
+قوانین الزامی می باشد, لذا همراه نداشتن موارد ذکر شده موجب عدم پذیرش و سوخت تمامی مبلغ پرداختی می شود.</p>
+<p>2 - پذیرش مهمانان از ساعت 14 صورت می پذیرد و ساعت در نظر گرفته شده برای تخلیه اتاق 12 ظهر می باشد.</p>
+<p>3 - به جهت حفظ آرامش مهمانان در مکان های سنتی برای هیچ یک از اتاق ها تلویزیون قرار داده نشده است.</p>
+<p>4 - کشیدن سیگار در تمامی اتاق ها و سالن ها ممنوع می باشد و در صورت تخلف ملزم به پرداخت جریمه خواهد بود.</p>
+<p>5 - میهمانان در کلیه قسمت های هتل اعم از اتاق ها, رستوران و فضای باز قادر به استفاده از اینترنت رایگان پر سرعت می باشند.</p>
+<p>6 - جهت فراهم نمودن امکانات حمل و نقل , تا 48 ساعت قبل از ورود به مسئول واحد پذیرش اطلع دهید تا اقدامات لزم انجام گیرد.</p>
+<p>7 - خدمات قابل ارائه به مهمانان در هتل شامل اقامت و صبحانه می باشد در صورت تمایل جهت استفاده از خدمات همایونی مسئول رزرواسیون را
+مطلع کنید.</p>
+<p>8 - مسئولیت تمامی موارد مربوط به صحت و سقم روادید, پاسپورت و سایر اسناد مرتبط و همچنین امنیت مسافران خارج از فضای هتل بر عهده آژانس
+مرتبط می باشد.</p>
+<p>9 - به جهت اینکه استفاده از خدمات حمام سنتی ایرانی مجموعه به صورت رزرو اختصاصی است و زمان های محدود برای پذیرش دارد توصیه می شود
+در صورت تمایل جهت کسب اطلعات بیشتر قبل از ورود از طریق شماره 09012224097 با ما در ارتباط باشید تا اقدامات لزم انجام گیرد.
+</p>
+<p>10 - روز قبل از ورود به هتل از بخش پذیرش با شماره تماس ارائه شده از مهمان تماس گرفته می شود. در صورت تمایل برای دریافت خدمات خاص
+مورد نظر خود لطفا به ایشان اطلع دهید.
+</p>
+    </div>
+</div>
+    )
   };
   
 export default MyDocument

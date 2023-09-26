@@ -7,11 +7,15 @@ import CheckOut from "./Components/CheckOut";
 import MainDashboard from "./Components/MainDashboard";
 import PdfGenerator from "./Components/PdfGenerator";
 import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
+import TestPdfSecond from "./Components/TestPdfSecond";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+      <Route exact path="/testpdfomid">
+    <TestPdfSecond />
+      </Route>
       <Route exact path="/sendlinks">
         <MeCaLinker />
       </Route>
