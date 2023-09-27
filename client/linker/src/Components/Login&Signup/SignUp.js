@@ -56,7 +56,7 @@ const SignUp = () =>{
                     setEmptyError(false)
                     try{
                         setIsLoading(true)
-                            const response = await axios.post('http://localhost:3001/api/newuser',{
+                            const response = await axios.post('https://gmhotel.ir/api/newuser',{
                                 fullName  : fullName,
                                 email : email,
                                 phone : phone,

@@ -25,7 +25,7 @@ const CheckOut = () =>{
     
     try{
       setIsLoading(true)
-        const getPaymentData = await axios.post("http://localhost:3001/api/payfinal",{
+        const getPaymentData = await axios.post("https://gmhotel.ir/api/payfinal",{
             authority : authority,
 
         })
@@ -44,13 +44,8 @@ const CheckOut = () =>{
         fetchData();
       
       }, []);
-      const generatePdf = async() =>{
-        const getDataReserves = await axios.post("http://localhost:3001/api/getReserveInfoToGeneratePdf",{
-            authority : authority
-        })
-        const temp = JSON.parse(getDataReserves.data[0].ReserveObj);
-        console.log(temp)
-        history.push("./pdf/"+ randomreservenumber)
+      const getConfirm = () =>{
+        history.push("/pdf/"+paymentData.reserveid)
       }
     return(
         <>
@@ -58,10 +53,12 @@ const CheckOut = () =>{
         {isLoading && <LoadingComp />}
         {paymentData.status === "ok"
             ? <><div>پرداخت موفق</div>
-        شماره پیگیری : {paymentData.ref_id}
+            <div>
+        شماره پیگیری : {paymentData.ref_id}</div>
+        <div><button onClick={getConfirm}>دریافت تاییدیه رزرو</button></div>
             </>:<div>در حال بارگذاری</div>
         }
-        {/* <CheckOutMain data={queryParams} /> */}
+        
         </div>
         </>
     )

@@ -126,7 +126,7 @@ export const toPaynd = async(req,res)=>{
         
       
       
-      res.json({status : "ok", ref_id : response.data.data.ref_id})
+      res.json({status : "ok", ref_id : response.data.data.ref_id, reserveid : findPay.ReserveId})
       
     }
     

@@ -13,7 +13,7 @@ function ManageUsers() {
         try{
             setIsLoading(true)
            
-            const response = await axios.get("http://localhost:3001/api/getusermanager")
+            const response = await axios.get("https://gmhotel.ir/api/getusermanager")
             setData(response.data)
             isGetData(true)
             setIsLoading(false)
@@ -33,7 +33,7 @@ function ManageUsers() {
     const saveData = async()=>{
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/changeaccesstype",{
+        const response = await axios.post("https://gmhotel.ir/api/changeaccesstype",{
           data : data
         })
         notify( "موفق", "success")

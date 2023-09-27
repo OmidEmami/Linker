@@ -6,12 +6,12 @@ import moment from 'jalali-moment';
 import styles from "./MyDocument.module.css"
 
 
-const MyDocument = ({ data, price,id }) => {
+const MyDocument = ({ data, price }) => {
   
   moment.locale('fa');
 
     return (      
-<div id={id} className={styles.mainContainer}>
+<div  className={styles.mainContainer}>
   <img src={logo} alt='logo' style={{width:"10%"}} />
 <h3 style={{fontSize:"15" , margin:"10px" }}>ووچر رزرو هتل قصرمنشی</h3>
             <div style={{display:"flex", flexDirection:"row", alignContent:"space-between"}}>
