@@ -5,7 +5,7 @@ import axios from "axios"
 import LoadingComp from "./LoadingComp";
 import { notify } from "./toast";
 import logo from "../assests/logo.png"
-
+import done from "../assests/done.gif"
 const CheckOut = () =>{
     const location = useLocation();
     const history = useHistory();
@@ -52,15 +52,31 @@ const CheckOut = () =>{
         <div style={{display:"flex",flexDirection:"column",justifyContent: "center",
     alignItems: "center"}}>
       <div style={{display:"flex",flexDirection:"column",justifyContent: "center",
-    alignItems: "center", backgroundColor:"#f0f2f0", width:"100%"}}><img style={{padding:"5px"}} width="10%" src={logo} alt="logo" /></div>
-        {/* {isLoading && <LoadingComp />} */}
+    alignItems: "center", backgroundColor:"#f0f2f0", width:"100%"}}>
+      <img style={{padding:"5px"}} width="10%" src={logo} alt="logo" />
+      </div>
+        {isLoading && <LoadingComp />}
         {paymentData.status === "ok"
-            ? <><div>پرداخت موفق</div>
+            ? <>
+            <div>پرداخت موفق</div>
+            <h3>منتظر دیدار شما هستیم</h3>
+            <div style={{display:"flex", flexDirection:"row", justifyContent: "center",
+    alignItems: "center", direction:"rtl", columnGap:"3rem"}}>
+      <img src={done} alt="گیف" /> </div>
+            <div>پرداخت موفق</div>
             <div>
-        شماره پیگیری : {paymentData.ref_id}</div>
-        <div><button onClick={getConfirm}>دریافت تاییدیه رزرو</button></div>
-            </>:<div>در حال بارگذاری</div>
-        }
+              
+        شماره پیگیری : {paymentData.ref_id}
+         
+         </div>
+            </>:<div>در انتظار دریافت پاسخ</div>}
+            
+           
+            
+        
+            {paymentData.status === "ok" ? <><div style={{padding:"50px"}}><button style={{backgroundColor:"#D1AF6E", border:"none", borderRadius:"2px",padding:"5px"}} onClick={getConfirm}>دریافت تاییدیه رزرو</button></div>
+            </>:<div>در حال بارگذاری</div>}
+
         
         </div>
         </>
