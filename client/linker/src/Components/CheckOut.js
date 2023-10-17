@@ -49,7 +49,8 @@ const CheckOut = () =>{
       }
     return(
         <>
-        <div style={{display:"flex",flexDirection:"column"}}>
+        <div style={{display:"flex",flexDirection:"column",justifyContent: "center",
+    alignItems: "center"}}>
         {isLoading && <LoadingComp />}
         {paymentData.status === "ok"
             ? <><div>پرداخت موفق</div>
