@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import axios from "axios"
 import LoadingComp from "./LoadingComp";
 import { notify } from "./toast";
-
+import logo from "../assests/logo.png"
 
 const CheckOut = () =>{
     const location = useLocation();
@@ -51,7 +51,9 @@ const CheckOut = () =>{
         <>
         <div style={{display:"flex",flexDirection:"column",justifyContent: "center",
     alignItems: "center"}}>
-        {isLoading && <LoadingComp />}
+      <div style={{display:"flex",flexDirection:"column",justifyContent: "center",
+    alignItems: "center", backgroundColor:"#f0f2f0", width:"100%"}}><img style={{padding:"5px"}} width="10%" src={logo} alt="logo" /></div>
+        {/* {isLoading && <LoadingComp />} */}
         {paymentData.status === "ok"
             ? <><div>پرداخت موفق</div>
             <div>
