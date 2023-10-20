@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingComp from "../LoadingComp";
 import { Link } from "react-router-dom";
+import Logo from "../../assests/logo.png"
 const SignUp = () =>{
     const customStyles = {
         content: {
@@ -221,33 +222,55 @@ const SignUp = () =>{
                   و می توانید بانام کاربری و رمز عبور انتخابی وارد پنل شوید</p>
       </div>
       </Modal>
+      
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", direction:"rtl",padding:"10px",margin:"10px"}}> 
+        <div style={{width:"100%", border:"solid",borderColor:"#D2AF6F", borderTopWidth: "0",
+    borderRightWidth:"0",
+    borderBottomWidth: "2px",
+    borderLeftWidth: "0",
+    display:"flex",
+    flexDirection:"column",
+   justifyContent:"center",
+    alignItems:"center",
+
+}}>
+    <img width="5%" src={Logo} alt="logo ghasr" style={{margin:"2px"}} />
+    <h4>ارسال لینک قصرمنشی</h4>
+</div>
+<div style={{display:"flex", flexDirection:"column",
+         width:"100%",margin:"10px"
+          ,direction:"rtl", alignItems:"center",
+           backgroundColor:"#D2AF6F",
+           borderRadius:"5px"
+           }}>
+            <h3>ثبت نام</h3>
             <label>
                 نام کامل</label>
-                <input required type="text" value={fullName} onBlur={fullNameBlur} onChange={(e)=>setFullName(e.target.value)} />
+                <input style={{borderRadius:"5px", border:"none"}} required type="text" value={fullName} onBlur={fullNameBlur} onChange={(e)=>setFullName(e.target.value)} />
             
             {errorfullName && <label>لطفا نام خود را وارد کنید</label>}
             <label> ایمیل</label>
-                <input required type="text" value={email} onBlur={emailBlur} onChange={(e)=>setEmail(e.target.value)} />
+                <input  style={{borderRadius:"5px", border:"none", direction:"ltr"}} required type="text" value={email} onBlur={emailBlur} onChange={(e)=>setEmail(e.target.value)} />
             
             {errorEmail && <label>لطفا ایمیل خود را وارد کنید</label>}
             {errorRegexEmail && <label>ایمیل معتبر نیست</label>}
             <label> موبایل  </label>
-              <input required type="text" value={phone} onBlur={phoneBlur} onChange={(e)=>setPhone(e.target.value)} />
+              <input style={{borderRadius:"5px", border:"none"}} required type="text" value={phone} onBlur={phoneBlur} onChange={(e)=>setPhone(e.target.value)} />
            
             {errorPhone && <label>لطفا شماره موبایل خود را وارد کنید</label>}
             {errorRegexPhone && <label>شماره موبایل معتبر نیست</label>}
             <label>رمز عبور</label>
-                <input type="password" value={pass} onBlur={passBlur} onChange={(e)=>setPass(e.target.value)} />
+                <input style={{borderRadius:"5px", border:"none"}} type="password" value={pass} onBlur={passBlur} onChange={(e)=>setPass(e.target.value)} />
             
             {errorPass && <label>لطفا رمز عبور خود را وارد کنید</label>}
             {errorRegexPass && <label>رمز عبور باید شامل حداقل 4 حرف و یک عدد باشد</label>}
             <label>تکرار رمز عبور</label>{showPassError && <label>تکرار رمز عبور صحیح نیست</label>}
-                <input required type="password" value={rePass} onBlur={rePassBlur} onChange={(e)=>checkPass(e.target.value)} />
+                <input style={{borderRadius:"5px", border:"none"}}  required type="password" value={rePass} onBlur={rePassBlur} onChange={(e)=>checkPass(e.target.value)} />
             
             {errorRePass && <label>لطفا رمز عبور خود را تکرار کنید</label>}
             {emptyError && <label>لطفا همه موارد را به درستی تکمیل کنید</label>}
-            <button onClick={confirm}>ثبت نام</button> <Link to="/">ورود</Link>
+            <button style={{margin:"10px"}} onClick={confirm}>ثبت نام</button> <Link to="/">ورود</Link>
+            </div>
         </div>
         </>
     )

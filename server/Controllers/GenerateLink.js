@@ -72,7 +72,7 @@ try{
               try{
                 
               const patternCodeToGuestGenerateLink = "b4rnjphxqpno0pk";
-              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId});
+              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId , timeValue : req.body.TimeValue});
               const patternCodeToOperator = "b5ydvmj9wxggr80"
               
               const smsName = req.body.Name

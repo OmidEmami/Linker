@@ -11,6 +11,7 @@
 .RightContainer{
     background-color: "black";
     width: 20%;
+    cursor: pointer;
 }
 .MainContent{
     background-color:#F9F9F9;

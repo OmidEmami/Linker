@@ -7,7 +7,7 @@ import { farazSendPattern } from "@aspianet/faraz-sms";
 export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
-        merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
+        merchant_id: '63203523-fe22-485f-963d-6ca28477d320',
         callback_url: 'https://gmhotel.ir/checkout',
         amount : req.body.amount,
         description : req.body.description,
@@ -52,7 +52,7 @@ export const toPaynd = async(req,res)=>{
       
       const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/verify.json', 
       {
-        merchant_id: '78d95f82-bbca-4a67-a11a-4e3ec2bfca63',
+        merchant_id: '63203523-fe22-485f-963d-6ca28477d320',
         amount: findPay.ClientAmount,
         authority:req.body.authority
       }

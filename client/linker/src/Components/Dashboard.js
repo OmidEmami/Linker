@@ -121,7 +121,9 @@ export default function Dashboard() {
     {isLoading && <LoadingComp />}
     <div style={{display:"flex", flexDirection:"column", direction:"rtl", alignItems:"center", padding:"10px"}}>
       <form onSubmit={(e)=>generateLink(e)} >
+      <h3>ارسال لینک اقامت</h3>
         <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
+          
         <label>نام مهمان</label>
           <input required type='text' value={guestName} onChange={(e)=>setGuestName(e.target.value)} />
         </div>

@@ -9,6 +9,8 @@ import PaymentTable from "./PaymentTable";
 import ReservesTable from "./ReservesTable";
 import ManualCancel from "./ManualCancel";
 import ManageUsers from "./ManageUsers";
+import Logo from "../assests/logoblue.png";
+import LogOutSystem from "./Login&Signup/LogOutSystem";
  const MainDashboard = () =>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -69,8 +71,16 @@ import ManageUsers from "./ManageUsers";
     return(
         <>
         <div style={{
-                    backgroundColor:"blue"
-        }}>header</div>
+                    backgroundColor:"#D2AF6F",
+                    display : "flex",
+                    flexDirection:"row",
+                    justifyContent: "center",
+                    alignItems: "center"    
+
+        }}>
+            <img style={{margin:"3px"}} width="8%" src={Logo} alt="logo ghasr" />
+           
+            </div>
         <div className={stylesNd.ViewContainer}>
         <div  className={stylesNd.RightContainer}>
             <ul className={styles.list}>
@@ -79,7 +89,7 @@ import ManageUsers from "./ManageUsers";
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
                 {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
-                
+                <li value={6} onClick={(e)=>showItem(e.target.value)}>خروج از سیستم</li>
                 
             </ul>
 
@@ -98,6 +108,9 @@ import ManageUsers from "./ManageUsers";
           : null}
           {item === 5 ?
          <div className={stylesNd.MainContent}><ManageUsers /></div>
+          : null}
+          {item === 6 ?
+         <div className={stylesNd.MainContent}><LogOutSystem /></div>
           : null}
           {item === false && <div className={stylesNd.MainContent}>
             <h3>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}

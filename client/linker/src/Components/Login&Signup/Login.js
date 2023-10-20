@@ -1,16 +1,68 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
+import jwt_decode from "jwt-decode";
 import { useHistory,Link } from "react-router-dom";
 import axios from "axios";
 import { notify } from "../toast";
 import LoadingComp from "../LoadingComp";
+import Logo from "../../assests/logo.png"
 const Login =()=>{
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
     const [errorUser, setErrorUser] = useState(false)
     const [errorPass, setErrorPass] = useState(false)
     const [finalError, setFinalError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [token, setToken] = useState('');
+    const [accessType, setAccessType] = useState('')
+    const [expire, setExpire] = useState('');
     let history = useHistory();
+    useEffect(() => {
+        refreshToken();
+        
+    }, []);
+ 
+    const refreshToken = async () => {
+        try {
+            const response = await axios.get('https://gmhotel.ir/api/token');
+            
+            setToken(response.data.accessToken);
+            const decoded = jwt_decode(response.data.accessToken);
+            setName(decoded.name);
+            setEmail(decoded.email);
+            setPhone(decoded.phone)
+            setExpire(decoded.exp);
+            setAccessType(decoded.accessType);
+            history.push("/home")
+        } catch (error) {
+            console.log(error)
+            if (error.response) {
+                history.push("/");
+            }
+        }
+    }
+ 
+    const axiosJWT = axios.create();
+ 
+    axiosJWT.interceptors.request.use(async (config) => {
+        const currentDate = new Date();
+        if (expire * 1000 < currentDate.getTime()) {
+            const response = await axios.get('https://gmhotel.ir/api/token');
+            config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+            setToken(response.data.accessToken);
+            const decoded = jwt_decode(response.data.accessToken);
+            setName(decoded.name);
+            setPhone(decoded.phone)
+            setEmail(decoded.email);
+            setExpire(decoded.exp);
+            setAccessType(decoded.accessType)
+        }
+        return config;
+    }, (error) => {
+        return Promise.reject(error);
+    });
     const checkBlurUser = () =>{
         
         if(user === ""){
@@ -54,23 +106,43 @@ const Login =()=>{
     return(
         <>
         {isLoading && <LoadingComp />}
-        <div style={{display:"flex", flexDirection:"column", padding:"10px", margin:"10px", direction:"rtl", alignItems:"center"}}>
+        <div style={{width:"100%", border:"solid",borderColor:"#D2AF6F", borderTopWidth: "0",
+    borderRightWidth:"0",
+    borderBottomWidth: "2px",
+    borderLeftWidth: "0",
+    display:"flex",
+    flexDirection:"column",
+   justifyContent:"center",
+    alignItems:"center",
+
+}}>
+    <img width="5%" src={Logo} alt="logo ghasr" style={{margin:"2px"}} />
+    <h4>ارسال لینک قصرمنشی</h4>
+</div>
+        <div style={{display:"flex", flexDirection:"column",
+         padding:"10px", margin:"10px"
+          ,direction:"rtl", alignItems:"center",
+           backgroundColor:"#D2AF6F",
+           borderRadius:"5px"
+           }}>
+            <h3>ورود به سیستم</h3>
                 <label>نام کاربری</label>
                     
-                <input type="text" value={user} onBlur={checkBlurUser} onChange={(e)=>setUser(e.target.value)} placeholder="نام کاربری" />
+                <input style={{borderRadius:"5px", border:"none"}} type="text" value={user} onBlur={checkBlurUser} onChange={(e)=>setUser(e.target.value)} placeholder="نام کاربری" />
                 
             {errorUser === true && <label>خطا</label>}<br></br>
                  <label>رمز عبور</label>
 
-            <input type="password" value={pass} onBlur={checkBlurPass} onChange={(e)=>setPass(e.target.value)} placeholder="رمز عبور" />
+            <input style={{borderRadius:"5px", border:"none"}} type="password" value={pass} onBlur={checkBlurPass} onChange={(e)=>setPass(e.target.value)} placeholder="رمز عبور" />
                 
                 {errorPass === true && <label>خطا</label>}
                 <br>
                 </br>
-                <button onClick={login}>ورود</button>
+                <button style={{borderRadius:"5px"}} onClick={login}>ورود</button>
                 {finalError && <label>خطا</label>}
                 <Link to="/signup">حساب ندارم، ثبت نام میکنم</Link>
         </div>
+        
         </>
     )
 }

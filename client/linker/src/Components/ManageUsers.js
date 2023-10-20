@@ -64,7 +64,7 @@ function ManageUsers() {
             <td>{user.UserName}</td>
             <td>{user.Phone}</td>
             <td><select required  value={user.AccessType} onChange={(e) => handleChangeAccessType(index, e.target.value)}>
-                                        {/* <option  enabled value={user.AccessType} >{user.AccessType}</option> */}
+                                        <option  enabled value="none" >نقش کاربر را انتخاب کنید</option>
                                         <option value="editor">editor</option>
                                         <option value="admin">admin</option>
                         
