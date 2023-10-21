@@ -27,5 +27,5 @@ router.post("/api/findReserveForPdf", findReserveForPdf)
 router.post('/api/sendroomcatalog', sendRoomcatalog);
 router.post('/api/sendrestaurantmenu', sendrestaurantmenu);
 router.post('/api/sendhamam', sendhamam);
-router.delete('/logout', Logout);
+router.delete('/api/logout', Logout);
 export default router;
