@@ -10,7 +10,7 @@ function LogOutSystem() {
         }, []);
         
         const logoutsystem = async() => {
-            await axios.delete('https://gmhotel.ir/api/logout');
+            await axios.delete('http://localhost:3001/api/logout');
             notify("با موفقیت از سیستم خارج شدید", "success")
             history.push("/");
             

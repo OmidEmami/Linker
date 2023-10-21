@@ -90,7 +90,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
