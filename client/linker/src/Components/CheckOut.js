@@ -29,7 +29,7 @@ const CheckOut = () =>{
             authority : authority,
 
         })
-        console.log(getPaymentData)
+        
         setPaymentData(getPaymentData.data)
         setIsLoading(false)
         notify( "پرداخت موفق", "success")

@@ -55,24 +55,19 @@ try{
                     console.log(error)
                     return;
                 }
-            // const response = await Reserves.create({
-            // FullName : req.body.Name,
-            // Phone: req.body.Phone,
-            // CheckIn : req.body.CheckIn,
-            // CheckOut : req.body.CheckOut,
-            // RoomType : req.body.Room[i].value,
-            // RoomName : req.body.Room[i].roomname,
-            // Status : "pending",
-            // Price : req.body.Room[i].price,
-            // ReserveId : ReserveId,
-            // AccoCount : req.body.AccoCount
-            //     })
+         
            
               }
               try{
                 
               const patternCodeToGuestGenerateLink = "b4rnjphxqpno0pk";
-              await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId , timeValue : req.body.TimeValue});
+              if(req.body.TimeValue === "1"){
+                await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId , timeValue : "1"});
+              }else if(req.body.TimeValue === "2"){
+                await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId , timeValue : "12"});
+              }else if(req.body.TimeValue === "3"){
+                await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/pay/"+ReserveId , timeValue : "24"});
+              }
               const patternCodeToOperator = "b5ydvmj9wxggr80"
               
               const smsName = req.body.Name
@@ -89,15 +84,19 @@ try{
                 console.log(error)
                 return;
             }
-    
+            
+            const cancelpatternGuest = "c7t3lyp134zs3v6"
+            const cancelPatternUser = "4zti2uww3ug514s"
             const taskScheduleTime = new Date();
             if(req.body.TimeValue === "1"){
               taskScheduleTime.setHours(taskScheduleTime.getHours() + 1);
-        
+              
               const job = schedule.scheduleJob(taskScheduleTime, async () => {
+                
                 try {
-                  
+               
                   for(let i = 0 ; i < tarianaResponse.length ; i++){
+                    
                   const responseFinal = await Reserves.findAll({
                       where:{
                           Tariana : tarianaResponse[i],
@@ -105,11 +104,14 @@ try{
                       }
                   })
                   if(responseFinal.length !== 0){
+                    
                       const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
                       PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
                       BookingNumber : tarianaResponse[i]
                       
                     })
+                    
+                    
                     
                     const responseFinalCancel = await Reserves.update({
                       Status : "cancel"
@@ -120,9 +122,12 @@ try{
                       }
                   }
                   )
-                  console.log(responseFinalCancel + "cancel")
+                  
                   }
               }
+              
+              await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
                 } catch (error) {
                   console.error('Error in scheduled task:', error);
                 }
@@ -156,9 +161,11 @@ try{
                       }
                   }
                   )
-                  console.log(responseFinalCancel + "cancel")
+                  
                   }
               }
+              await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
                 } catch (error) {
                   console.error('Error in scheduled task:', error);
                 }
@@ -192,9 +199,11 @@ try{
                       }
                   }
                   )
-                  console.log(responseFinalCancel + "cancel")
+                  
                   }
               }
+              await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
                 } catch (error) {
                   console.error('Error in scheduled task:', error);
                 }

@@ -57,15 +57,16 @@ export const toPaynd = async(req,res)=>{
         authority:req.body.authority
       }
       );
-      console.log(response.data)
-      if(response.data.data.code === 100 || response.data.data.code === 101){
+      
+      if(response.data.data.code === 100){
         
 
         try{
         const patternCode = "xxgdc4qh2euhqbl";
         const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"https://gmhotel.ir/pdf/"+findPay.ReserveId, reserve:findPay.ReserveId });
        
-      }catch(error){console.log(error) 
+      }catch(error){
+        console.log(error) 
         }
         
         const findReserveRequests = await Reserves.findAll({
@@ -109,24 +110,28 @@ export const toPaynd = async(req,res)=>{
         else{
           res.status(404).json({ error: 'An error occurred while making the request.' });
         }
-      }else{
+        await Payments.update({
+          Status : "Paid",
+          TransactionCode:response.data.data.ref_id,
+          CardPan : response.data.data.card_pan
+  
+        },
+          {
+            where:{
+              AuthCode:req.body.authority
+            }
+          })
+          
+        
+        
+        res.json({status : "ok", ref_id : response.data.data.ref_id, reserveid : findPay.ReserveId})
+      }else if(response.data.data.code === 101){
+        res.json({status : "ok", ref_id : response.data.data.ref_id, reserveid : findPay.ReserveId})
+      }
+      else{
         res.status(404).json({ error: 'An error occurred while making the request.' });
       }
-      await Payments.update({
-        Status : "Paid",
-        TransactionCode:response.data.data.ref_id,
-        CardPan : response.data.data.card_pan
-
-      },
-        {
-          where:{
-            AuthCode:req.body.authority
-          }
-        })
-        
       
-      
-      res.json({status : "ok", ref_id : response.data.data.ref_id, reserveid : findPay.ReserveId})
       
     }
     

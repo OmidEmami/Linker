@@ -24,7 +24,7 @@ export default function GuestView() {
     
     moment.locale('fa');
     useEffect(() => {
-      console.log(moment.from('2018-04-04', 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD'))
+      
 
         const getDatetopay = async()=>{
           setIsLoading(true)

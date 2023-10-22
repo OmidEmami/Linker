@@ -24,7 +24,7 @@ export default function PdfGenerator() {
           ReserveKey : param
         })
         for(let i = 0 ; i < response.data.length ; i++){
-          setTotalPrice(prevstate => (prevstate + parseInt(response.data[i].Price)))
+          setTotalPrice(prevstate => (prevstate + parseInt(response.data[i].Price * response.data[i].AccoCount)))
         }
         setReserveData(response.data)
         

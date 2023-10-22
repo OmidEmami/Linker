@@ -12,10 +12,7 @@ const PaymentTableComponent = ({ data }) => {
             Header: 'Client Name',
             accessor: 'ClientName',
           },
-          {
-            Header: 'Client Email',
-            accessor: 'ClientEmail',
-          },
+          
           {
             Header: 'Client Phone',
             accessor: 'ClientPhone',
