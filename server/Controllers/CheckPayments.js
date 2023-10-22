@@ -8,7 +8,7 @@ export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
         merchant_id: '63203523-fe22-485f-963d-6ca28477d320',
-        callback_url: 'http://localhost:3000/checkout',
+        callback_url: 'https://gmhotel.ir/checkout',
         amount : req.body.amount,
         description : req.body.description,
         metadata : req.body.metadata
