@@ -2,6 +2,7 @@ import Reserves from "../Models/Reserves.js";
 import axios from "axios";
 import schedule from "node-schedule";
 import { farazSendPattern } from "@aspianet/faraz-sms";
+import moment from 'jalali-moment' ;
 export const stLinkGenerator = async(req,res)=>{
   
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
@@ -41,7 +42,8 @@ try{
             Price : req.body.Room[i].price,
             ReserveId : ReserveId,
             AccoCount : req.body.AccoCount,
-            Tariana : responseTariana.data.d.slice(26,32)
+            Tariana : responseTariana.data.d.slice(26,32),
+            RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
                 })
            
                   }catch(error){

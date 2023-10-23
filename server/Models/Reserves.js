@@ -8,6 +8,9 @@ const Reserves = db.define('Reserves',{
     FullName :{
         type:DataTypes.TEXT
     },
+    RequestDate :{
+        type:DataTypes.TEXT
+    },
     Phone: {
         type : DataTypes.TEXT
     },
