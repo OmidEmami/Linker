@@ -50,6 +50,10 @@ const ReservesTableComponent = ({ data }) => {
             accessor :'AccoCount'
         },
         {
+          Header:'RequestDate',
+          accessor :'RequestDate'
+      },
+        {
             Header:'Tariana',
             accessor :'Tariana'
         },
