@@ -82,6 +82,7 @@ export default function GuestView() {
                     notify( "خطا", "error")
                   }
       }
+    // coment
       const showRules = () =>{
         setInitialPopup(true)
       }
