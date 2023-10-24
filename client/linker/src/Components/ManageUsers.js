@@ -3,27 +3,71 @@ import axios from 'axios'
 import LoadingComp from './LoadingComp';
 import styles from "./ManageUsers.module.css"
 import { notify } from './toast';
+import jwt_decode from "jwt-decode";
+import { useHistory } from "react-router-dom";
 function ManageUsers() {
     const [isLoading , setIsLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [getData, isGetData] = useState(false)
+    const [getData, isGetData] = useState(false);
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
+
+    const history = useHistory();
     useEffect(() => {
+      refreshToken();
+      if(token !== ''){
+        getDataServer();
+      }
       
-       const getDataServer = async()=>{
-        try{
-            setIsLoading(true)
-           
-            const response = await axios.get("https://gmhotel.ir/api/getusermanager")
-            setData(response.data)
-            isGetData(true)
-            setIsLoading(false)
-        }catch(error){
-            console.log(error)
-            setIsLoading(false)
+       async function getDataServer() {
+        try {
+          setIsLoading(true);
+
+          const response = await axios.get("http://localhost:3001/api/getusermanager", {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setData(response.data);
+          isGetData(true);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
         }
-       }
-       getDataServer();
-    }, []);
+      }
+       
+    }, [token]);
+    const refreshToken = async () => {
+      try {
+          const response = await axios.get('http://localhost:3001/api/token');
+          console.log(response)
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          
+      } catch (error) {
+          console.log(error)
+          if (error.response) {
+              history.push("/");
+          }
+      }
+  }
+
+  const axiosJWT = axios.create();
+
+  axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+          const response = await axios.get('http://localhost:3001/api/token');
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+       
+      }
+      return config;
+  }, (error) => {
+      return Promise.reject(error);
+  });
     const handleChangeAccessType = async(index,e) =>{
       const updatedUsers = [...data];
       updatedUsers[index] = { ...updatedUsers[index], AccessType: e };
@@ -33,9 +77,14 @@ function ManageUsers() {
     const saveData = async()=>{
       try{
         setIsLoading(true)
-        const response = await axios.post("https://gmhotel.ir/api/changeaccesstype",{
+        const response = await axios.post("http://localhost:3001/api/changeaccesstype",{
           data : data
-        })
+        },{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        }
+        )
         notify( "موفق", "success")
         setIsLoading(false)
       }catch(error){

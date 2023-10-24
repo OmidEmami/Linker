@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
@@ -6,7 +6,9 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import axios, { all } from 'axios';
 import { notify } from "./toast";
+import { useHistory} from "react-router-dom";
 import LoadingComp from "./LoadingComp"
+import jwt_decode from "jwt-decode";
 export default function Dashboard() {
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
@@ -16,7 +18,50 @@ export default function Dashboard() {
   const [allDates, setAllDates] = useState([]);
   const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeValue, setTimeValue] = useState()
+  const [timeValue, setTimeValue] = useState();
+  
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
+    const [users, setUsers] = useState([]);
+    const history = useHistory();
+ 
+    useEffect(() => {
+       refreshToken();
+      
+  }, []);
+
+  const refreshToken = async () => {
+      try {
+          const response = await axios.get('http://localhost:3001/api/token');
+          console.log(response)
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+         
+         
+      } catch (error) {
+          console.log(error)
+          if (error.response) {
+              history.push("/");
+          }
+      }
+  }
+
+  const axiosJWT = axios.create();
+
+  axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+          const response = await axios.get('http://localhost:3001/api/token');
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          
+          
+      }
+      return config;
+  }, (error) => {
+      return Promise.reject(error);
+  });
   moment.locale('en');
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
@@ -90,7 +135,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -98,7 +143,14 @@ export default function Dashboard() {
         Room : inputFields,
         AccoCount : accoCount,
         TimeValue : timeValue
+      },{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
       })
+    //   headers: {
+    //     Authorization: `Bearer ${token}`
+    // }
       if(response.data.length !== 0){
         setIsLoading(false)
       notify( "لینک ارسال شد", "success")
