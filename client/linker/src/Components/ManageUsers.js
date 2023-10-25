@@ -96,7 +96,7 @@ function ManageUsers() {
   return (
     <div>
         {isLoading && <LoadingComp />}
-    <h2>کاربران ثبت نام کرده</h2>
+    <h2 style={{direction:"rtl"}}>کاربران ثبت نام کرده</h2>
     <table className={styles.userTable}>
       <thead>
         <tr>

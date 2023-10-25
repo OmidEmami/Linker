@@ -75,6 +75,10 @@ const ReservesTableComponent = ({ data }) => {
             Header: 'Reserve id',
             accessor: 'ReserveId',
           },
+          {
+            Header: 'User',
+            accessor: 'LoggedUser',
+          },
         ],
         []
       );
@@ -98,7 +102,7 @@ const ReservesTableComponent = ({ data }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 5 }, // Set initial page index and page size
+      initialState: { pageIndex: 0, pageSize: 5, sortBy: [{ id: 'RequestDate', desc: true }] }, // Set initial page index and page size
     },
     useSortBy,
     usePagination
@@ -106,7 +110,7 @@ const ReservesTableComponent = ({ data }) => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table {...getTableProps()} style={{ width: '99%', borderCollapse: 'collapse',marginLeft:"5px" }}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>

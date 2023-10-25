@@ -63,7 +63,7 @@ const PaymentTable = () => {
               }, [token]);
   return (
     <div>
-     <h3>تمامی پرداخت های انجام شده</h3>
+     <h3 style={{direction:"rtl"}}>تمامی پرداخت های انجام شده</h3>
       {data.length > 0 ? <PaymentTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );

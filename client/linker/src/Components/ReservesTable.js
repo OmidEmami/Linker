@@ -63,8 +63,8 @@ const ReservesTable = () => {
                 return Promise.reject(error);
               });
   return (
-    <div>
-    <h3>لینک های ارسال شده</h3>
+    <div >
+    <h3 style={{direction:"rtl"}}>لینک های ارسال شده</h3>
       {data.length > 0 ? <ReservesTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );

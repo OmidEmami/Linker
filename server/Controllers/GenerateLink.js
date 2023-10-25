@@ -8,7 +8,7 @@ export const stLinkGenerator = async(req,res)=>{
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
     var tarianaResponse = []
         try{
-            console.log(req.body.Room.length)
+            
             for(let i = 0 ; i < req.body.Room.length ; i++){
 
 try{
@@ -27,7 +27,7 @@ try{
                     Rate:req.body.Room[i].price,
                     
                   })
-                  console.log(responseTariana)
+                  
                   if(responseTariana.data.d !== "No available room"){
                   tarianaResponse.push(responseTariana.data.d.slice(26,32))
                   try{
@@ -44,6 +44,7 @@ try{
             AccoCount : req.body.AccoCount,
             Tariana : responseTariana.data.d.slice(26,32),
             RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
+            LoggedUser : req.body.User
                 })
            
                   }catch(error){
@@ -54,7 +55,7 @@ try{
                   }
                 }catch(error){
                     res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
-                    console.log(error)
+                    
                     return;
                 }
          

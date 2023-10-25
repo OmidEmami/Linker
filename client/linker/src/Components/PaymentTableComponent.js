@@ -62,7 +62,7 @@ const PaymentTableComponent = ({ data }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 5 }, // Set initial page index and page size
+      initialState: { pageIndex: 0, pageSize: 5, sortBy: [{ id: 'payDate', desc: true }] }, // Set initial page index and page size
     },
     useSortBy,
     usePagination

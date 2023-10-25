@@ -167,7 +167,7 @@ export const getReserves = async(req,res) =>{
 export const manualcancel = async(req,res) =>{
   try{
     const response = await Reserves.update({
-      Status : "cancel by operator"
+      Status : "کنسل : " + req.body.User
     },{
       where:{
         ReserveId : req.body.reserveId,

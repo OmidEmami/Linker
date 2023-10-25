@@ -23,6 +23,7 @@ export default function Dashboard() {
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
     const [users, setUsers] = useState([]);
+    const [userName, setUserName] = useState('')
     const history = useHistory();
  
     useEffect(() => {
@@ -33,13 +34,13 @@ export default function Dashboard() {
   const refreshToken = async () => {
       try {
           const response = await axios.get('http://localhost:3001/api/token');
-          console.log(response)
+          
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-         
+          setUserName(decoded.name)
          
       } catch (error) {
-          console.log(error)
+          
           if (error.response) {
               history.push("/");
           }
@@ -55,7 +56,7 @@ export default function Dashboard() {
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-          
+          setUserName(decoded.name)
           
       }
       return config;
@@ -130,6 +131,7 @@ export default function Dashboard() {
   };
   const generateLink = async(e)=>{
     e.preventDefault();
+   
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const accoCount = allDates.length - 1
@@ -142,7 +144,8 @@ export default function Dashboard() {
         CheckOut : checkOutDateServer,
         Room : inputFields,
         AccoCount : accoCount,
-        TimeValue : timeValue
+        TimeValue : timeValue,
+        User : userName
       },{
         headers:{
           Authorization: `Bearer ${token}`

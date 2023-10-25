@@ -40,6 +40,9 @@ const Reserves = db.define('Reserves',{
     },
     Tariana:{
         type: DataTypes.TEXT
+    },
+    LoggedUser:{
+        type: DataTypes.TEXT
     }
     
     

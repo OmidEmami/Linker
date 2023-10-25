@@ -29,7 +29,7 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
     const refreshToken = async () => {
         try {
             const response = await axios.get('http://localhost:3001/api/token');
-            console.log(response)
+           
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
             setName(decoded.name);
@@ -78,9 +78,11 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
                     alignItems: "center"    
 
         }}>
-            <img style={{margin:"3px"}} width="8%" src={Logo} alt="logo ghasr" />
+            <img style={{margin:"3px"}} width="5%" src={Logo} alt="logo ghasr" />
            
             </div>
+            <div style={{marginRight:"50px"}}><h3 style={{direction:"rtl"}}>کاربر: {name}</h3></div>
+            
         <div className={stylesNd.ViewContainer}>
         <div  className={stylesNd.RightContainer}>
             <ul className={styles.list}>

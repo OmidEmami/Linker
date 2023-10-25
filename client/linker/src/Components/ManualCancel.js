@@ -9,7 +9,7 @@ const ManualCancel =()=> {
     const [loading, setIsLoading] = useState(false);
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
-
+    const [userName, setUserName] = useState('')
     const history = useHistory();
     useEffect(() => {
       refreshToken();
@@ -19,10 +19,10 @@ const ManualCancel =()=> {
     const refreshToken = async () => {
       try {
           const response = await axios.get('http://localhost:3001/api/token');
-          console.log(response)
+          
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-          
+          setUserName(decoded.name)
       } catch (error) {
           console.log(error)
           if (error.response) {
@@ -40,7 +40,7 @@ const ManualCancel =()=> {
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-       
+          setUserName(decoded.name)
       }
       return config;
   }, (error) => {
@@ -51,7 +51,8 @@ const ManualCancel =()=> {
         setIsLoading(true)
         try{
             const response = await axios.post("http://localhost:3001/api/manualcancel",{
-                reserveId : reserveId
+                reserveId : reserveId,
+                User : userName
             },{
                 headers:{
                     Authorization: `Bearer ${token}`
@@ -59,7 +60,7 @@ const ManualCancel =()=> {
             }
             
             )
-            console.log(typeof(response.data))
+            
             if(response.data === 1){
                 notify( "موفق", "success")
             }else{
