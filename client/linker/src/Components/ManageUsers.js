@@ -40,13 +40,15 @@ function ManageUsers() {
     }, [token]);
     const refreshToken = async () => {
       try {
+        setIsLoading(true)
           const response = await axios.get('https://gmhotel.ir/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
+          setIsLoading(false)
       } catch (error) {
-        
+        setIsLoading(false)
           if (error.response) {
               history.push("/");
           }
@@ -58,6 +60,7 @@ function ManageUsers() {
   axiosJWT.interceptors.request.use(async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
+        setIsLoading(true)
           const response = await axios.get('https://gmhotel.ir/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
@@ -66,7 +69,9 @@ function ManageUsers() {
       }
       return config;
   }, (error) => {
-      return Promise.reject(error);
+      setIsLoading(false)
+       Promise.reject(error)
+       return
   });
     const handleChangeAccessType = async(index,e) =>{
       const updatedUsers = [...data];

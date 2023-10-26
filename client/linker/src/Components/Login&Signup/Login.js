@@ -26,6 +26,7 @@ const Login =()=>{
  
     const refreshToken = async () => {
         try {
+            setIsLoading(true)
             const response = await axios.get('https://gmhotel.ir/api/token');
             
             setToken(response.data.accessToken);
@@ -35,9 +36,10 @@ const Login =()=>{
             setPhone(decoded.phone)
             setExpire(decoded.exp);
             setAccessType(decoded.accessType);
+            setIsLoading(false)
             history.push("/home")
         } catch (error) {
-           
+            setIsLoading(false)
             if (error.response) {
                 history.push("/");
             }
@@ -49,6 +51,7 @@ const Login =()=>{
     axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
+            setIsLoading(true)
             const response = await axios.get('https://gmhotel.ir/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
@@ -58,10 +61,13 @@ const Login =()=>{
             setEmail(decoded.email);
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
+            setIsLoading(false)
         }
         return config;
     }, (error) => {
-        return Promise.reject(error);
+        setIsLoading(false)
+        Promise.reject(error);
+         return
     });
     const checkBlurUser = () =>{
         

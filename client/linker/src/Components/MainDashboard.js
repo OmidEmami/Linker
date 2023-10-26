@@ -11,6 +11,7 @@ import ManualCancel from "./ManualCancel";
 import ManageUsers from "./ManageUsers";
 import Logo from "../assests/logoblue.png";
 import LogOutSystem from "./Login&Signup/LogOutSystem";
+import LoadingComp from "./LoadingComp";
  const MainDashboard = () =>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
     const [token, setToken] = useState('');
     const [accessType, setAccessType] = useState('')
     const [expire, setExpire] = useState('');
-
+    const [isLoading, setIsLoading] = useState(false)
     const history = useHistory();
  
     useEffect(() => {
@@ -27,7 +28,9 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
     }, []);
  
     const refreshToken = async () => {
+        
         try {
+            setIsLoading(true)
             const response = await axios.get('https://gmhotel.ir/api/token');
            
             setToken(response.data.accessToken);
@@ -37,8 +40,9 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
             setPhone(decoded.phone)
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
+            setIsLoading(false)
         } catch (error) {
-          
+            setIsLoading(false)
             if (error.response) {
                 history.push("/");
             }
@@ -50,6 +54,7 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
     axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
+            setIsLoading(true)
             const response = await axios.get('https://gmhotel.ir/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
@@ -59,10 +64,13 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
             setEmail(decoded.email);
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
+            setIsLoading(false)
         }
         return config;
     }, (error) => {
-        return Promise.reject(error);
+        setIsLoading(false)
+        Promise.reject(error); 
+        return
     });
     const [item, setItem] = useState(false);
     const showItem = (e) => {
@@ -70,6 +78,7 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
     }
     return(
         <>
+        {isLoading && <LoadingComp />}
         <div style={{
                     backgroundColor:"#D2AF6F",
                     display : "flex",

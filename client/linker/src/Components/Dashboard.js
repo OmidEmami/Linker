@@ -33,6 +33,7 @@ export default function Dashboard() {
 
   const refreshToken = async () => {
       try {
+        setIsLoading(true)
           const response = await axios.get('https://gmhotel.ir/api/token');
           
           setToken(response.data.accessToken);
@@ -40,9 +41,9 @@ export default function Dashboard() {
           setUserName(decoded.name)
           setExpire(decoded.exp);
          
-         
+         setIsLoading(false)
       } catch (error) {
-          
+        setIsLoading(false)
           if (error.response) {
               history.push("/");
           }
@@ -55,16 +56,20 @@ export default function Dashboard() {
       const currentDate = new Date();
 
       if (expire * 1000 < currentDate.getTime()) {
+        setIsLoading(true)
           const response = await axios.get('https://gmhotel.ir/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
-          
+          setIsLoading(false)
       }
       return config;
   }, (error) => {
-      return Promise.reject(error);
+    setIsLoading(false)
+      Promise.reject(error);
+    return 
+       
   });
   moment.locale('en');
   const handleInputChange = (index, event) => {

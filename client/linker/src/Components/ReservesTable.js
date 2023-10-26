@@ -3,8 +3,8 @@ import ReservesTableComponent from './ReservesTableComponent';
 import axios from "axios"
 import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
-
- 
+import LoadingComp from './LoadingComp';
+ import { notify } from './toast';
 
 
 
@@ -12,19 +12,23 @@ const ReservesTable = () => {
   const history = useHistory();
     const [data,setData] = useState([]);
     const [token,setToken] = useState('')
-    const [expire, setExpire] = useState('')
+    const [expire, setExpire] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
       useEffect(() => {
         refreshToken();
         const fetchData=async()=>{
             try{
+              setIsLoading(true)
                 const response = await axios.get("https://gmhotel.ir/api/getReserves",{
                   headers:{
                     Authorization: `Bearer ${token}`
                   }
                 })
                 setData(response.data)
+                setIsLoading(false)
             }catch(error){
-    
+              setIsLoading(false)
+              notify('خطا در اتصال به شبکه', 'error')
             }
             
             }
@@ -34,13 +38,15 @@ const ReservesTable = () => {
               }, [token]);
               const refreshToken = async () => {
                 try {
+                  setIsLoading(true)
                     const response = await axios.get('https://gmhotel.ir/api/token');
             
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
                     setExpire(decoded.exp);
+                    setIsLoading(false)
                 } catch (error) {
-                  
+                  setIsLoading(false)
                     if (error.response) {
                         history.push("/");
                     }
@@ -64,6 +70,7 @@ const ReservesTable = () => {
               });
   return (
     <div >
+      {isLoading && <LoadingComp />}
     <h3 style={{direction:"rtl"}}>لینک های ارسال شده</h3>
       {data.length > 0 ? <ReservesTableComponent data={data} /> : <p>Loading...</p>}
     </div>

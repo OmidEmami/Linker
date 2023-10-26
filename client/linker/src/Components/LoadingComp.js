@@ -9,7 +9,7 @@ const LoadingComp = () =>{
             <div className={stylesNd.loadingContainer}>
           <div className={stylesNd.heart}>
             <span role="img" aria-label="Heartbeat">
-              <img src={Ghasr} width="200px" height="auto" />
+              <img alt="waiting" src={Ghasr} width="200px" height="auto" />
             </span>
           </div>
           <p>در حال بارگذاری</p>
