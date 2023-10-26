@@ -29,7 +29,7 @@ export default function Dashboard() {
     useEffect(() => {
        refreshToken();
       
-  }, []);
+  }, [token]);
 
   const refreshToken = async () => {
       try {
