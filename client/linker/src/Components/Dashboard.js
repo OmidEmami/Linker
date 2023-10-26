@@ -56,7 +56,7 @@ export default function Dashboard() {
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-          setUserName(decoded.name)
+          
           
       }
       return config;
