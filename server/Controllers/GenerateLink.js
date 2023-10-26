@@ -21,7 +21,7 @@ try{
                     Arrival_Date_Eng:req.body.CheckIn,
                     Departure_Date_Eng :req.body.CheckOut,
                     Adult:"2",
-                    Children:"2",
+                    Children:"0",
                     RoomType_ID:req.body.Room[i].value,                                
                     RoomType_Name:req.body.Room[i].roomname,
                     Rate:req.body.Room[i].price,
@@ -55,7 +55,7 @@ try{
                   }
                 }catch(error){
                     res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
-                    
+                    console.log(error)
                     return;
                 }
          

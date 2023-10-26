@@ -5,9 +5,9 @@ export const refreshToken = async(req, res) => {
     try {
         
         const refreshToken = req.cookies.refreshToken;
-        console.log(refreshToken)
+        
         if(!refreshToken) return res.sendStatus(401);
-        console.log("omid2")
+        
         const user = await AdminUsers.findAll({
             where:{
                 RefreshToken: refreshToken
