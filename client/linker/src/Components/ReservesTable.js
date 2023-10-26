@@ -17,7 +17,7 @@ const ReservesTable = () => {
         refreshToken();
         const fetchData=async()=>{
             try{
-                const response = await axios.get("http://localhost:3001/api/getReserves",{
+                const response = await axios.get("https://gmhotel.ir/api/getReserves",{
                   headers:{
                     Authorization: `Bearer ${token}`
                   }
@@ -34,7 +34,7 @@ const ReservesTable = () => {
               }, [token]);
               const refreshToken = async () => {
                 try {
-                    const response = await axios.get('http://localhost:3001/api/token');
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     console.log(response)
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -52,7 +52,7 @@ const ReservesTable = () => {
               axiosJWT.interceptors.request.use(async (config) => {
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
-                    const response = await axios.get('http://localhost:3001/api/token');
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
