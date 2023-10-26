@@ -66,7 +66,7 @@ export const toPaynd = async(req,res)=>{
         const omid =await farazSendPattern( patternCode, "+983000505", findPay.ClientPhone, {link:"https://gmhotel.ir/pdf/"+findPay.ReserveId, reserve:findPay.ReserveId });
        
       }catch(error){
-        console.log(error) 
+       
         }
         
         const findReserveRequests = await Reserves.findAll({

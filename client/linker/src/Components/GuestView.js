@@ -14,6 +14,7 @@ export default function GuestView() {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
+      width:"80%"
     },
   };      
     const [initialPopup, setInitialPopup] = useState(false)
@@ -94,6 +95,7 @@ export default function GuestView() {
         onRequestClose={()=>setInitialPopup(false)}
         style={customStyles}
         contentLabel="Example Modal"
+        
       >
         <div style={{direction:"rtl"}}>
         <h4>لطفا شرایط رزرو و اقامت در هتل قصرمنشی را مطالعه  کنید، بعد از موافقت با قوانین به درگاه پرداخت منتقل می شوید</h4>
@@ -112,8 +114,9 @@ export default function GuestView() {
       </Modal>
     <div style={{display:"flex",flexDirection:"column"}}>
       {isLoading && <LoadingComp />}
+      
       <table style={{direction:"rtl", borderCollapse: 'collapse',
-    border: '1px solid #ddd',}}>
+    border: '1px solid #ddd',margin:"1rem"}}>
         <tr>
           <th style={{backgroundColor: '#f2f2f2',
     padding: '8px',
@@ -127,18 +130,7 @@ export default function GuestView() {
     padding: '8px',
     textAlign: 'left',
     border: '1px solid #ddd'}}>مدت اقامت</th>
-          <th style={{backgroundColor: '#f2f2f2',
-    padding: '8px',
-    textAlign: 'left',
-    border: '1px solid #ddd'}}>نام مهمان اصلی</th>
-          <th style={{backgroundColor: '#f2f2f2',
-    padding: '8px',
-    textAlign: 'left',
-    border: '1px solid #ddd'}}>تاریخ ورود</th>
-          <th style={{backgroundColor: '#f2f2f2',
-    padding: '8px',
-    textAlign: 'left',
-    border: '1px solid #ddd'}}>تاریخ خروج</th>
+     
           
         </tr>
         {payData.length > 0  && payData.map((val, key) => {
@@ -152,19 +144,19 @@ export default function GuestView() {
     border: '1px solid #ddd'}}>{val.Price}</td>
               <td style={{ padding: '8px',
     border: '1px solid #ddd'}}>{val.AccoCount}</td>
-              <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{val.FullName}</td>
-              <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{moment.from(val.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
-              <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{moment.from(val.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
               
               
               
             </tr>
           )
         })}
-        <h4>جمع کل : {totalPrice}</h4>
+        {payData.length !== 0 && <div style={{margin:"1rem"}}>
+        <h4>نام مهمان اصلی : {payData[0].FullName}</h4>
+        <h4>تاریخ ورود : {moment.from(payData[0].CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</h4>
+        <h4>تاریخ خروج : {moment.from(payData[0].CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</h4>
+        </div>}
+        
+        <h4 style={{margin:"1rem"}}>جمع کل : {totalPrice}</h4>
       </table>
       <button onClick={showRules}>مطالعه شرایط و پرداخت</button>
     </div></>

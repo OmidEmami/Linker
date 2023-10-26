@@ -37,7 +37,7 @@ const Login =()=>{
             setAccessType(decoded.accessType);
             history.push("/home")
         } catch (error) {
-            console.log(error)
+           
             if (error.response) {
                 history.push("/");
             }

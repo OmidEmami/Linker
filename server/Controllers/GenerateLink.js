@@ -55,7 +55,7 @@ try{
                   }
                 }catch(error){
                     res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
-                    console.log(error)
+               
                     return;
                 }
          
@@ -76,7 +76,9 @@ try{
               const smsName = req.body.Name
               const smsPhone = req.body.Phone
               await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
-             }catch(error){console.log(error)}
+             }catch(error){
+
+             }
               res.json(tarianaResponse)
             //   res.json("ok")  
             
@@ -84,7 +86,7 @@ try{
             
             catch(error){
                 res.status(500).json({ error: 'An error occurred while making the request.' , error2 : error});
-                console.log(error)
+             
                 return;
             }
             
@@ -133,7 +135,7 @@ try{
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {
-                  console.error('Error in scheduled task:', error);
+      
                 }
               });
             }else if(req.body.TimeValue === "2"){
@@ -174,7 +176,7 @@ try{
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {
-                  console.error('Error in scheduled task:', error);
+                 
                 }
               });
             }else if(req.body.TimeValue === "3"){
@@ -215,7 +217,7 @@ try{
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {
-                  console.error('Error in scheduled task:', error);
+                 
                 }
               });
             }

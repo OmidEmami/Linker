@@ -38,7 +38,7 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
         } catch (error) {
-            console.log(error)
+          
             if (error.response) {
                 history.push("/");
             }

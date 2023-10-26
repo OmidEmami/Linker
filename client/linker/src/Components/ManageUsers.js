@@ -32,7 +32,7 @@ function ManageUsers() {
           isGetData(true);
           setIsLoading(false);
         } catch (error) {
-          console.log(error);
+         
           setIsLoading(false);
         }
       }
@@ -41,12 +41,12 @@ function ManageUsers() {
     const refreshToken = async () => {
       try {
           const response = await axios.get('https://gmhotel.ir/api/token');
-          console.log(response)
+          
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-          
+          setExpire(decoded.exp);
       } catch (error) {
-          console.log(error)
+        
           if (error.response) {
               history.push("/");
           }
@@ -62,7 +62,7 @@ function ManageUsers() {
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
-       
+          setExpire(decoded.exp);
       }
       return config;
   }, (error) => {

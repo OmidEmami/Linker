@@ -20,7 +20,7 @@ const CheckOut = () =>{
     const authority = queryParams.Authority;
     const status = queryParams.Status;
     useEffect(() => {
-      console.log(authority)
+     
         const fetchData=async()=>{
     
     try{
@@ -36,7 +36,7 @@ const CheckOut = () =>{
         
         
         }catch(error){
-            console.log(error)
+          
        setIsLoading(false)
        notify( "خطا", "error")
     }

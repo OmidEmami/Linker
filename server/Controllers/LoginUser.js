@@ -39,13 +39,12 @@ export const loginUser = async(req,res) =>{
             maxAge: 24 * 60 * 60 * 1000
         });
         
-      console.log("ta inja 1")
+     
         res.json({ accessToken });
         
     
     }catch(error){
         res.status(404).json({msg:"Email not found"});
-        console.log("ta inja 2")
-        console.log(error)
+    
     }
 }

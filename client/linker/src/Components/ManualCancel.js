@@ -23,8 +23,9 @@ const ManualCancel =()=> {
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setUserName(decoded.name)
+          setExpire(decoded.exp);
       } catch (error) {
-          console.log(error)
+        
           if (error.response) {
               history.push("/");
           }
@@ -41,6 +42,7 @@ const ManualCancel =()=> {
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setUserName(decoded.name)
+          setExpire(decoded.exp);
       }
       return config;
   }, (error) => {

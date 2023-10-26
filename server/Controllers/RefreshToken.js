@@ -22,11 +22,11 @@ export const refreshToken = async(req, res) => {
             const phoneNumber = user[0].Phone;
             const accessType = user[0].AccessType;
             const accessToken = jwt.sign({userId, name, email,phoneNumber, accessType}, process.env.ACCESS_TOKEN_SECRET,{
-                expiresIn: '15s'
+                expiresIn: '1d'
             });
             res.json({ accessToken });
         });
     } catch (error) {
-        console.log(error);
+        res.sendStatus(403);
     }
 }
