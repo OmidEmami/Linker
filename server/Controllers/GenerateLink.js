@@ -76,7 +76,8 @@ try{
               const smsName = req.body.Name
               const smsPhone = req.body.Phone
               await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
-             }catch(error){
+              await farazSendPattern( patternCodeToOperator, "+983000505", "09012222347", { name :smsName, phone :smsPhone, reserve :ReserveId.toString() });
+            }catch(error){
 
              }
               res.json(tarianaResponse)
@@ -133,6 +134,7 @@ try{
               if(smsConf === true){
               await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09012222347" , { reserveId: ReserveId.toString() });  
             }
                 } catch (error) {
       
@@ -174,6 +176,7 @@ try{
               if(smsConf2 === true){
               await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09012222347" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {
                  
@@ -214,6 +217,7 @@ try{
               }
               if(smsConf3 = true){
               await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09012222347" , { reserveId: ReserveId.toString() });
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {

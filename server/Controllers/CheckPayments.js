@@ -106,7 +106,8 @@ export const toPaynd = async(req,res)=>{
           }
           const patternCodeToOperator = "y606cvhv1bx07g9";
         await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { reserve: findPay.ReserveId});
-        }
+        await farazSendPattern( patternCodeToOperator, "+983000505", "09012222347", { reserve: findPay.ReserveId});
+      }
         else{
           res.status(404).json({ error: 'An error occurred while making the request.' });
         }
