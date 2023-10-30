@@ -31,7 +31,7 @@ import LoadingComp from "./LoadingComp";
         
         try {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
            
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -55,7 +55,7 @@ import LoadingComp from "./LoadingComp";
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
