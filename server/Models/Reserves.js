@@ -43,6 +43,9 @@ const Reserves = db.define('Reserves',{
     },
     LoggedUser:{
         type: DataTypes.TEXT
+    },
+    Percent:{
+        type: DataTypes.TEXT
     }
     
     

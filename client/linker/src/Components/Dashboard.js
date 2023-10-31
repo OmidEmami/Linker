@@ -16,8 +16,8 @@ export default function Dashboard() {
   const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [allDates, setAllDates] = useState([]);
-  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'' }]);
-  const [roomCount , setRoomCount] = useState([{roomType: '', count : ''}]);
+  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'', percent : ''}]);
+  // const [roomCount , setRoomCount] = useState([{roomType: '', count : ''}]);
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState();
   
@@ -35,7 +35,7 @@ export default function Dashboard() {
   const refreshToken = async () => {
       try {
         setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
+          const response = await axios.get('https://gmhotel.ir/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
       if (expire * 1000 < currentDate.getTime()) {
         setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
+          const response = await axios.get('https://gmhotel.ir/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -140,13 +140,13 @@ export default function Dashboard() {
   };
   const generateLink = async(e)=>{
     e.preventDefault();
-   console.log(inputFields)
+    
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
+      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -156,7 +156,7 @@ export default function Dashboard() {
         TimeValue : timeValue,
         User : userName
       },{
-        headers:{
+          headers:{
           Authorization: `Bearer ${token}`
         }
       })
@@ -165,11 +165,11 @@ export default function Dashboard() {
     // }
       if(response.data.length !== 0){
         setIsLoading(false)
-      notify( "لینک ارسال شد", "success")
+        notify( "لینک ارسال شد", "success")
       
     }else{
-      setIsLoading(false)
-      notify( "خطا", "error")
+        setIsLoading(false)
+        notify( "خطا", "error")
       
     }
     }
@@ -180,6 +180,11 @@ export default function Dashboard() {
     }
         
   }
+      const handlePercentChange = (index, e) =>{
+        const values = [...inputFields];
+        values[index].percent = e.target.value;
+        setInputFields(values);
+    }
   return (
     <>
     {isLoading && <LoadingComp />}
@@ -236,14 +241,31 @@ export default function Dashboard() {
                                     </select>
           <input placeholder='قیمت هر شب به ریال' required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
           <label>اتاق {index + 1}</label>
-          {roomCount.map((value,index)=>(
+          <input placeholder='درصد پرداخت' type='number' value={inputField.percent} onChange={(e)=> handlePercentChange(index,e)}  />
+          {/* {roomCount.map((value,index)=>(
           
             <>
-              {/* eslint-disable-next-line no-mixed-operators */}
-            <input type='number' placeholder='تعداد اتاق' min="1" max={inputField.value === "2" && "2" || inputField.value  === "5" && "6"} />
+              
+            <input type='number' placeholder='تعداد اتاق' min="1" max={
+            inputField.value === "2" && "2" || 
+            inputField.value  === "5" && "6" || 
+            inputField.value === "24" && "2" || 
+            inputField.value === "7" && "1" ||
+            inputField.value === "21" && "1" ||
+            inputField.value === "19" && "1" ||
+            inputField.value === "18" && "1" ||
+            inputField.value === "22" && "1" ||
+            inputField.value === "25" && "1" ||
+            inputField.value === "20026" && "1" ||
+            inputField.value === "20" && "1" ||
+            inputField.value === "10026" && "1"
+            
+            } 
+            
+            />
             <label>تعداد اتاق</label>
             </>
-          ))}
+          ))} */}
           
           <button onClick={() => handleRemoveInput(index)}>حذف</button>
         </div>
@@ -256,7 +278,7 @@ export default function Dashboard() {
                                         <option value="1">1 ساعت</option>
                                         <option value="2">12 ساعت</option>
                                         <option value="3">24 ساعت</option>
-                                    </select>
+                       </select>
          
        </div>
       <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>

@@ -10,6 +10,7 @@ export const stLinkGenerator = async(req,res)=>{
         try{
             
             for(let i = 0 ; i < req.body.Room.length ; i++){
+              
 
 try{
                const responseTariana = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/NewBooking',{
@@ -44,7 +45,8 @@ try{
             AccoCount : req.body.AccoCount,
             Tariana : responseTariana.data.d.slice(26,32),
             RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
-            LoggedUser : req.body.User
+            LoggedUser : req.body.User,
+            Percent : req.body.Room[i].percent
                 })
            
                   }catch(error){
