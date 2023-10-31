@@ -10,13 +10,14 @@ import { useHistory} from "react-router-dom";
 import LoadingComp from "./LoadingComp"
 import jwt_decode from "jwt-decode";
 export default function Dashboard() {
+  const [payPercent, setPayPercent] = useState('')
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
   const date = new DateObject({ calendar: persian, locale: persian_fa });
   const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [allDates, setAllDates] = useState([]);
-  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'', percent : ''}]);
+  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:''}]);
   // const [roomCount , setRoomCount] = useState([{roomType: '', count : ''}]);
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState();
@@ -41,7 +42,7 @@ export default function Dashboard() {
           const decoded = jwt_decode(response.data.accessToken);
           setUserName(decoded.name)
           setExpire(decoded.exp);
-         
+
          setIsLoading(false)
       } catch (error) {
         setIsLoading(false)
@@ -139,6 +140,7 @@ export default function Dashboard() {
     setInputFields(values);
   };
   const generateLink = async(e)=>{
+    // console.log(payPercent)
     e.preventDefault();
     
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
@@ -154,7 +156,8 @@ export default function Dashboard() {
         Room : inputFields,
         AccoCount : accoCount,
         TimeValue : timeValue,
-        User : userName
+        User : userName,
+        Percent : payPercent
       },{
           headers:{
           Authorization: `Bearer ${token}`
@@ -180,11 +183,11 @@ export default function Dashboard() {
     }
         
   }
-      const handlePercentChange = (index, e) =>{
-        const values = [...inputFields];
-        values[index].percent = e.target.value;
-        setInputFields(values);
-    }
+    //   const handlePercentChange = (index, e) =>{
+    //     const values = [...inputFields];
+    //     values[index].percent = e.target.value;
+    //     setInputFields(values);
+    // }
   return (
     <>
     {isLoading && <LoadingComp />}
@@ -241,7 +244,7 @@ export default function Dashboard() {
                                     </select>
           <input placeholder='قیمت هر شب به ریال' required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
           <label>اتاق {index + 1}</label>
-          <input placeholder='درصد پرداخت' type='number' value={inputField.percent} onChange={(e)=> handlePercentChange(index,e)}  />
+          
           {/* {roomCount.map((value,index)=>(
           
             <>
@@ -279,7 +282,7 @@ export default function Dashboard() {
                                         <option value="2">12 ساعت</option>
                                         <option value="3">24 ساعت</option>
                        </select>
-         
+                       <input placeholder='درصد پرداخت' type='number' value={payPercent} onChange={(e)=> setPayPercent(e.target.value)}  />
        </div>
       <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
       <button onClick={handleAddInput}>اضافه کردن اتاق</button>

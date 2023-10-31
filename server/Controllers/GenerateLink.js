@@ -46,7 +46,7 @@ try{
             Tariana : responseTariana.data.d.slice(26,32),
             RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
             LoggedUser : req.body.User,
-            Percent : req.body.Room[i].percent
+            Percent : req.body.Percent
                 })
            
                   }catch(error){
