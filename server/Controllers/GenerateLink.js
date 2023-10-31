@@ -4,7 +4,7 @@ import schedule from "node-schedule";
 import { farazSendPattern } from "@aspianet/faraz-sms";
 import moment from 'jalali-moment' ;
 export const stLinkGenerator = async(req,res)=>{
-  
+  console.log(req.body.Percent)
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
     var tarianaResponse = []
         try{

@@ -36,7 +36,7 @@ export default function Dashboard() {
   const refreshToken = async () => {
       try {
         setIsLoading(true)
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -59,7 +59,7 @@ export default function Dashboard() {
 
       if (expire * 1000 < currentDate.getTime()) {
         setIsLoading(true)
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -141,6 +141,12 @@ export default function Dashboard() {
   };
   const generateLink = async(e)=>{
     // console.log(payPercent)
+    var percentNew;
+    if(payPercent === ''){
+      percentNew = "100"
+    }else{
+      percentNew = payPercent
+    }
     e.preventDefault();
     
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
@@ -148,7 +154,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -157,7 +163,7 @@ export default function Dashboard() {
         AccoCount : accoCount,
         TimeValue : timeValue,
         User : userName,
-        Percent : payPercent
+        Percent : percentNew
       },{
           headers:{
           Authorization: `Bearer ${token}`
