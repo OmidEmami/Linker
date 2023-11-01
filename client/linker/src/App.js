@@ -8,11 +8,15 @@ import MainDashboard from "./Components/MainDashboard";
 import PdfGenerator from "./Components/PdfGenerator";
 import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 import TestPdfSecond from "./Components/TestPdfSecond";
+import TestSlider from "./Components/TestSlider";
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+    <Route exact path="/testslider">
+    <TestSlider />
+      </Route>
       <Route exact path="/testpdfomid">
     <TestPdfSecond />
       </Route>
