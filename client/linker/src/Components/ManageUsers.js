@@ -23,7 +23,7 @@ function ManageUsers() {
         try {
           setIsLoading(true);
 
-          const response = await axios.get("http://localhost:3001/api/getusermanager", {
+          const response = await axios.get("https://gmhotel.ir/api/getusermanager", {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -40,15 +40,15 @@ function ManageUsers() {
     }, [token]);
     const refreshToken = async () => {
       try {
-        setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
+        
+          const response = await axios.get('https://gmhotel.ir/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
-          setIsLoading(false)
+       
       } catch (error) {
-        setIsLoading(false)
+        
           if (error.response) {
               history.push("/");
           }
@@ -60,8 +60,8 @@ function ManageUsers() {
   axiosJWT.interceptors.request.use(async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
+        
+          const response = await axios.get('https://gmhotel.ir/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -69,7 +69,7 @@ function ManageUsers() {
       }
       return config;
   }, (error) => {
-      setIsLoading(false)
+      
        Promise.reject(error)
        return
   });
@@ -82,7 +82,7 @@ function ManageUsers() {
     const saveData = async()=>{
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/changeaccesstype",{
+        const response = await axios.post("https://gmhotel.ir/api/changeaccesstype",{
           data : data
         },{
           headers:{

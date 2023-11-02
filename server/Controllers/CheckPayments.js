@@ -3,6 +3,7 @@ import Payments from "../Models/Payments.js"
 import axios from "axios";
 import moment from 'jalali-moment' ;
 import request from "request"
+import schedule from "node-schedule"
 import { farazSendPattern } from "@aspianet/faraz-sms";
 export const toPaySt = async(req,res)=>{
   try{
@@ -204,3 +205,4 @@ export const manualcancel = async(req,res) =>{
     res.status(404)
   }
 }
+

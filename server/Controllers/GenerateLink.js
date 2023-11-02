@@ -198,7 +198,7 @@ try{
                       }
                   })
                   if(responseFinal.length !== 0){
-                    smsConf3 = true
+                    smsConf3= true
                       const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
                       PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
                       BookingNumber : tarianaResponse[i]
@@ -217,10 +217,10 @@ try{
                   
                   }
               }
-              if(smsConf3 = true){
+              if(smsConf3 === true){
               await farazSendPattern( cancelpatternGuest, "+983000505", req.body.Phone , { reserveId: ReserveId.toString() });
-              await farazSendPattern( cancelPatternUser, "+983000505", "09012222347" , { reserveId: ReserveId.toString() });
               await farazSendPattern( cancelPatternUser, "+983000505", "09387829919" , { reserveId: ReserveId.toString() });
+              await farazSendPattern( cancelPatternUser, "+983000505", "09012222347" , { reserveId: ReserveId.toString() });
             }
                 } catch (error) {
                  

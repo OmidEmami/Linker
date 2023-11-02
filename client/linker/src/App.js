@@ -10,11 +10,13 @@ import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 import TestMove from "./Components/TestMove";
 
 
+
 function App() {
   return (
    <>
    <BrowserRouter>
     <Switch>
+    
     <Route exact path="/testmove">
         <TestMove />
       </Route>

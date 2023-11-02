@@ -14,15 +14,15 @@ const PaymentTable = () => {
 
               const refreshToken = async () => {
                 try {
-                  setIsLoading(true)
-                    const response = await axios.get('http://localhost:3001/api/token');
+                  
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
                     setExpire(decoded.exp);
-                    setIsLoading(false)
+                    
                 } catch (error) {
-                  setIsLoading(false)
+                  
                     if (error.response) {
                         history.push("/");
                     }
@@ -34,8 +34,8 @@ const PaymentTable = () => {
               axiosJWT.interceptors.request.use(async (config) => {
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
-                  setIsLoading(true)
-                    const response = await axios.get('http://localhost:3001/api/token');
+                  
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -43,22 +43,25 @@ const PaymentTable = () => {
                 }
                 return config;
               }, (error) => {
-                setIsLoading(false)
+                
                 Promise.reject(error);
                 return 
               });
       useEffect(() => {
-      refreshToken()
+      refreshToken();
         const fetchData=async()=>{
+          setIsLoading(true)
             try{
-                const response = await axios.get("http://localhost:3001/api/getpayments",{
+                const response = await axios.get("https://gmhotel.ir/api/getpayments",{
                   headers:{
                     Authorization: `Bearer ${token}`
                   }
                 })
                 setData(response.data)
+                setIsLoading(false)
             }catch(error){
               notify('خطا در اتصال به شبکه', 'error')
+              setIsLoading(false)
             }
             
             }
