@@ -12,6 +12,7 @@ import ManageUsers from "./ManageUsers";
 import Logo from "../assests/logoblue.png";
 import LogOutSystem from "./Login&Signup/LogOutSystem";
 import LoadingComp from "./LoadingComp";
+import MeCaLinker from "./Send Menu & Catalog links/MeCaLinker";
  const MainDashboard = () =>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -99,6 +100,7 @@ import LoadingComp from "./LoadingComp";
                 <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
+                <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ و منو</li>
                 {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
                 <li value={6} onClick={(e)=>showItem(e.target.value)}>خروج از سیستم</li>
                 
@@ -119,6 +121,9 @@ import LoadingComp from "./LoadingComp";
           : null}
           {item === 5 ?
          <div className={stylesNd.MainContent}><ManageUsers /></div>
+          : null}
+          {item === 7 ?
+         <div className={stylesNd.MainContent}><MeCaLinker /></div>
           : null}
           {item === 6 ?
          <div className={stylesNd.MainContent}><LogOutSystem /></div>
