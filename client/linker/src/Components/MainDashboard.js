@@ -13,6 +13,7 @@ import Logo from "../assests/logoblue.png";
 import LogOutSystem from "./Login&Signup/LogOutSystem";
 import LoadingComp from "./LoadingComp";
 import MeCaLinker from "./Send Menu & Catalog links/MeCaLinker";
+import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard";
  const MainDashboard = () =>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -123,7 +124,7 @@ import MeCaLinker from "./Send Menu & Catalog links/MeCaLinker";
          <div className={stylesNd.MainContent}><ManageUsers /></div>
           : null}
           {item === 7 ?
-         <div className={stylesNd.MainContent}><MeCaLinker /></div>
+         <div className={stylesNd.MainContent}><MeCaLinkerDashboard /></div>
           : null}
           {item === 6 ?
          <div className={stylesNd.MainContent}><LogOutSystem /></div>
