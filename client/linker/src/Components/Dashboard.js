@@ -4,7 +4,7 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
-import axios, { all } from 'axios';
+import axios from 'axios';
 import { notify } from "./toast";
 import { useHistory} from "react-router-dom";
 import LoadingComp from "./LoadingComp"
