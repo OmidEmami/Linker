@@ -85,7 +85,7 @@ export const toPaynd = async(req,res)=>{
       <postingPaymnets xmlns="http://tempuri.org/">
       <bookingNumber>${findReserveRequests[i].Tariana}</bookingNumber>
       <postingCode>121212</postingCode>
-      <price>${(findReserveRequests[i].Price * findReserveRequests[i].AccoCount)}</price>
+      <price>${((findReserveRequests[i].Price * findReserveRequests[i].AccoCount) * findReserveRequests[i].Percent / 100)}</price>
     </postingPaymnets>
       </soap:Body>
   </soap:Envelope>`, {
