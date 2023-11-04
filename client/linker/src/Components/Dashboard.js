@@ -36,7 +36,7 @@ export default function Dashboard() {
   const refreshToken = async () => {
       try {
         setIsLoading(true)
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -59,7 +59,7 @@ export default function Dashboard() {
 
       if (expire * 1000 < currentDate.getTime()) {
         setIsLoading(true)
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -155,7 +155,7 @@ export default function Dashboard() {
     setIsLoading(true)
     
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,

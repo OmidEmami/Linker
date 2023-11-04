@@ -9,7 +9,7 @@ import styles from "./MyDocument.module.css"
 const MyDocument = ({ data, price }) => {
   
   moment.locale('fa');
-
+  const notPaid = (data[0].Price * data[0].AccoCount) - (price) 
     return (      
 <div  className={styles.mainContainer}>
   <img src={logo} alt='logo' style={{width:"10%"}} />
@@ -41,6 +41,7 @@ const MyDocument = ({ data, price }) => {
       </tbody>
     </table>
     <p>کل مبلغ پرداخت شده : {price} ریال</p>
+    <p>باقی مانده : {notPaid} ریال ({data[0].Percent} درصد از کل مبلغ پرداخت شده است.)</p>
     <div style={{width:"80%", direction:"rtl"}}>
       <h4> شرایط انصراف: </h4>
     <p style={{direction:"rtl", textAlign: "justify"}}>
