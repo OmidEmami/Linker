@@ -7,6 +7,7 @@ export default function PdfGenerator() {
     const [reserveData, setReserveData] = useState("false")
     const { param } = useParams();
     const [totalPrice, setTotalPrice] = useState(0);
+    const [showPdf, setShowPdf] = useState(false)
     // const generatePDF = async() => {
     //   const input = document.getElementById('componentToPDF'); // Replace with the ID of your component
     //   await document.fonts.ready;
@@ -23,15 +24,28 @@ export default function PdfGenerator() {
         const response = await axios.post("http://localhost:3001/api/findReserveForPdf", {
           ReserveKey : param
         })
-        for(let i = 0 ; i < response.data.length ; i++){
-          // setTotalPrice(prevstate => (prevstate + parseInt(response.data[i].Price * response.data[i].AccoCount)))
-          setTotalPrice((prevSum) => prevSum + (parseInt(response.data[i].Price) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent)) / 100) )
+        if(response.data.length === 0){
+          setShowPdf(false)
+
+        }else{
+          for(let i = 0 ; i < response.data.length ; i++){
+            var ExtraService;
+              if(response.data[i].ExtraService === null){
+                ExtraService = "0"
+              }else{
+                ExtraService = response.data[i].ExtraService
+              }
+            // setTotalPrice(prevstate => (prevstate + parseInt(response.data[i].Price * response.data[i].AccoCount)))
+            setTotalPrice((prevSum) => prevSum + ((parseInt(response.data[i].Price)+ parseInt(ExtraService)) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent)) / 100) )
+          }
+          setReserveData(response.data)
+          setShowPdf(true)
         }
-        setReserveData(response.data)
+        
         
        
         }catch(error){
-          
+          setShowPdf(false)
         }
         
       }
@@ -48,6 +62,8 @@ export default function PdfGenerator() {
         {reserveData === "false" ? null : 
         <MyDocument data={reserveData} price={totalPrice} id="componentToPDF" />
      }
+     {showPdf === false && <h1 style={{display:"flex",justifyContent: "center",
+                                    alignItems: "center"}}>در حال بارگذاری ووچر</h1>}
      {/* <button onClick={generatePDF}>pdf</button> */}
       
     </div>

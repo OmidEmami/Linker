@@ -40,10 +40,21 @@ export default function GuestView() {
             notify( "خطا", "error")
           }else if(response.data.length > 0){
             setPayData(response.data)
+            var nimTotal = 0;
             for(let i = 0 ; i < response.data.length ; i++){
-              
-                setTotalPrice((prevSum) => prevSum + (parseInt(response.data[i].Price) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent)) / 100) )
+              var ExtraService;
+              if(response.data[i].ExtraService === null){
+                ExtraService = "0"
+              }else{
+                ExtraService = response.data[i].ExtraService
+              }
+              nimTotal = nimTotal
+              + (parseInt(response.data[i].Price) + parseInt(ExtraService)) * parseInt(response.data[i].AccoCount)
+                // setTotalPrice((prevSum) => prevSum 
+                // + (((parseInt(response.data[i].Price) + parseInt(ExtraService)) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent))) / 100) )
             }
+            console.log(nimTotal)
+            setTotalPrice((nimTotal * (parseInt(response.data[0].Percent))) / 100)
             setIsLoading(false)
           }
         }catch(error){
@@ -127,10 +138,18 @@ export default function GuestView() {
     padding: '8px',
     textAlign: 'left',
     border: '1px solid #ddd'}}>قیمت نهایی</th>
+     <th  style={{backgroundColor: '#f2f2f2',
+    padding: '8px',
+    textAlign: 'left',
+    border: '1px solid #ddd'}}>قیمت سرویس اضافه</th>
           <th style={{backgroundColor: '#f2f2f2',
     padding: '8px',
     textAlign: 'left',
     border: '1px solid #ddd'}}>مدت اقامت</th>
+     <th style={{backgroundColor: '#f2f2f2',
+    padding: '8px',
+    textAlign: 'left',
+    border: '1px solid #ddd'}}>درصد پرداخت</th>
      
           
         </tr>
@@ -143,8 +162,12 @@ export default function GuestView() {
     border: '1px solid #ddd'}}>{val.RoomName}</td>
               <td style={{ padding: '8px',
     border: '1px solid #ddd'}}>{val.Price}</td>
+    <td style={{ padding: '8px',
+    border: '1px solid #ddd'}}>{val.ExtraService === null ? "0" : val.ExtraService}</td>
               <td style={{ padding: '8px',
     border: '1px solid #ddd'}}>{val.AccoCount}</td>
+    <td style={{ padding: '8px',
+    border: '1px solid #ddd'}}>{val.Percent}</td>
               
               
               

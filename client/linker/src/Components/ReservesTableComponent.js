@@ -1,10 +1,23 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import { parseISO, isDate, isValid } from 'date-fns';
 import moment from 'jalali-moment'
+import Modal from 'react-modal';
 const ReservesTableComponent = ({ data }) => {
+  const [showPopUp, setShowPopUp] = useState(false)
+  const [popupData, setPopUpData] = useState('')
     moment.locale('fa');
-
+    const customStyles = {
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        width:"60%"
+      },
+    };      
     const columns = React.useMemo(
         () => [
           {
@@ -75,10 +88,7 @@ const ReservesTableComponent = ({ data }) => {
             Header: 'Reserve id',
             accessor: 'ReserveId',
           },
-          {
-            Header: 'User',
-            accessor: 'LoggedUser',
-          },
+         
         ],
         []
       );
@@ -107,9 +117,45 @@ const ReservesTableComponent = ({ data }) => {
     useSortBy,
     usePagination
   );
-
+const setDataForPopUp = (row) =>{
+  setPopUpData(row.original)
+  setShowPopUp(true)
+}
   return (
     <div style={{ textAlign: 'center' }}>
+      <Modal
+        isOpen={showPopUp}
+        //onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setShowPopUp(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+        
+      >
+        <div style={{direction:"rtl",display:"flex",flexDirection:"column",justifyContent: "center",
+          alignItems: "center"}}>
+           <h3> اطلاعات بیشتر</h3>
+        <table style={{ borderCollapse: 'collapse', width: '50%' }}>
+          
+      <thead>
+        <tr style={{ borderBottom: '1px solid black' }}>
+          <th style={{ border: '1px solid black', padding: '8px' }}>درصد پرداخت</th>
+          <th style={{ border: '1px solid black', padding: '8px' }}>قیمت سرویس اضافه</th>
+          <th style={{ border: '1px solid black', padding: '8px' }}>ثبت کننده</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr key={popupData.id} style={{ borderBottom: '1px solid black' }}>
+            <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.Percent}</td>
+            <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.ExtraService === null ? <p>ندارد</p> : popupData.ExtraService}</td>
+            <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.LoggedUser}</td>
+          </tr>
+        
+      </tbody>
+    </table>
+      </div>
+   
+      </Modal>
       <table {...getTableProps()} style={{ width: '99%', borderCollapse: 'collapse',marginLeft:"5px" }}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -123,13 +169,13 @@ const ReservesTableComponent = ({ data }) => {
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
+        <tbody  {...getTableBodyProps()}>
           {page.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} key={row.id}>
+              <tr style={{ cursor: 'pointer' }} onClick={()=>setDataForPopUp(row)} {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} key={cell.column.id} style={{ border: '1px solid black', padding: '2px' }}>
+                  <td  {...cell.getCellProps()} key={cell.column.id} style={{ border: '1px solid black', padding: '2px' }}>
                     {cell.render('Cell')}
                   </td>
                 ))}

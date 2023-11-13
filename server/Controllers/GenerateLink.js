@@ -4,7 +4,7 @@ import schedule from "node-schedule";
 import { farazSendPattern } from "@aspianet/faraz-sms";
 import moment from 'jalali-moment' ;
 export const stLinkGenerator = async(req,res)=>{
-  console.log(req.body.Percent)
+  
     const ReserveId = Math.floor(Math.random() * 9000) + 1000
     var tarianaResponse = []
         try{
@@ -32,6 +32,13 @@ try{
                   if(responseTariana.data.d !== "No available room"){
                   tarianaResponse.push(responseTariana.data.d.slice(26,32))
                   try{
+                    var extraService;
+                      if(req.body.Room[i].extraService !== undefined){
+                        extraService = req.body.Room[i].extraService
+                      }else{
+                        extraService = null
+                      }
+                    
                     const response = await Reserves.create({
             FullName : req.body.Name,
             Phone: req.body.Phone,
@@ -46,7 +53,8 @@ try{
             Tariana : responseTariana.data.d.slice(26,32),
             RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
             LoggedUser : req.body.User,
-            Percent : req.body.Percent
+            Percent : req.body.Percent,
+            ExtraService : extraService
                 })
            
                   }catch(error){

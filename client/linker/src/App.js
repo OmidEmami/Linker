@@ -8,6 +8,7 @@ import MainDashboard from "./Components/MainDashboard";
 import PdfGenerator from "./Components/PdfGenerator";
 import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 import TestMove from "./Components/TestMove";
+import ForAmir from "./Components/Send Menu & Catalog links/ForAmir";
 
 
 
@@ -16,7 +17,9 @@ function App() {
    <>
    <BrowserRouter>
     <Switch>
-    
+    <Route exact path="/foramir">
+        <ForAmir />
+      </Route>
     <Route exact path="/testmove">
         <TestMove />
       </Route>

@@ -17,7 +17,7 @@ export default function Dashboard() {
   const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [allDates, setAllDates] = useState([]);
-  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:''}]);
+  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'',extraService:"0"}]);
   // const [roomCount , setRoomCount] = useState([{roomType: '', count : ''}]);
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState();
@@ -148,7 +148,7 @@ export default function Dashboard() {
       percentNew = payPercent
     }
     e.preventDefault();
-    
+    console.log(inputFields)
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const accoCount = allDates.length - 1
@@ -195,6 +195,11 @@ export default function Dashboard() {
     //     values[index].percent = e.target.value;
     //     setInputFields(values);
     // }
+    const handleExtraServiceChange = (index,e) => {
+      const values = [...inputFields];
+      values[index].extraService = e.target.value;
+      setInputFields(values);
+    }
   return (
     <>
     {isLoading && <LoadingComp />}
@@ -249,7 +254,17 @@ export default function Dashboard() {
                                         <option value="20">دلنشین</option>
                                         <option value="10026">کانکت</option>
                                     </select>
+          
           <input placeholder='قیمت هر شب به ریال' required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
+          {inputField.roomname === "صفویه" &&  <input type='number'  value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
+          {inputField.roomname === "قاجار" &&  <input type='number' value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
+          {inputField.roomname === "قیصریه" &&  <input type='number' value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
+          {inputField.roomname === "زندیه" &&  <input type='number' value={inputField.extraService} 
+          onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
+
           <label>اتاق {index + 1}</label>
           
           {/* {roomCount.map((value,index)=>(
