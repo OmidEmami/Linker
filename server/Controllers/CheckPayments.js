@@ -9,7 +9,7 @@ export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
         merchant_id: '63203523-fe22-485f-963d-6ca28477d320',
-        callback_url: 'http://localhost:3000/checkout',
+        callback_url: 'https://gmhotel.ir/checkout',
         amount : req.body.amount,
         description : req.body.description,
         metadata : req.body.metadata
@@ -78,9 +78,12 @@ export const toPaynd = async(req,res)=>{
         })
         if(findReserveRequests !== null){
           for(let i = 0 ; i < findReserveRequests.length ; i++){
-            var ExtraService = 0;
+            
             if(findReserveRequests[i].ExtraService !== null){
-              ExtraService = findReserveRequests[i].ExtraService
+              var ExtraService = findReserveRequests[i].ExtraService
+            }else{
+              var ExtraService = "0"
+             
             }
             const response = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx', 
   `<?xml version="1.0" encoding="utf-8"?>
@@ -89,7 +92,7 @@ export const toPaynd = async(req,res)=>{
       <postingPaymnets xmlns="http://tempuri.org/">
       <bookingNumber>${findReserveRequests[i].Tariana}</bookingNumber>
       <postingCode>121212</postingCode>
-      <price>${(((findReserveRequests[i].Price + ExtraService) * findReserveRequests[i].AccoCount) * findReserveRequests[i].Percent / 100)}</price>
+      <price>${ (((parseInt(findReserveRequests[i].Price) + parseInt(ExtraService)) * parseInt(findReserveRequests[i].AccoCount)) * (parseInt(findReserveRequests[i].Percent) / 100))}</price>
     </postingPaymnets>
       </soap:Body>
   </soap:Envelope>`, {

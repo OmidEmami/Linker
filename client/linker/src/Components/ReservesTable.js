@@ -1,27 +1,29 @@
 import React,{useEffect,useState} from 'react';
 import ReservesTableComponent from './ReservesTableComponent';
 import axios from "axios"
-import jwt_decode from "jwt-decode";
-import { useHistory } from "react-router-dom";
+// import jwt_decode from "jwt-decode";
+// import { useHistory } from "react-router-dom";
 import LoadingComp from './LoadingComp';
- import { notify } from './toast';
+import { notify } from './toast';
+import { useSelector } from "react-redux";
 
 
 
 const ReservesTable = () => {
-  const history = useHistory();
+  // const history = useHistory();
+  const realToken = useSelector((state) => state.tokenReducer.token);
     const [data,setData] = useState([]);
-    const [token,setToken] = useState('')
-    const [expire, setExpire] = useState('');
+    // const [token,setToken] = useState('')
+    // const [expire, setExpire] = useState('');
     const [isLoading, setIsLoading] = useState(false)
       useEffect(() => {
-        refreshToken();
+        // refreshToken();
         const fetchData=async()=>{
             try{
               setIsLoading(true)
-                const response = await axios.get("http://localhost:3001/api/getReserves",{
+                const response = await axios.get("https://gmhotel.ir/api/getReserves",{
                   headers:{
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${realToken.realToken}`
                   }
                 })
                 setData(response.data)
@@ -33,42 +35,42 @@ const ReservesTable = () => {
             }
             
             }
-            if(token !== ''){
+            if(realToken.realToken !== ''){
             fetchData();
             }
-              }, [token]);
-              const refreshToken = async () => {
-                try {
+              }, [realToken.realToken]);
+              // const refreshToken = async () => {
+              //   try {
                   
-                    const response = await axios.get('http://localhost:3001/api/token');
+              //       const response = await axios.get('https://gmhotel.ir/api/token');
             
-                    setToken(response.data.accessToken);
-                    const decoded = jwt_decode(response.data.accessToken);
-                    setExpire(decoded.exp);
+              //       setToken(response.data.accessToken);
+              //       const decoded = jwt_decode(response.data.accessToken);
+              //       setExpire(decoded.exp);
                     
-                } catch (error) {
+              //   } catch (error) {
                   
-                    if (error.response) {
-                        history.push("/");
-                    }
-                }
-              }
+              //       if (error.response) {
+              //           history.push("/");
+              //       }
+              //   }
+              // }
               
-              const axiosJWT = axios.create();
+              // const axiosJWT = axios.create();
               
-              axiosJWT.interceptors.request.use(async (config) => {
-                const currentDate = new Date();
-                if (expire * 1000 < currentDate.getTime()) {
-                    const response = await axios.get('http://localhost:3001/api/token');
-                    config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-                    setToken(response.data.accessToken);
-                    const decoded = jwt_decode(response.data.accessToken);
-                    setExpire(decoded.exp);
-                }
-                return config;
-              }, (error) => {
-                return Promise.reject(error);
-              });
+              // axiosJWT.interceptors.request.use(async (config) => {
+              //   const currentDate = new Date();
+              //   if (expire * 1000 < currentDate.getTime()) {
+              //       const response = await axios.get('https://gmhotel.ir/api/token');
+              //       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+              //       setToken(response.data.accessToken);
+              //       const decoded = jwt_decode(response.data.accessToken);
+              //       setExpire(decoded.exp);
+              //   }
+              //   return config;
+              // }, (error) => {
+              //   return Promise.reject(error);
+              // });
   return (
     <div >
       {isLoading && <LoadingComp />}

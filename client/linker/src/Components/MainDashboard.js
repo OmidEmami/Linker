@@ -14,7 +14,10 @@ import LogOutSystem from "./Login&Signup/LogOutSystem";
 import LoadingComp from "./LoadingComp";
 import MeCaLinker from "./Send Menu & Catalog links/MeCaLinker";
 import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard";
+import { useDispatch } from "react-redux";
+import { addToken } from './action';
  const MainDashboard = () =>{
+    const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -33,15 +36,19 @@ import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard
         
         try {
             setIsLoading(true)
-            const response = await axios.get('http://localhost:3001/api/token');
+            const response = await axios.get('https://gmhotel.ir/api/token');
            
             setToken(response.data.accessToken);
+            
+           
             const decoded = jwt_decode(response.data.accessToken);
             setName(decoded.name);
             setEmail(decoded.email);
             setPhone(decoded.phone)
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
+            const token = {userName : decoded.name, realToken:response.data.accessToken}
+            dispatch(addToken(token));
             setIsLoading(false)
         } catch (error) {
             setIsLoading(false)
@@ -57,7 +64,7 @@ import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('http://localhost:3001/api/token');
+            const response = await axios.get('https://gmhotel.ir/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);

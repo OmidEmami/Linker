@@ -7,7 +7,7 @@ import styles from "./MyDocument.module.css"
 
 
 const MyDocument = ({ data, price }) => {
-  
+  console.log(price)
   moment.locale('fa');
   // const notPaid = (data[0].Price * data[0].AccoCount) - (price) 
  
@@ -49,8 +49,8 @@ const notPaid = (100 * price / 30) - price
         ))}
       </tbody>
     </table>
-    <p>کل مبلغ پرداخت شده : {price} ریال</p>
-    <p>باقی مانده : {notPaid} ریال ({data[0].Percent} درصد از کل مبلغ پرداخت شده است.)</p>
+    <p>کل مبلغ پرداخت شده : {(price * data[0].Percent) / 100} ریال</p>
+    <p>باقی مانده : {(price) - ((price * data[0].Percent) / 100)} ریال ({data[0].Percent} درصد از کل مبلغ پرداخت شده است.)</p>
     <div style={{width:"80%", direction:"rtl"}}>
       <h4> شرایط انصراف: </h4>
     <p style={{direction:"rtl", textAlign: "justify"}}>

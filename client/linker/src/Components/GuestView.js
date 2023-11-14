@@ -30,7 +30,7 @@ export default function GuestView() {
         const getDatetopay = async()=>{
           setIsLoading(true)
           try{
-          const response = await axios.post("http://localhost:3001/api/topay", {
+          const response = await axios.post("https://gmhotel.ir/api/topay", {
             ReserveId : param
           })
          
@@ -71,7 +71,7 @@ export default function GuestView() {
       const toPay = async()=>{
         try{
           setIsLoading(true)
-        const response = await axios.post('http://localhost:3001/api/topayfirst', {
+        const response = await axios.post('https://gmhotel.ir/api/topayfirst', {
 
                       amount: totalPrice,
                       description: 'Transaction description.',

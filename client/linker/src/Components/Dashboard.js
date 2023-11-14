@@ -6,10 +6,13 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import axios from 'axios';
 import { notify } from "./toast";
-import { useHistory} from "react-router-dom";
+// import { useHistory} from "react-router-dom";
 import LoadingComp from "./LoadingComp"
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
+import { useSelector } from "react-redux";
 export default function Dashboard() {
+  const realToken = useSelector((state) => state.tokenReducer.token);
+  
   const [payPercent, setPayPercent] = useState('')
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
@@ -22,57 +25,58 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState();
   
-    const [token, setToken] = useState('');
-    const [expire, setExpire] = useState('');
-    const [users, setUsers] = useState([]);
-    const [userName, setUserName] = useState('')
-    const history = useHistory();
+    // const [token, setToken] = useState('');
+    // const [expire, setExpire] = useState('');
+    // const [users, setUsers] = useState([]);
+    // const [userName, setUserName] = useState('')
+    // const history = useHistory();
  
-    useEffect(() => {
-       refreshToken();
-      
-  }, [token]);
+  //   useEffect(() => {
+  //      refreshToken();
+  //     console.log(realToken + "" + "omid")
+  // }, [token]);
 
-  const refreshToken = async () => {
-      try {
-        setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
+  // const refreshToken = async () => {
+  //     try {
+  //       setIsLoading(true)
+  //         const response = await axios.get('https://gmhotel.ir/api/token');
           
-          setToken(response.data.accessToken);
-          const decoded = jwt_decode(response.data.accessToken);
-          setUserName(decoded.name)
-          setExpire(decoded.exp);
+  //         setToken(response.data.accessToken);
+          
+  //         const decoded = jwt_decode(response.data.accessToken);
+  //         setUserName(decoded.name)
+  //         setExpire(decoded.exp);
 
-         setIsLoading(false)
-      } catch (error) {
-        setIsLoading(false)
-          if (error.response) {
-              history.push("/");
-          }
-      }
-  }
+  //        setIsLoading(false)
+  //     } catch (error) {
+  //       setIsLoading(false)
+  //         if (error.response) {
+  //             history.push("/");
+  //         }
+  //     }
+  // }
 
-  const axiosJWT = axios.create();
+  // const axiosJWT = axios.create();
 
-  axiosJWT.interceptors.request.use(async (config) => {
-      const currentDate = new Date();
+  // axiosJWT.interceptors.request.use(async (config) => {
+  //     const currentDate = new Date();
 
-      if (expire * 1000 < currentDate.getTime()) {
-        setIsLoading(true)
-          const response = await axios.get('http://localhost:3001/api/token');
-          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-          setToken(response.data.accessToken);
-          const decoded = jwt_decode(response.data.accessToken);
-          setExpire(decoded.exp);
-          setIsLoading(false)
-      }
-      return config;
-  }, (error) => {
-    setIsLoading(false)
-      Promise.reject(error);
-    return 
+  //     if (expire * 1000 < currentDate.getTime()) {
+  //       setIsLoading(true)
+  //         const response = await axios.get('https://gmhotel.ir/api/token');
+  //         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+  //         setToken(response.data.accessToken);
+  //         const decoded = jwt_decode(response.data.accessToken);
+  //         setExpire(decoded.exp);
+  //         setIsLoading(false)
+  //     }
+  //     return config;
+  // }, (error) => {
+  //   setIsLoading(false)
+  //     Promise.reject(error);
+  //   return 
        
-  });
+  // });
   moment.locale('en');
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
@@ -148,14 +152,14 @@ export default function Dashboard() {
       percentNew = payPercent
     }
     e.preventDefault();
-    console.log(inputFields)
+    //console.log(inputFields)
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const accoCount = allDates.length - 1
     setIsLoading(true)
     
     try{
-      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
+      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -163,11 +167,11 @@ export default function Dashboard() {
         Room : inputFields,
         AccoCount : accoCount,
         TimeValue : timeValue,
-        User : userName,
+        User : realToken.userName,
         Percent : percentNew
       },{
           headers:{
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${realToken.realToken}`
         }
       })
     //   headers: {

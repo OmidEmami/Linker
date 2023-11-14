@@ -21,22 +21,29 @@ export default function PdfGenerator() {
     useEffect(() => {
       const getDateForPdf = async()=>{
         try{
-        const response = await axios.post("http://localhost:3001/api/findReserveForPdf", {
+        const response = await axios.post("https://gmhotel.ir/api/findReserveForPdf", {
           ReserveKey : param
         })
         if(response.data.length === 0){
           setShowPdf(false)
 
         }else{
+          console.log(response.data)
           for(let i = 0 ; i < response.data.length ; i++){
-            var ExtraService;
+            
               if(response.data[i].ExtraService === null){
-                ExtraService = "0"
+                const ExtraService = "0"
+                setTotalPrice((prevSum) => prevSum + ((parseInt(response.data[i].Price* (parseInt(response.data[i].AccoCount)))+ (parseInt(ExtraService)* (parseInt(response.data[i].AccoCount)))))  )
+                console.log("omid1")
               }else{
-                ExtraService = response.data[i].ExtraService
+               const ExtraService = response.data[i].ExtraService
+                setTotalPrice((prevSum) => prevSum + ((parseInt(response.data[i].Price * (parseInt(response.data[i].AccoCount)))+ (parseInt(ExtraService)* (parseInt(response.data[i].AccoCount)))))  )
+                
               }
+              
             // setTotalPrice(prevstate => (prevstate + parseInt(response.data[i].Price * response.data[i].AccoCount)))
-            setTotalPrice((prevSum) => prevSum + ((parseInt(response.data[i].Price)+ parseInt(ExtraService)) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent)) / 100) )
+            // setTotalPrice((prevSum) => prevSum + (((parseInt(response.data[i].Price)+ parseInt(ExtraService)) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent))) / 100) )
+            
           }
           setReserveData(response.data)
           setShowPdf(true)
