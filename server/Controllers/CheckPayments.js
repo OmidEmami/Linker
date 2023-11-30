@@ -85,7 +85,7 @@ export const toPaynd = async(req,res)=>{
               var ExtraService = "0"
              
             }
-            const response = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx', 
+            const response = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx', 
   `<?xml version="1.0" encoding="utf-8"?>
   <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
@@ -191,7 +191,7 @@ export const manualcancel = async(req,res) =>{
           ReserveId : req.body.reserveId
         }
       })
-      const responseTarianaFinal = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/CancelBooking',{
+      const responseTarianaFinal = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx/CancelBooking',{
                       PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
                       BookingNumber : findtarianacode[0].Tariana
                       
