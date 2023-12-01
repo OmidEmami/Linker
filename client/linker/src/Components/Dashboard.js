@@ -92,7 +92,7 @@ export default function Dashboard() {
         values[index].roomname = 'دابل - تخت کویین';
         break;
         case '7':
-          values[index].roomname = 'دابل - تخت کویین';
+          values[index].roomname = 'سه تخته';
         break;
         case '18':
           values[index].roomname = 'صفویه';

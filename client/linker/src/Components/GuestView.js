@@ -132,24 +132,17 @@ export default function GuestView() {
         <tr>
           <th style={{backgroundColor: '#f2f2f2',
     padding: '8px',
-    textAlign: 'left',
+    textAlign: 'right',
     border: '1px solid #ddd'}}>نام اتاق</th>
           <th  style={{backgroundColor: '#f2f2f2',
     padding: '8px',
-    textAlign: 'left',
+    textAlign: 'right',
     border: '1px solid #ddd'}}>قیمت نهایی</th>
      <th  style={{backgroundColor: '#f2f2f2',
     padding: '8px',
-    textAlign: 'left',
+    textAlign: 'right',
     border: '1px solid #ddd'}}>قیمت سرویس اضافه</th>
-          <th style={{backgroundColor: '#f2f2f2',
-    padding: '8px',
-    textAlign: 'left',
-    border: '1px solid #ddd'}}>مدت اقامت</th>
-     <th style={{backgroundColor: '#f2f2f2',
-    padding: '8px',
-    textAlign: 'left',
-    border: '1px solid #ddd'}}>درصد پرداخت</th>
+        
      
           
         </tr>
@@ -164,24 +157,27 @@ export default function GuestView() {
     border: '1px solid #ddd'}}>{val.Price}</td>
     <td style={{ padding: '8px',
     border: '1px solid #ddd'}}>{val.ExtraService === null ? "0" : val.ExtraService}</td>
-              <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{val.AccoCount}</td>
-    <td style={{ padding: '8px',
-    border: '1px solid #ddd'}}>{val.Percent}</td>
+    
               
               
               
             </tr>
           )
         })}
-        {payData.length !== 0 && <div style={{margin:"1rem"}}>
-        <h4>نام مهمان اصلی : {payData[0].FullName}</h4>
-        <h4>تاریخ ورود : {moment.from(payData[0].CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</h4>
+        
+      </table>
+      {payData.length !== 0 && <div style={{margin:"1rem", direction:"rtl"}}>
+        <h4 style={{border:'1px solid #ddd', padding:"5px"}}>نام مهمان اصلی : {payData[0].FullName}</h4>
+        <div style={{display:"flex", flexDirection:"row", columnGap:"15vw",border:'1px solid #ddd', padding:"5px"}}>
+        <h4 >تاریخ ورود : {moment.from(payData[0].CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</h4>
         <h4>تاریخ خروج : {moment.from(payData[0].CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</h4>
+        </div>
+        <h4 style={{border:'1px solid #ddd', padding:"5px"}}>
+          مدت اقامت : {payData[0].AccoCount} شب
+        </h4>
         </div>}
         
-        <h4 style={{margin:"1rem"}}>جمع کل : {totalPrice}</h4>
-      </table>
+        <h4 style={{margin:"1rem", direction:"rtl",border:'1px solid #ddd', padding:"5px"}}>جمع کل : {totalPrice}</h4>
       <button onClick={showRules}>مطالعه شرایط و پرداخت</button>
     </div></>
   )

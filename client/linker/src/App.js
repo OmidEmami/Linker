@@ -9,12 +9,16 @@ import PdfGenerator from "./Components/PdfGenerator";
 import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 import TestMove from "./Components/TestMove";
 import ForAmir from "./Components/Send Menu & Catalog links/ForAmir";
+import Footer from "./Components/Footer";
 
 
 
 function App() {
   return (
    <>
+   <div style={{minHeight: "95vh",
+                display: "flex",
+                  flexDirection: "column"}}>
    <BrowserRouter>
     <Switch>
     <Route exact path="/foramir">
@@ -47,6 +51,8 @@ function App() {
       </Route>
       </Switch>
       </BrowserRouter>
+      </div>
+     <Footer />
       </>
   );
 }

@@ -16,7 +16,9 @@
 .MainContent{
     background-color:#F9F9F9;
     width:80%;
-     direction:ltr
+     direction:ltr;
+     padding: 1vw;
+     border-radius: 20px;
 }
 @media (max-width: 600px) {
     .ViewContainer{

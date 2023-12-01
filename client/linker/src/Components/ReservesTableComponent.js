@@ -21,15 +21,15 @@ const ReservesTableComponent = ({ data }) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: 'Full Name',
+            Header: 'نام مهمان',
             accessor: 'FullName',
           },
           {
-            Header: 'Phone',
+            Header: 'شماره تماس',
             accessor: 'Phone',
           },
           {
-            Header: 'Check in date',
+            Header: 'تاریخ ورود',
             accessor: 'CheckIn',
             Cell: ({ cell }) => {
               const dateValue = parseISO(cell.value);
@@ -40,7 +40,7 @@ const ReservesTableComponent = ({ data }) => {
             },
           },
           {
-            Header: 'check out date',
+            Header: 'تاریخ خروج',
             accessor: 'CheckOut',
             Cell: ({ cell }) => {
               const dateValue = parseISO(cell.value);
@@ -51,27 +51,27 @@ const ReservesTableComponent = ({ data }) => {
             },
           },
           {
-            Header: 'Room Type',
+            Header: 'نوع اتاق',
             accessor: 'RoomName',
           },
           {
-            Header:'Price',
+            Header:'قیمت هر شب',
             accessor :'Price'
         },
         {
-            Header:'Nights',
+            Header:'مدت اقامت',
             accessor :'AccoCount'
         },
         {
-          Header:'RequestDate',
+          Header:'تاریخ درخواست',
           accessor :'RequestDate'
       },
         {
-            Header:'Tariana',
+            Header:'شماره تاریانا',
             accessor :'Tariana'
         },
           {
-            Header: 'Status',
+            Header: 'وضعیت',
             accessor: 'Status',
             sortType: (rowA, rowB, columnId) => {
               const dateA = parseISO(rowA.original.payDate);
@@ -85,7 +85,7 @@ const ReservesTableComponent = ({ data }) => {
             },
           },
           {
-            Header: 'Reserve id',
+            Header: 'آیدی رزرو',
             accessor: 'ReserveId',
           },
          

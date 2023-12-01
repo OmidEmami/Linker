@@ -42,8 +42,13 @@
       src: url('../assests/Yekan.ttf') format('truetype');
       /* Add more font formats (e.g., woff, woff2) for cross-browser support */
     }
+    @font-face {
+      font-family: 'shabnam'; /* Choose a suitable name for your font */
+      src: url('../assests/Shabnam.ttf') format('truetype');
+      /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+    }
     *{
-      font-family: 'yekan';
+      font-family: 'shabnam';
       font-size: 18px;
     }
   

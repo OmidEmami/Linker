@@ -24,6 +24,7 @@
 .tableStyles{
     border-collapse: collapse;
     width: 80%;
+    direction: rtl;
   }
   
 .thStyles{
@@ -31,10 +32,12 @@
     padding: 8px;
     text-align: left;
     border: 1px solid #dddddd;
+    direction: rtl;
   }
   
 .tdStyles{
     padding: 8px;
     text-align: left;
     border: 1px solid #dddddd;
+    direction: rtl;
 }

@@ -64,7 +64,7 @@ export default function PdfGenerator() {
     }, []);
   return (
     <div>
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div >
        {/* <PDFViewer style={{ width: '100%', height: '100%' }}>  </PDFViewer> */}
         {reserveData === "false" ? null : 
         <MyDocument data={reserveData} price={totalPrice} id="componentToPDF" />

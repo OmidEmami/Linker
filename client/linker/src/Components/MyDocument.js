@@ -7,7 +7,7 @@ import styles from "./MyDocument.module.css"
 
 
 const MyDocument = ({ data, price }) => {
-  console.log(price)
+  
   moment.locale('fa');
   // const notPaid = (data[0].Price * data[0].AccoCount) - (price) 
  
@@ -18,11 +18,16 @@ const notPaid = (100 * price / 30) - price
   
     return (      
 <div  className={styles.mainContainer}>
-  <img src={logo} alt='logo' style={{width:"10%"}} />
+  <img src={logo} alt='logo' style={{width:"10%", padding:"3vw"}} />
 <h3 style={{fontSize:"15" , margin:"10px" }}>ووچر رزرو هتل قصرمنشی</h3>
             <div style={{display:"flex", flexDirection:"row", alignContent:"space-between"}}>
             <p style={{fontSize:"15" , margin:"10px" }}>نام مهمان : {data[0].FullName} </p>
              <p style={{fontSize:"15" , margin:"10px" }}> شماره تماس : {data[0].Phone}</p>
+            
+</div>
+<div>
+<p style={{fontSize:"15" , margin:"10px" }}>تاریخ ورود: {moment.from(data[0].CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</p>
+             <p style={{fontSize:"15" , margin:"10px" }}>تاریخ خروج: {moment.from(data[0].CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</p>
 </div>
 <table className={styles.tableStyles}>
       <thead>
@@ -30,7 +35,7 @@ const notPaid = (100 * price / 30) - price
           <th className={styles.thStyles}>ردیف</th>
           <th className={styles.thStyles}>نام اتاق</th>
           <th className={styles.thStyles}>قیمت هر شب به ریال</th>
-          <th className={styles.thStyles}>تاریخ ورود و خروج</th>
+          {/* <th className={styles.thStyles}>تاریخ ورود و خروج</th> */}
           <th className={styles.thStyles}>قیمت سرویس اضافه</th>
           <th className={styles.thStyles}>مدت اقامت</th>
         </tr>
@@ -42,7 +47,7 @@ const notPaid = (100 * price / 30) - price
             <td className={styles.tdStyles}>{info.RoomName}</td>
             <td className={styles.tdStyles}>{info.Price}</td>
             
-            <td className={styles.tdStyles}>{moment.from(info.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')} - {moment.from(info.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
+            {/* <td className={styles.tdStyles}>{moment.from(info.CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')} - {moment.from(info.CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td> */}
             <td className={styles.tdStyles}>   {info.ExtraService === null ? <p>ندارد</p> :  info.ExtraService}</td>
             <td className={styles.tdStyles}>   {info.AccoCount}</td>
           </tr>
@@ -50,7 +55,7 @@ const notPaid = (100 * price / 30) - price
       </tbody>
     </table>
     <p>کل مبلغ پرداخت شده : {(price * data[0].Percent) / 100} ریال</p>
-    <p>باقی مانده : {(price) - ((price * data[0].Percent) / 100)} ریال ({data[0].Percent} درصد از کل مبلغ پرداخت شده است.)</p>
+    <p style={{paddingRight:"10vw"}}>باقی مانده : {(price) - ((price * data[0].Percent) / 100)} ریال ({data[0].Percent} درصد از کل مبلغ پرداخت شده است.)</p>
     <div style={{width:"80%", direction:"rtl"}}>
       <h4> شرایط انصراف: </h4>
     <p style={{direction:"rtl", textAlign: "justify"}}>

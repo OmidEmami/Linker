@@ -5,24 +5,24 @@ const PaymentTableComponent = ({ data }) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: 'Transaction Code',
+            Header: 'شماره پیگیری',
             accessor: 'TransactionCode',
           },
           {
-            Header: 'Client Name',
+            Header: 'نام مهمان ',
             accessor: 'ClientName',
           },
           
           {
-            Header: 'Client Phone',
+            Header: 'شماره تماس',
             accessor: 'ClientPhone',
           },
           {
-            Header: 'Client Amount',
+            Header: 'مبلغ پرداختی',
             accessor: 'ClientAmount',
           },
           {
-            Header: 'Pay Date',
+            Header: 'تاریخ پرداخت',
             accessor: 'payDate',
             sortType: (rowA, rowB, columnId) => {
               const dateA = parseISO(rowA.original.payDate);
@@ -36,7 +36,7 @@ const PaymentTableComponent = ({ data }) => {
             },
           },
           {
-            Header: 'Card Number',
+            Header: 'شماره کارت',
             accessor: 'CardPan',
           },
         ],

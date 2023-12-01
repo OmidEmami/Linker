@@ -137,7 +137,7 @@ import { addToken } from './action';
          <div className={stylesNd.MainContent}><LogOutSystem /></div>
           : null}
           {item === false && <div className={stylesNd.MainContent}>
-            <h3>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}
+            <h3 style={{direction:"rtl"}}>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}
         </div>
         </>
     )
