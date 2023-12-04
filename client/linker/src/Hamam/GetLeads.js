@@ -28,7 +28,7 @@ function GetLeads() {
       dates = [...dates, moment.from(values[i].format(), 'fa', 'DD/MM/YYYY').format('jYYYY-jMM-jDD')]
     }
     try{
-      const response = await axios.post("https://gmhotel.ir/api/createNewLead",{
+      const response = await axios.post("http://localhost:3001/api/createNewLead",{
             FullName : fullName,
             Phone: phoneNumber,
             HamamType:hamamType,

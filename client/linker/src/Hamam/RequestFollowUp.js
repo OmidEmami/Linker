@@ -57,7 +57,7 @@ const RequestFollowUp = () => {
     const fetchData=async()=>{
         setIsLoading(false)
         try{
-            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
+            const response = await axios.get("http://localhost:3001/api/getNewLeads")
          
                 setData(response.data)
                 setIsLoading(true)
@@ -89,7 +89,7 @@ const RequestFollowUp = () => {
     setShowSaveButton(false)
     setRegisterLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
+      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
         data : data 
     })
    if(response.data === "Omid"){
@@ -152,10 +152,14 @@ const RequestFollowUp = () => {
                   ): <select onChange={(e) => handleFieldChange(row,column.id, e.target.value)} value={row[column.id]}><option value={row[column.id]}>{row[column.id]}</option>
                   <option value="Active">Active</option>
                   <option value="Cancel">Cancel</option>
-                  </select>) : (column.id !== "Status" ?(row[column.id]):(<select onChange={(e) => handleFieldChange(row,column.id, e.target.value)} value={row[column.id]}><option value={row[column.id]}>{row[column.id]}</option>
-                  <option value="Active">Active</option>
-                  <option value="Cancel">Cancel</option>
-                  </select>)
+                  </select>) : (column.id !== "Status" ?(row[column.id]):(
+                  <select onChange={(e) => handleFieldChange(row, column.id, e.target.value)} value={row[column.id]}>
+                  {['Active', 'Cancel', 'Pending'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>)
                    
                   )}
                   {/* {column.id === 'Source' && <select>
