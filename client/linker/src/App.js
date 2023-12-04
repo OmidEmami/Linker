@@ -10,6 +10,8 @@ import MeCaLinker from "./Components/Send Menu & Catalog links/MeCaLinker";
 import TestMove from "./Components/TestMove";
 import ForAmir from "./Components/Send Menu & Catalog links/ForAmir";
 import Footer from "./Components/Footer";
+import GetLeads from "./Hamam/GetLeads";
+import RequestFollowUp from "./Hamam/RequestFollowUp";
 
 
 
@@ -21,6 +23,12 @@ function App() {
                   flexDirection: "column"}}>
    <BrowserRouter>
     <Switch>
+    <Route exact path="/followup">
+        <RequestFollowUp />
+      </Route>
+    <Route exact path="/hamam">
+        <GetLeads />
+      </Route>
     <Route exact path="/foramir">
         <ForAmir />
       </Route>

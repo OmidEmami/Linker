@@ -1,0 +1,98 @@
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.LogoContainer{
+    width: 4.5rem;
+    padding: 0.3rem;
+}
+.HeaderCustomer{
+    border-bottom: 3px solid #D1AF6E;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@font-face {
+    font-family: 'amiri'; /* Choose a suitable name for your font */
+    src: url('../assests/amiri.ttf') format('truetype');
+    /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+  }
+  @font-face {
+    font-family: 'Shabnam'; /* Choose a suitable name for your font */
+    src: url('../assests/Shabnam.ttf') format('truetype');
+    /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+  }
+  *{
+    font-family: 'Shabnam';
+  }
+  .TizerContainer{
+    font-family: 'amiri';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .TizerContainer h3{
+    font-size: 1.5rem;
+    color: #07478B;
+    font-family: 'amiri';
+  }
+  .TizerContainer video{
+    width: 22rem;
+    border-radius: 8px;
+  }
+  .FormContainer p{
+    font-family: 'Shabnam';
+    text-align: justify;
+    direction: rtl;
+    padding: 0.6rem;
+    font-size: 1.25rem;
+    
+
+  }
+  .FormContainer{
+    direction: rtl;
+    font-family: 'Shabnam';
+    margin-bottom: 10vw;
+    
+  }
+  .FormContainer label{
+    margin: 1rem;
+    color: white;
+  }
+  .FormContainer form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #07478B;
+  }
+  .FormContainer select{
+    font-family: "Shabnam";
+    width: 18rem;
+    height: 1.6rem;
+    border-radius:4px ;
+    font-size: 1rem;
+    
+  }
+  .FormContainer input{
+    width: 18rem;
+    height: 1.4rem;
+    border-radius: 4px;
+    border: 1px solid #D1AF6E;
+  }
+  .FormContainer form button{
+    font-family: "Shabnam";
+    padding-right: 2rem;
+    padding-left: 2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border: none;
+    border-radius: 10px;
+    margin: 1rem;
+    cursor: pointer;
+  }
+  .FormContainer form button:hover {background-color: #D1AF6E}

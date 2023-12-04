@@ -6,8 +6,8 @@ function Footer() {
   return (
     <div className={styles.mainContainer}>
       {/* {`Powered by ${<img src={linker} alt='logo for linkerfaster' />} Copyright © Upbeat Code ${year}`} */}
-      
-      Powered by   &nbsp;&nbsp;&nbsp; <img width="3%" src={linker} alt='logo for linkerfaster' /> &nbsp;&nbsp;&nbsp;  Copyright © LinkerFaster - GhasrMonshiHotel - Iran {year} - v 1.0.0
+      {/* Powered by   &nbsp;&nbsp;&nbsp; <img width="3%" src={linker} alt='logo for linkerfaster' /> &nbsp;&nbsp;&nbsp;   */}
+      Copyright © - GhasrMonshiHotel - Iran {year} - v 1.0.0
     </div>
   )
 }

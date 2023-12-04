@@ -85,6 +85,11 @@ import { addToken } from './action';
     const showItem = (e) => {
         setItem(e)
     }
+    const showHamamManagement = () =>{
+        
+            window.open('/followup', '_blank');
+    
+    }
     return(
         <>
         {isLoading && <LoadingComp />}
@@ -109,6 +114,7 @@ import { addToken } from './action';
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
                 <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ و منو</li>
+                <li value={7} onClick={showHamamManagement}>درخواست های حمام(Beta)</li>
                 {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
                 <li value={6} onClick={(e)=>showItem(e.target.value)}>خروج از سیستم</li>
                 

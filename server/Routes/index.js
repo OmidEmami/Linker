@@ -11,6 +11,10 @@ import { findReserveForPdf } from "../Controllers/GeneratePdf.js";
 import { sendRoomcatalog, sendhamam, sendrestaurantmenu } from "../Controllers/SendLinks.js";
 import { Logout } from "../Controllers/Logout.js";
 import { verifyToken } from "../Controllers/VerifyToken.js";
+import { newLead } from "../Controllers/GenerateLead.js";
+import { getNewLeads } from "../Controllers/GetNewLeads.js";
+import { modifyLeads } from "../Controllers/ModifyLeads.js";
+
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
@@ -29,4 +33,7 @@ router.post('/api/sendroomcatalog', sendRoomcatalog);
 router.post('/api/sendrestaurantmenu', sendrestaurantmenu);
 router.post('/api/sendhamam', sendhamam);
 router.delete('/api/logout', Logout);
+router.post("/api/createNewLead", newLead);
+router.get("/api/getNewLeads",getNewLeads);
+router.post("/api/regFollowLead", modifyLeads)
 export default router;
