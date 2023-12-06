@@ -12,6 +12,7 @@ import ForAmir from "./Components/Send Menu & Catalog links/ForAmir";
 import Footer from "./Components/Footer";
 import GetLeads from "./Hamam/GetLeads";
 import RequestFollowUp from "./Hamam/RequestFollowUp";
+import Calendar from "./Components/Rack Hamam/Calendar";
 
 
 
@@ -23,6 +24,9 @@ function App() {
                   flexDirection: "column"}}>
    <BrowserRouter>
     <Switch>
+    <Route exact path="/cal">
+        <Calendar />
+      </Route>
     <Route exact path="/followup">
         <RequestFollowUp />
       </Route>
