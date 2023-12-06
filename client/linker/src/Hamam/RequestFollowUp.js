@@ -11,8 +11,9 @@ import TextField from '@mui/material/TextField';
 import Logo from '../assests/logoBrown.png';
 import axios from 'axios';
 import LoadingComp from '../Components/LoadingComp';
-import styles from './RequestFollowUp.module.css'
+import styles from './RequestFollowUp.module.css';
 import { notify } from "../Components/toast";
+import Modal from 'react-modal';
 const columns = [
     { id: 'id', label: 'ردیف' },
     { id: 'FullName', label: 'نام مهمان',editable: true  },
@@ -31,6 +32,18 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width:"80%"
+    },
+  };      
+  const [initialPopup, setInitialPopup] = useState(false)
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [data, setData] = useState();
@@ -77,8 +90,11 @@ const RequestFollowUp = () => {
     setPage(0);
   };
   const handleFieldChange = (row,column, newValue) => {
-    console.log(row.id + "" + column +"" + newValue)
+    // console.log(row.id + "" + column +"" + newValue)
     setShowSaveButton(true)
+    if(newValue === "Active"){
+      setInitialPopup(true)
+    }
     const updatedData = data.map((item) =>
     // var calledChange = column
       item.id === row.id ? { ...item, [column]: newValue } : item
@@ -187,6 +203,29 @@ const RequestFollowUp = () => {
     alignItems: "center"}}>
     {showSaveButton && <button onClick={saveNewData} className={styles.buttonClass}>ذخیره</button>}
     </div>
+    <Modal
+        isOpen={initialPopup}
+        //onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setInitialPopup(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+        
+      >
+        <div style={{direction:"rtl"}}>
+        <h4>لطفا شرایط رزرو و اقامت در هتل قصرمنشی را مطالعه  کنید، بعد از موافقت با قوانین به درگاه پرداخت منتقل می شوید</h4>
+        <ul>
+          <li>شرایط کنسلی رزرو در هتل قصرمنشی : 
+          تا 8 روز قبل از تاریخ ورود بدون جریمه , از 7 تا 3 روز قبل از ورود جریمه معادل 50 درصد هزینه کل اقامت و در نهایت در صورت تمایل برای کنسلی
+اتاق تا 48 ساعت قبل از ورود جریمه معادل 100 درصد از هزینه کل دریافتی می باشد.
+          </li>
+          <li>سیگار کشیدن در اتاق ها ممنوع است</li>
+          <li>ورود حیوان خانگی به هتل قصرمنشی ممنوع است</li>
+          <li>حفظ و رعایت شئونات اسلامی مطابق با قوانین جمهوری اسلامی الزامی است.</li>
+         <li>پذیرش زوجین فقط با مدرک معتبر محرمیت امکان پذیر است</li>
+        </ul>
+        
+      </div>
+      </Modal>
   </>
   );
 };
