@@ -59,3 +59,38 @@
 .pendingView{
     background-color: yellow;
 }
+.finalizeFormData{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    row-gap: 2vw;
+   
+}
+.partOneFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 2vw;
+}
+.partTwoFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.3vw;
+}
+.partThreeFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1vw;
+}
+.partFourFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1vw;
+}

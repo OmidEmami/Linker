@@ -64,7 +64,7 @@ function GetLeads() {
         <label>نام و نام خانوادگی</label>
             <input value={fullName} onChange={(e)=>setFullName(e.target.value)} placeholder='نام مهمان' type='text' />
         <label>شماره تماس</label>
-        <input value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)} placeholder='شماره تماس' type='text' />
+        <input type="number" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)} placeholder='شماره تماس' type='text' />
         <label>انتخاب نوع سرویس حمام</label>
         <select value={hamamType} onChange={(e)=>setHamamType(e.target.value)} required>
                                         <option  enabled >انتخاب نوع سرویس حمام</option>

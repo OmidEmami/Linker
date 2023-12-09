@@ -14,6 +14,17 @@ import LoadingComp from '../Components/LoadingComp';
 import styles from './RequestFollowUp.module.css';
 import { notify } from "../Components/toast";
 import Modal from 'react-modal';
+import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import DatePanel from "react-multi-date-picker/plugins/date_panel"
+import moment from 'jalali-moment';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 const columns = [
     { id: 'id', label: 'ردیف' },
     { id: 'FullName', label: 'نام مهمان',editable: true  },
@@ -32,6 +43,9 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  const date = new DateObject({ calendar: persian, locale: persian_fa });
+  const [values, setValues] = useState();
+  const digits=["0","1","2","3","4","5","6","7","8","9"];
   const customStyles = {
     content: {
       top: '50%',
@@ -42,7 +56,21 @@ const RequestFollowUp = () => {
       transform: 'translate(-50%, -50%)',
       width:"80%"
     },
-  };      
+  };
+  const [finalFormData, setFinalFormDate] = useState({
+    RequestKey :"",
+    FullName:"",
+    Phone:"",
+    CertainDate:"",
+    CertainHour:"",
+    CustomerType:"",
+    ServiceType:"",
+    SelectedService:"",
+    AccoStatus:"",
+    CateringDetails:"",
+    MassorNames:"",
+    Desc:""
+  })     
   const [initialPopup, setInitialPopup] = useState(false)
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -116,6 +144,9 @@ const RequestFollowUp = () => {
       setRegisterLoading(false)
       notify( "خطا", "error")
     }
+  }
+  const FinalReserveDetails = async()=>{
+
   }
   return (
    <>
@@ -211,19 +242,81 @@ const RequestFollowUp = () => {
         contentLabel="Example Modal"
         
       >
-        <div style={{direction:"rtl"}}>
-        <h4>لطفا شرایط رزرو و اقامت در هتل قصرمنشی را مطالعه  کنید، بعد از موافقت با قوانین به درگاه پرداخت منتقل می شوید</h4>
-        <ul>
-          <li>شرایط کنسلی رزرو در هتل قصرمنشی : 
-          تا 8 روز قبل از تاریخ ورود بدون جریمه , از 7 تا 3 روز قبل از ورود جریمه معادل 50 درصد هزینه کل اقامت و در نهایت در صورت تمایل برای کنسلی
-اتاق تا 48 ساعت قبل از ورود جریمه معادل 100 درصد از هزینه کل دریافتی می باشد.
-          </li>
-          <li>سیگار کشیدن در اتاق ها ممنوع است</li>
-          <li>ورود حیوان خانگی به هتل قصرمنشی ممنوع است</li>
-          <li>حفظ و رعایت شئونات اسلامی مطابق با قوانین جمهوری اسلامی الزامی است.</li>
-         <li>پذیرش زوجین فقط با مدرک معتبر محرمیت امکان پذیر است</li>
-        </ul>
-        
+        <div>
+        <h3>لطفا جزئیات رزرو را تکمیل کنید</h3>
+        <form className={styles.finalizeFormData} onSubmit={FinalReserveDetails}>
+          <div className={styles.partOneFinalForm}>
+          <label>نام کامل
+          <input type='text' value={finalFormData.FullName} /></label>
+          <label>شماره تماس
+          <input type='number'value={finalFormData.Phone} /></label>
+          <label>شماره درخواست
+          <input type='text' value={finalFormData.RequestKey} /></label>
+          </div>
+          <div className={styles.partTwoFinalForm}>
+          <label>تاریخ تایید شده</label>
+          <DatePicker  
+           digits={digits}
+            value={values}
+            onChange={value=>{setValues(value)
+            }}
+                style={{fontFamily:"Shabnam"}}
+             calendar={persian}
+             locale={persian_fa}
+             calendarPosition="bottom-right"
+             format="DD/MM/YYYY"
+             placeholder='تاریخ پیشنهادی دریافت خدمات'
+           ></DatePicker>
+           
+           <label>ساعت شروع</label>
+           <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <TimePicker views={['hours']} />
+           </LocalizationProvider>
+           <label>ساعت پایان</label>
+           <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <TimePicker views={['hours']} />
+           </LocalizationProvider>
+           </div>
+           <div className={styles.partThreeFinalForm}>
+            <label>نوع مشتری
+           <select value={finalFormData.CustomerType}>
+           <option value="none" selected>نوع مشتری</option>
+            <option>گروه مردانه</option>
+            <option>گروه زنانه</option>
+            <option>زوج</option>
+            
+           </select></label>
+           <label>نوع خدمات
+           <select value={finalFormData.ServiceType}>
+            <option value="none" selected>نوع خدمات</option>
+            <option>حمام</option>
+            <option>ماساژ</option>
+            <option>قرق با خدمات</option>
+            <option>قرق بدون خدمات</option>
+           </select></label>
+           <label>روش ارائه
+           <select value={finalFormData.SelectedService}>
+            <option value="none">روش ارائه</option>
+            <option>معمولی</option>
+            <option>قرق</option>
+            <option>VIP</option>
+           </select></label>
+           </div>
+           <div className={styles.partFourFinalForm}>
+            <select value={finalFormData.AccoStatus}>
+              <option value="none">وضعیت اقامت</option>
+              <option>مقیم هتل</option>
+              <option>غیر مقیم</option>
+            </select>
+            <label>نوع پذیرایی</label>
+            <textarea type='text' value={finalFormData.CateringDetails} />
+            <label>نام خدمات دهنده</label>
+            <input type='text' value={finalFormData.MassorNames} />
+            <label>توضیحات دیگر</label>
+            <textarea type='text' value={finalFormData.Desc} />
+            </div>
+            <button type='submit'>ذخیره</button>   
+        </form>
       </div>
       </Modal>
   </>

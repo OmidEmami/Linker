@@ -14,7 +14,7 @@ import axios from "axios";
 dotenv.config();
 const app = express();
 const corsOptions = {
-    origin: ['https://gmhotel.ir','http://87.248.152.131','http://localhost:3001']
+    origin: ['https://gmhotel.ir','http://87.248.152.131','http://localhost:3000']
     , // Replace with your frontend domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you're using cookies or sessions
