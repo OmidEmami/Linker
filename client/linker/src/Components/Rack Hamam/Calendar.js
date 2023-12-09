@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import moment from 'jalali-moment';
 import './Calendar.css'; // Import a CSS file for styling
 import DatePicker, { DateObject}from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
-import DatePanel from "react-multi-date-picker/plugins/date_panel"
+import DatePanel from "react-multi-date-picker/plugins/date_panel";
+import LoadingComp from '../LoadingComp';
+import axios from "axios"
 const Calendar = () => {
   const reservedData = [{day:'1402-09-01', hour:['00','01','02'],id:"2"},{day:'1402-09-03', hour:['22','23','00'],id:"3"}]
   const [currentDate, setCurrentDate] = useState(moment()); 
   const [startDay, setStartDay] = useState(1);
   const [values, setValues] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState();
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   let isMouseDown = false;
   let initialCell = null;
@@ -19,7 +23,39 @@ const Calendar = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
 
+  useEffect(() => {
+    
+    const fetchData=async()=>{
+        setIsLoading(false)
+        try{
+            const response = await axios.get("http://localhost:3001/api/getFixedReserves")
+            const updatedData = response.data.map(item => {
+              const hoursString = item.Hours;
+              
+                try{
+                  const parsedHoursArray = JSON.parse(hoursString);
+                  return {...item, Hours:parsedHoursArray} ;
+                  
+                }catch(error){
+                  console.error("Error parsing 'Hours' string:", error);
+                  // Handle parsing error, e.g., set default value for Hours
+                  return { ...item, Hours: [] };
+                }
+                
+              
+              
+            })
+            // console.log(updatedData)
+            setData(updatedData)
+                
+                setIsLoading(true)
+        }catch(error){
 
+        }
+        
+    }
+    fetchData();
+          }, []);
   const handleMouseDown = (day, hour) => {
     isMouseDown = true;
     initialCell = { day, hour };
@@ -145,10 +181,10 @@ const Calendar = () => {
                 onMouseUp={()=>handleMouseUp(day, hour)}
                 >
                   
-                  {reservedData.map((omid,index)=>(
-                   <div> {omid.day === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
-                    omid.hour.map((houry,index)=>(
-                      <div>{houry === hour && <div style={{backgroundColor:"lightblue", padding:"1rem"}}>{omid.id}</div>}</div>
+                  {isLoading && data.map((omid,index)=>(
+                   <div> {omid.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
+                    omid.Hours.map((houry,index)=>(
+                      <div>{console.log(typeof(houry), typeof(hour))}{houry.toString() === hour && <div style={{backgroundColor:"lightblue", padding:"1rem"}}>{omid.FullName}</div>}</div>
                     ))
                     }</div>}</div>
                   

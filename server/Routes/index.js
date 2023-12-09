@@ -14,6 +14,8 @@ import { verifyToken } from "../Controllers/VerifyToken.js";
 import { newLead } from "../Controllers/GenerateLead.js";
 import { getNewLeads } from "../Controllers/GetNewLeads.js";
 import { modifyLeads } from "../Controllers/ModifyLeads.js";
+import { regNewHamamReserve } from "../Controllers/RegisterNewHamamReserve.js";
+import { getFixedReserves } from "../Controllers/getFixedReserves.js";
 
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
@@ -36,4 +38,6 @@ router.delete('/api/logout', Logout);
 router.post("/api/createNewLead", newLead);
 router.get("/api/getNewLeads",getNewLeads);
 router.post("/api/regFollowLead", modifyLeads)
+router.post("/api/HamamReserveDetail",regNewHamamReserve);
+router.get("/api/getFixedReserves",getFixedReserves)
 export default router;

@@ -25,6 +25,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+
 const columns = [
     { id: 'id', label: 'ردیف' },
     { id: 'FullName', label: 'نام مهمان',editable: true  },
@@ -43,6 +44,9 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  
+  const [hamamStartHour, setHamamStartHour] = useState();
+  const [hamamEndHour, setHamamEndHour] = useState();
   const date = new DateObject({ calendar: persian, locale: persian_fa });
   const [values, setValues] = useState();
   const digits=["0","1","2","3","4","5","6","7","8","9"];
@@ -57,7 +61,7 @@ const RequestFollowUp = () => {
       width:"80%"
     },
   };
-  const [finalFormData, setFinalFormDate] = useState({
+  const [finalFormData, setFinalFormData] = useState({
     RequestKey :"",
     FullName:"",
     Phone:"",
@@ -67,9 +71,9 @@ const RequestFollowUp = () => {
     ServiceType:"",
     SelectedService:"",
     AccoStatus:"",
-    CateringDetails:"",
+    CateringDetails:" ",
     MassorNames:"",
-    Desc:""
+    Desc:" "
   })     
   const [initialPopup, setInitialPopup] = useState(false)
   const [page, setPage] = useState(0);
@@ -118,13 +122,17 @@ const RequestFollowUp = () => {
     setPage(0);
   };
   const handleFieldChange = (row,column, newValue) => {
-    // console.log(row.id + "" + column +"" + newValue)
+    
     setShowSaveButton(true)
     if(newValue === "Active"){
       setInitialPopup(true)
+      
+      const foundItem = data.find(item => item.id === row.id);
+
+      setFinalFormData({...finalFormData,"RequestKey": foundItem.UniqueId,"Phone":foundItem.Phone,"FullName":foundItem.FullName})
     }
     const updatedData = data.map((item) =>
-    // var calledChange = column
+    
       item.id === row.id ? { ...item, [column]: newValue } : item
     );
     setData(updatedData);
@@ -145,8 +153,49 @@ const RequestFollowUp = () => {
       notify( "خطا", "error")
     }
   }
-  const FinalReserveDetails = async()=>{
+  const FinalReserveDetails = async(e)=>{
+    
+    e.preventDefault();
+    if (hamamStartHour && hamamEndHour) {
+      const firstHour = hamamStartHour.hour();
+      const secondHour = hamamEndHour.hour();
 
+      const start = firstHour < secondHour ? firstHour : secondHour;
+      const end = firstHour > secondHour ? firstHour : secondHour;
+
+      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
+       
+   try{
+    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
+          RequestKey:finalFormData.RequestKey,
+          FullName:finalFormData.FullName,
+          Phone:finalFormData.Phone,
+          CertainDate:finalFormData.CertainDate.format('YYYY-MM-DD'),
+          CertainHour:JSON.stringify(selectedHours),
+          CustomerType:finalFormData.CustomerType,
+          ServiceType:finalFormData.ServiceType,
+          SelectedService:finalFormData.SelectedService,
+          AccoStatus:finalFormData.AccoStatus,
+          CateringDetails:finalFormData.CateringDetails,
+          MassorNames:finalFormData.MassorNames,
+          Desc:finalFormData.Desc
+    })
+    if(response.status === 200){
+      notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+    }
+   }catch(error){
+    console.log(error)
+   }
+  }
+}
+  const handleFinalReserveDetailsForm =async(e)=>{
+   
+    const { name, value } = e.target;
+
+    setFinalFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
   }
   return (
    <>
@@ -247,19 +296,19 @@ const RequestFollowUp = () => {
         <form className={styles.finalizeFormData} onSubmit={FinalReserveDetails}>
           <div className={styles.partOneFinalForm}>
           <label>نام کامل
-          <input type='text' value={finalFormData.FullName} /></label>
+          <input name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} /></label>
           <label>شماره تماس
-          <input type='number'value={finalFormData.Phone} /></label>
+          <input type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} /></label>
           <label>شماره درخواست
-          <input type='text' value={finalFormData.RequestKey} /></label>
+          <input type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} /></label>
           </div>
           <div className={styles.partTwoFinalForm}>
           <label>تاریخ تایید شده</label>
           <DatePicker  
+          name="CertainDate"
            digits={digits}
-            value={values}
-            onChange={value=>{setValues(value)
-            }}
+            value={finalFormData.CertainDate}
+            onChange={(value)=>setFinalFormData({...finalFormData, CertainDate : value})}
                 style={{fontFamily:"Shabnam"}}
              calendar={persian}
              locale={persian_fa}
@@ -270,16 +319,16 @@ const RequestFollowUp = () => {
            
            <label>ساعت شروع</label>
            <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <TimePicker views={['hours']} />
+           <TimePicker value={hamamStartHour} onChange={(value)=>setHamamStartHour(value)} views={['hours']} />
            </LocalizationProvider>
            <label>ساعت پایان</label>
            <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <TimePicker views={['hours']} />
+           <TimePicker value={hamamEndHour} onChange={(value)=>setHamamEndHour(value)} views={['hours']} />
            </LocalizationProvider>
            </div>
            <div className={styles.partThreeFinalForm}>
             <label>نوع مشتری
-           <select value={finalFormData.CustomerType}>
+           <select name='CustomerType' onChange={handleFinalReserveDetailsForm} value={finalFormData.CustomerType}>
            <option value="none" selected>نوع مشتری</option>
             <option>گروه مردانه</option>
             <option>گروه زنانه</option>
@@ -287,7 +336,7 @@ const RequestFollowUp = () => {
             
            </select></label>
            <label>نوع خدمات
-           <select value={finalFormData.ServiceType}>
+           <select name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
             <option value="none" selected>نوع خدمات</option>
             <option>حمام</option>
             <option>ماساژ</option>
@@ -295,7 +344,7 @@ const RequestFollowUp = () => {
             <option>قرق بدون خدمات</option>
            </select></label>
            <label>روش ارائه
-           <select value={finalFormData.SelectedService}>
+           <select name='SelectedService' onChange={handleFinalReserveDetailsForm} value={finalFormData.SelectedService}>
             <option value="none">روش ارائه</option>
             <option>معمولی</option>
             <option>قرق</option>
@@ -303,17 +352,17 @@ const RequestFollowUp = () => {
            </select></label>
            </div>
            <div className={styles.partFourFinalForm}>
-            <select value={finalFormData.AccoStatus}>
+            <select name='AccoStatus' onChange={handleFinalReserveDetailsForm} value={finalFormData.AccoStatus}>
               <option value="none">وضعیت اقامت</option>
               <option>مقیم هتل</option>
               <option>غیر مقیم</option>
             </select>
             <label>نوع پذیرایی</label>
-            <textarea type='text' value={finalFormData.CateringDetails} />
+            <textarea name='CateringDetails' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.CateringDetails} />
             <label>نام خدمات دهنده</label>
-            <input type='text' value={finalFormData.MassorNames} />
+            <input name="MassorNames" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.MassorNames} />
             <label>توضیحات دیگر</label>
-            <textarea type='text' value={finalFormData.Desc} />
+            <textarea name='Desc' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.Desc} />
             </div>
             <button type='submit'>ذخیره</button>   
         </form>

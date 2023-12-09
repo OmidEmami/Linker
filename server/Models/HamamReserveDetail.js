@@ -28,9 +28,21 @@ const HamamReserveDetail = db.define('HamamReserveDetail',{
     },
     SelectedService:{
         type:DataTypes.TEXT
-    }
-    
-    
+    },
+    AccoStatus:{
+        type:DataTypes.TEXT
+    },
+    CateringDetails:{
+        type:DataTypes.TEXT
+    },
+    MassorNames:{
+        type:DataTypes.TEXT
+    },
+    Desc:{
+        type:DataTypes.TEXT
+    },
+  
+
 },{
     freezeTableName:true
 });
