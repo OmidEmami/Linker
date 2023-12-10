@@ -166,6 +166,7 @@ const RequestFollowUp = () => {
       const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
        
    try{
+    setIsLoading(true)
     const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
@@ -181,10 +182,12 @@ const RequestFollowUp = () => {
           Desc:finalFormData.Desc
     })
     if(response.status === 200){
+      setIsLoading(false)
       notify( "اطلاعات شما با موفقیت ثبت شد", "success")
     }
    }catch(error){
-    console.log(error)
+    notify( "خطا", "error")
+    setIsLoading(false)
    }
   }
 }

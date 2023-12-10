@@ -6,19 +6,31 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import LoadingComp from '../LoadingComp';
-import axios from "axios"
+import axios from "axios";
+import Modal from 'react-modal';
 const Calendar = () => {
-  const reservedData = [{day:'1402-09-01', hour:['00','01','02'],id:"2"},{day:'1402-09-03', hour:['22','23','00'],id:"3"}]
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width:"80%"
+    },
+  };
   const [currentDate, setCurrentDate] = useState(moment()); 
-  const [startDay, setStartDay] = useState(1);
+  const [showPopUp, setShowPopUp] = useState(false)
   const [values, setValues] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
+  const [reserveDetails, setReserveDetails] = useState('')
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   let isMouseDown = false;
   let initialCell = null;
   let lastCell = null;
-  const [selectedArea, setSelectedArea] = useState()
+
   const daysInMonth = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
@@ -38,14 +50,14 @@ const Calendar = () => {
                   
                 }catch(error){
                   console.error("Error parsing 'Hours' string:", error);
-                  // Handle parsing error, e.g., set default value for Hours
+                 
                   return { ...item, Hours: [] };
                 }
                 
               
               
             })
-            // console.log(updatedData)
+            
             setData(updatedData)
                 
                 setIsLoading(true)
@@ -59,9 +71,8 @@ const Calendar = () => {
   const handleMouseDown = (day, hour) => {
     isMouseDown = true;
     initialCell = { day, hour };
-    console.log(day , hour, "omid1")
-    
-    // Handle the initial click event
+   
+ 
   };
 
   const handleMouseEnter = (day, hour) => {
@@ -69,7 +80,7 @@ const Calendar = () => {
     if (!isMouseDown) return;
     // Calculate selected cells and update UI accordingly
    
-    console.log(day,hour,"omid2")
+    
   };
 
   const handleMouseUp = (day,hour) => {
@@ -79,7 +90,7 @@ const Calendar = () => {
     isMouseDown = false;
     // initialCell = null;
     lastCell = {day,hour}
-    console.log(lastCell , initialCell)
+    
     
   };
   const getDaysArray = () => {
@@ -121,8 +132,24 @@ const Calendar = () => {
     }
  
   };
-
+  const showReserveDetails = async(showData)=>{
+    setReserveDetails(showData)
+    setShowPopUp(true)
+    
+  }
   return (
+    <>
+    <Modal
+        isOpen={showPopUp}
+        //onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setShowPopUp(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div>
+          {reserveDetails.FullName}
+      </div>
+      </Modal>
     <div className="calendar-container">
       <div className="calendar-nav">
         <button onClick={previousMonth}>Previous Month</button>
@@ -181,10 +208,10 @@ const Calendar = () => {
                 onMouseUp={()=>handleMouseUp(day, hour)}
                 >
                   
-                  {isLoading && data.map((omid,index)=>(
-                   <div> {omid.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
-                    omid.Hours.map((houry,index)=>(
-                      <div>{console.log(typeof(houry), typeof(hour))}{houry.toString() === hour && <div style={{backgroundColor:"lightblue", padding:"1rem"}}>{omid.FullName}</div>}</div>
+                  {isLoading && data.map((showData,index)=>(
+                   <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
+                    showData.Hours.map((houry,index)=>(
+                      <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={{backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
                     ))
                     }</div>}</div>
                   
@@ -197,6 +224,7 @@ const Calendar = () => {
         </tbody>
       </table>
     </div>
+    </>
   );
 };
 
