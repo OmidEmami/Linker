@@ -8,6 +8,12 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import LoadingComp from '../LoadingComp';
 import axios from "axios";
 import Modal from 'react-modal';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+
+import { notify } from "../../Components/toast";
+
 const Calendar = () => {
   const customStyles = {
     content: {
@@ -24,13 +30,15 @@ const Calendar = () => {
   const [showPopUp, setShowPopUp] = useState(false)
   const [values, setValues] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState();
-  const [reserveDetails, setReserveDetails] = useState('')
+  const [data, setData] = useState('');
+  const [reserveDetails, setReserveDetails] = useState('');
+  const [hamamStartHour, setHamamStartHour] = useState();
+  const [hamamEndHour, setHamamEndHour] = useState();
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   let isMouseDown = false;
   let initialCell = null;
   let lastCell = null;
-
+  const date = new DateObject({ calendar: persian, locale: persian_fa });
   const daysInMonth = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
@@ -38,7 +46,7 @@ const Calendar = () => {
   useEffect(() => {
     
     const fetchData=async()=>{
-        setIsLoading(false)
+        setIsLoading(true)
         try{
             const response = await axios.get("http://localhost:3001/api/getFixedReserves")
             const updatedData = response.data.map(item => {
@@ -60,9 +68,10 @@ const Calendar = () => {
             
             setData(updatedData)
                 
-                setIsLoading(true)
+                setIsLoading(false)
         }catch(error){
-
+                setIsLoading(false)
+                notify("خطا",error)
         }
         
     }
@@ -133,12 +142,87 @@ const Calendar = () => {
  
   };
   const showReserveDetails = async(showData)=>{
+    // setHamamStartHour(showData.Hours[0])
+    // setHamamEndHour(showData.Hours[showData.Hours.length - 1])
     setReserveDetails(showData)
     setShowPopUp(true)
     
   }
+  const modifyFixedReserves = async(e) =>{
+    e.preventDefault();
+    if (hamamStartHour && hamamEndHour) {
+      const firstHour = hamamStartHour.hour();
+      const secondHour = hamamEndHour.hour();
+
+      const start = firstHour < secondHour ? firstHour : secondHour;
+      const end = firstHour > secondHour ? firstHour : secondHour;
+
+      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
+      try{
+        setIsLoading(true)
+        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+          UniqueId:reserveDetails.UniqueId,
+          FullName:reserveDetails.FullName,
+          Phone:reserveDetails.Phone,
+          Date:reserveDetails.Date,
+          Hours:JSON.stringify(selectedHours),
+          CustomerType:reserveDetails.CustomerType,
+          ServiceType:reserveDetails.ServiceType,
+          SelectedService:reserveDetails.SelectedService,
+          AccoStatus:reserveDetails.AccoStatus,
+          CateringDetails:reserveDetails.CateringDetails,
+          MassorNames:reserveDetails.MassorNames,
+          Desc:reserveDetails.Desc
+          })
+          setIsLoading(false)
+          notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+      }catch(error){
+          setIsLoading(false)
+          notify("خطا",error)
+      }
+      
+      
+  }else{
+    const selectedHours = reserveDetails.Hours;
+    try{
+      setIsLoading(true)
+      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        UniqueId:reserveDetails.UniqueId,
+        FullName:reserveDetails.FullName,
+        Phone:reserveDetails.Phone,
+        Date:reserveDetails.Date,
+        Hours:JSON.stringify(selectedHours),
+        CustomerType:reserveDetails.CustomerType,
+        ServiceType:reserveDetails.ServiceType,
+        SelectedService:reserveDetails.SelectedService,
+        AccoStatus:reserveDetails.AccoStatus,
+        CateringDetails:reserveDetails.CateringDetails,
+        MassorNames:reserveDetails.MassorNames,
+        Desc:reserveDetails.Desc
+        })
+        setIsLoading(false)
+        notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+    }catch(error){
+        setIsLoading(false)
+        notify("خطا",error)
+    }
+  }
+  
+
+
+}
+  const handleFinalReserveDetailsForm =async(e)=>{
+   
+    const { name, value } = e.target;
+
+    setReserveDetails(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  }
   return (
     <>
+    {isLoading && <LoadingComp />}
     <Modal
         isOpen={showPopUp}
         //onAfterOpen={afterOpenModal}
@@ -147,7 +231,100 @@ const Calendar = () => {
         contentLabel="Example Modal"
       >
         <div>
-          {reserveDetails.FullName}
+          <form className='formdetails' onSubmit={modifyFixedReserves}>
+            <div className='formdetails-first-one'>
+            <label>کد درخواست : {reserveDetails.UniqueId}</label>
+            <label>نام مهمان  
+              <input name='FullName' type='text' value={reserveDetails.FullName} onChange={handleFinalReserveDetailsForm} />
+            </label>
+            <label>شماره تماس
+              <input name='Phone' type='number' value={reserveDetails.Phone} onChange={handleFinalReserveDetailsForm} />
+            </label>
+            </div>
+            <div className='formdetails-first-one'>
+            <label>تاریخ دریافت خدمات : 
+              {reserveDetails.Date}
+        
+           
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    تغییر تاریخ     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+           <DatePicker  
+          name="CertainDate"
+           digits={digits}
+            // value={reserveDetails.Date}
+            onChange={(value)=>setReserveDetails({...reserveDetails, Date : value.format('YYYY-MM-DD')})}
+                style={{fontFamily:"Shabnam"}}
+             calendar={persian}
+             locale={persian_fa}
+             calendarPosition="bottom-right"
+             format="DD/MM/YYYY"
+             placeholder='تغییر تاریخ'
+           ></DatePicker>
+           
+            </label>
+            
+            </div>
+            <div className='formdetails-first-one'>
+            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && reserveDetails.Hours[reserveDetails.Hours.length - 1]}</h3></label></b>
+            <label>تغییر ساعت شروع</label>
+           <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <TimePicker  onChange={(value)=>setHamamStartHour(value)} views={['hours']} />
+           </LocalizationProvider>
+           <label>تغییر ساعت پایان</label>
+           <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <TimePicker  onChange={(value)=>setHamamEndHour(value)} views={['hours']} />
+           </LocalizationProvider>
+           </div>
+           <div className='formdetails-first-one'>
+            <label>نوع مشتری
+              <select name='CustomerType' onChange={handleFinalReserveDetailsForm} value={reserveDetails.CustomerType}>
+                  {['گروه مردانه', 'گروه زنانه', 'زوج'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+            </label>
+            <label>نوع خدمات
+            <select name='ServiceType' onChange={handleFinalReserveDetailsForm} value={reserveDetails.ServiceType}>
+                  {['حمام', 'ماساژ', 'قرق با خدمات','قرق بدون خدمات'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+            </label>
+            <label>روش ارائه
+            <select name='SelectedService' onChange={handleFinalReserveDetailsForm} value={reserveDetails.SelectedService}>
+                  {['معمولی', 'قرق', 'VIP'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+            </label>
+            <label>وضعیت اقامت
+            <select name='AccoStatus' onChange={handleFinalReserveDetailsForm} value={reserveDetails.AccoStatus}>
+                  {['مقیم هتل', 'غیر مقیم'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+            </label>
+            </div>
+            <div className='formdetails-first-one'>
+            <label>نوع پذیرایی </label>
+              <textarea name='CateringDetails' value={reserveDetails.CateringDetails} onChange={handleFinalReserveDetailsForm}/>
+           
+            <label>نام خدمات دهنده</label>
+              <input type='text' name='MassorNames' value={reserveDetails.MassorNames} onChange={handleFinalReserveDetailsForm} />
+            
+            <label>توضیحات</label>
+              <textarea name='Desc' value={reserveDetails.Desc} onChange={handleFinalReserveDetailsForm} />
+            
+            </div>
+            <button type='submit'>ذخیره</button>
+          </form>
       </div>
       </Modal>
     <div className="calendar-container">
@@ -208,7 +385,7 @@ const Calendar = () => {
                 onMouseUp={()=>handleMouseUp(day, hour)}
                 >
                   
-                  {isLoading && data.map((showData,index)=>(
+                  {data !== '' && data.map((showData,index)=>(
                    <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
                     showData.Hours.map((houry,index)=>(
                       <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={{backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>

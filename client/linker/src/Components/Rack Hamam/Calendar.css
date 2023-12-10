@@ -35,3 +35,19 @@
   margin: 5%;
   background-color: #ccc; /* Default color */
 }
+.formdetails{
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+  justify-content: center;
+  align-items: center;
+  row-gap: 20px;
+}
+.formdetails-first-one{
+  display: flex;
+  flex-direction: row;
+  direction: rtl;
+  justify-content: center;
+  align-items: center;
+  column-gap: 15px;
+}

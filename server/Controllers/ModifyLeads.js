@@ -22,6 +22,6 @@ export const modifyLeads = async(req,res)=>{
     
           res.json("Omid")
     }catch(error){
-        es.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
+        res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
     }
 }
