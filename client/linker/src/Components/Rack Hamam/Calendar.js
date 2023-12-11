@@ -76,7 +76,7 @@ const Calendar = () => {
         
     }
     fetchData();
-          }, []);
+          }, [showPopUp]);
   const handleMouseDown = (day, hour) => {
     isMouseDown = true;
     initialCell = { day, hour };
@@ -176,6 +176,7 @@ const Calendar = () => {
           })
           setIsLoading(false)
           notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+          setShowPopUp(false)
       }catch(error){
           setIsLoading(false)
           notify("خطا",error)
@@ -202,6 +203,7 @@ const Calendar = () => {
         })
         setIsLoading(false)
         notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+        setShowPopUp(false)
     }catch(error){
         setIsLoading(false)
         notify("خطا",error)
@@ -329,20 +331,12 @@ const Calendar = () => {
       </Modal>
     <div className="calendar-container">
       <div className="calendar-nav">
-        <button onClick={previousMonth}>Previous Month</button>
+        <button onClick={previousMonth}>ماه قبلی</button>
         <h2>{`${monthName} ${year}`}</h2>
-        <button onClick={nextMonth}>Next Month</button>
-      </div>
-      <div className="start-day-input">
+        <button onClick={nextMonth}>ماه بعدی</button>
+        <div className="start-day-input">
         <label htmlFor="start-day">Choose Date:</label>
-        {/* <input
-          type="date"
-          id="start-day"
-          name="start-day"
-          // The following line has been modified to work with the current Jalali date
-          value={moment(currentDate, 'jYYYY-jMM-jDD').format('YYYY-MM-DD')}
-          onChange={handleDateChange}
-        /> */}
+ 
         <DatePicker 
            digits={digits}
             value={values}
@@ -362,6 +356,8 @@ const Calendar = () => {
            ></DatePicker>
            <button onClick={handleDateChange}>برو به تاریخ</button>
       </div>
+      </div>
+      
       <table className="calendar-table">
         <thead>
           <tr>
