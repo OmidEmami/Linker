@@ -8,7 +8,7 @@ import { farazSMS } from '@aspianet/faraz-sms';
 import { refreshToken } from "../Controllers/RefreshToken.js";
 import { changeaccesstype, getUsersToManage } from "../Controllers/ManageUsers.js";
 import { findReserveForPdf } from "../Controllers/GeneratePdf.js";
-import { sendRoomcatalog, sendhamam, sendrestaurantmenu } from "../Controllers/SendLinks.js";
+import { sendRoomcatalog, sendhamam, sendrestaurantmenu, sendyalda } from "../Controllers/SendLinks.js";
 import { Logout } from "../Controllers/Logout.js";
 import { verifyToken } from "../Controllers/VerifyToken.js";
 import { newLead } from "../Controllers/GenerateLead.js";
@@ -42,4 +42,5 @@ router.post("/api/regFollowLead", modifyLeads)
 router.post("/api/HamamReserveDetail",regNewHamamReserve);
 router.get("/api/getFixedReserves",getFixedReserves);
 router.post("/api/modifyFixedReserves",modifyFixedReserves)
+router.post("/api/sendyalda", sendyalda)
 export default router;

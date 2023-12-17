@@ -13,6 +13,7 @@ import Footer from "./Components/Footer";
 import GetLeads from "./Hamam/GetLeads";
 import RequestFollowUp from "./Hamam/RequestFollowUp";
 import Calendar from "./Components/Rack Hamam/Calendar";
+import Yalda from "./Components/Yalda/Yalda.js";
 
 
 
@@ -26,6 +27,9 @@ function App() {
     <Switch>
     <Route exact path="/cal">
         <Calendar />
+      </Route>
+    <Route exact path="/yalda">
+        <Yalda />
       </Route>
     <Route exact path="/followup">
         <RequestFollowUp />

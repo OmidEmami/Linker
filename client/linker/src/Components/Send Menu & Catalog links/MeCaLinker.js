@@ -9,6 +9,7 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import styles from "./MeCaLinker.module.css"
 import Logo from "../../assests/logo.png"
+import Yalda from "../../assests/yalda.png"
 const MeCaLinker = ()=> {
     const [restaurantPhone, setRestaurantPhone] = useState('');
     const [hamamPhone, setHamamPhone] = useState('');
@@ -19,6 +20,27 @@ const MeCaLinker = ()=> {
     const date = new DateObject({ calendar: persian, locale: persian_fa });
     const [values, setValues] = useState([]);
     const digits=["0","1","2","3","4","5","6","7","8","9"];
+    const [yaldaName, setYaldaName] = useState('');
+    const [yaldaPhone, setYaldaPhone] = useState('')
+    const sendYalda = async(e)=>{
+        e.preventDefault();
+        try{
+            setLoading(true)
+            const response = await axios.post('https://gmhotel.ir/api/sendyalda',{
+                Phone : yaldaPhone,
+                Name : yaldaName,
+            })
+            if(response.data === "ok"){
+            setLoading(false)
+            notify( "لینک ارسال شد", "success")
+            setYaldaName('');
+            setYaldaPhone('')
+            }
+        }catch(error){
+            setLoading(false)
+            notify( "خطا", "error")
+        }
+    }
     const sendHamamSms = async(e)=>{
         e.preventDefault();
         try{
@@ -96,7 +118,19 @@ const MeCaLinker = ()=> {
     <>
     <div className={styles.header}><img src={Logo} alt='قصرمنشی'/></div>
         {loading && <LoadingComp />}
+        <div className={styles.yalda}>
+        <h2>اختصاصی شب یلدا</h2>
+        <form style={{justifyContent: "center",alignItems: "center", display: "flex", flexDirection: "row"}} onSubmit={(e)=>sendYalda(e)}>
+        <label>نام مهمان</label>
+        <input placeholder='نام مهمان' required type='text' value={yaldaName} onChange={(e)=>setYaldaName(e.target.value)} />
+        <label>شماره تماس</label>
+        <input placeholder='شماره تماس مهمان' required type='number' value={yaldaPhone} onChange={(e)=>setYaldaPhone(e.target.value)}></input>
+        <button type='submit'>ارسال</button>
+        <img src={Yalda} alt='yalda' width="8%" />
+        </form>
+    </div>
         <div className={styles.mainDiv}>
+            
     <div className={styles.formContainer}>
         <h2>ارسال منو رستوران</h2>
         <form onSubmit={(e)=>sendRestaurantSms(e)}>

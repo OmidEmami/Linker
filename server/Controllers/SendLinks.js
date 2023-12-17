@@ -2,6 +2,18 @@ import HamamEntry from "../Models/HamamEntry.js";
 import RestaurantEntry from "../Models/RestaurantEntry.js";
 import RoomEntry from "../Models/RoomEntry.js";
 import { farazSendPattern } from "@aspianet/faraz-sms";
+export const sendyalda = async(req,res)=>{
+    try{
+        
+        const patternCodeToGuestGenerateLink = "7d7l3ztp6pnhy7i";
+        const sms = await farazSendPattern( patternCodeToGuestGenerateLink,
+            "+983000505", req.body.Phone,
+             { name : req.body.Name});
+             res.json("ok")
+    }catch(error){
+        res.status(500).json({ error: 'An error occurred while making the request.'});
+    }
+}
 export const sendRoomcatalog = async(req,res)=>{
         try{
             const response = await RoomEntry.create({
