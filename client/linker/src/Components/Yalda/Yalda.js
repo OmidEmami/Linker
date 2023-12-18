@@ -63,7 +63,9 @@ function Yalda() {
         <video controls src={Tizer} poster="../../assests/yaldaPoster.jpg" />
       </div>
       <div className={styles.FormContainer}>
-        <p>شب یلدا میز بان شما هستیم محل قرار گیری متن</p>
+        <p>باهم و در کنار هم بلندترین شب سال را جشن می گیریم.</p>
+        <p>قدمهایتان بر چشم ...</p>
+        <p>هزینه ورودی و پذیرایی برای هر نفر 690 هزار تومان می باشد</p>
         <img src={YaldaPoster} alt='poster yalda' width="80%" />
       </div>
     </div>
