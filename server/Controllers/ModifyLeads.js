@@ -2,6 +2,7 @@ import NewLeads from "../Models/NewLeads.js";
 export const modifyLeads = async(req,res)=>{
     const data = req.body.data
     try{
+        
         for(let i = 0 ; i < data.length ; i++){
             const response = await NewLeads.update({
                 FullName:data[i].FullName,
@@ -11,7 +12,6 @@ export const modifyLeads = async(req,res)=>{
                 PreferedDate:data[i].PreferedDate,
                 UniqueId:data[i].UniqueId,
                 FirstFollow:data[i].FirstFollow,
-                SecondFollow:data[i].SecondFollow,
                 Status :data[i].Status
             },{
                 where:{

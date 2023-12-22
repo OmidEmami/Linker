@@ -94,3 +94,15 @@
     align-items: center;
     column-gap: 1vw;
 }
+.checkoutView{
+    background-color: #00ccff;
+}
+.inprogressView{
+    background-color: aquamarine;
+}
+.callednoanswerView{
+    background-color: #8400ff;
+}
+.calledacceptedView{
+    background-color: #ff00d4 ;
+}

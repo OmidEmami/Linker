@@ -20,32 +20,32 @@ const MeCaLinker = ()=> {
     const date = new DateObject({ calendar: persian, locale: persian_fa });
     const [values, setValues] = useState([]);
     const digits=["0","1","2","3","4","5","6","7","8","9"];
-    const [yaldaName, setYaldaName] = useState('');
-    const [yaldaPhone, setYaldaPhone] = useState('')
-    const sendYalda = async(e)=>{
-        e.preventDefault();
-        try{
-            setLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/sendyalda',{
-                Phone : yaldaPhone,
-                Name : yaldaName,
-            })
-            if(response.data === "ok"){
-            setLoading(false)
-            notify( "لینک ارسال شد", "success")
-            setYaldaName('');
-            setYaldaPhone('')
-            }
-        }catch(error){
-            setLoading(false)
-            notify( "خطا", "error")
-        }
-    }
+    // const [yaldaName, setYaldaName] = useState('');
+    // const [yaldaPhone, setYaldaPhone] = useState('')
+    // const sendYalda = async(e)=>{
+    //     e.preventDefault();
+    //     try{
+    //         setLoading(true)
+    //         const response = await axios.post('http://localhost:3001/api/sendyalda',{
+    //             Phone : yaldaPhone,
+    //             Name : yaldaName,
+    //         })
+    //         if(response.data === "ok"){
+    //         setLoading(false)
+    //         notify( "لینک ارسال شد", "success")
+    //         setYaldaName('');
+    //         setYaldaPhone('')
+    //         }
+    //     }catch(error){
+    //         setLoading(false)
+    //         notify( "خطا", "error")
+    //     }
+    // }
     const sendHamamSms = async(e)=>{
         e.preventDefault();
         try{
             setLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/sendhamam',
+            const response = await axios.post('http://localhost:3001/api/sendhamam',
             {
                 Phone : hamamPhone
             }
@@ -67,7 +67,7 @@ const MeCaLinker = ()=> {
         e.preventDefault();
         try{
             setLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/sendrestaurantmenu',
+            const response = await axios.post('http://localhost:3001/api/sendrestaurantmenu',
             {
                 Phone : restaurantPhone
             }
@@ -91,7 +91,7 @@ const MeCaLinker = ()=> {
         e.preventDefault();
         const entrydate = values[0].format();
         try{
-            const response = await axios.post('https://gmhotel.ir/api/sendroomcatalog',{
+            const response = await axios.post('http://localhost:3001/api/sendroomcatalog',{
                 date : entrydate,
                 name : guestName,
                 phone : roomPhone 
@@ -118,7 +118,7 @@ const MeCaLinker = ()=> {
     <>
     <div className={styles.header}><img src={Logo} alt='قصرمنشی'/></div>
         {loading && <LoadingComp />}
-        <div className={styles.yalda}>
+        {/* <div className={styles.yalda}>
         <h2>اختصاصی شب یلدا</h2>
         <form style={{justifyContent: "center",alignItems: "center", display: "flex", flexDirection: "row"}} onSubmit={(e)=>sendYalda(e)}>
         <label>نام مهمان</label>
@@ -128,7 +128,7 @@ const MeCaLinker = ()=> {
         <button type='submit'>ارسال</button>
         <img src={Yalda} alt='yalda' width="8%" />
         </form>
-    </div>
+    </div> */}
         <div className={styles.mainDiv}>
             
     <div className={styles.formContainer}>

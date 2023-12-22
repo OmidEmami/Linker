@@ -35,7 +35,6 @@ const columns = [
     {id: 'UniqueId', label : 'شماره درخواست'},
     {id:'RequestDate', label:'تاریخ ثبت',sortable:"true"},
     {id: 'FirstFollow', label:'نتیجه پیگیری اول'},
-    {id :'SecondFollow', label :'نتیجه پیگیری دوم'},
     {id :'Status', label :'وضعیت',sortable:"true"},
     {id : 'Source', label :'منبع',sortable:"true"}
   // Add more columns as needed
@@ -44,7 +43,7 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
-  
+  const [showData, setShowData] = useState(false)
   const [hamamStartHour, setHamamStartHour] = useState();
   const [hamamEndHour, setHamamEndHour] = useState();
   const date = new DateObject({ calendar: persian, locale: persian_fa });
@@ -100,12 +99,14 @@ const RequestFollowUp = () => {
   useEffect(() => {
     
     const fetchData=async()=>{
-        setIsLoading(false)
+        setShowData(false)
+        setIsLoading(true)
         try{
-            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
+            const response = await axios.get("http://localhost:3001/api/getNewLeads")
          
                 setData(response.data)
-                setIsLoading(true)
+                setShowData(true)
+                setIsLoading(false)
         }catch(error){
 
         }
@@ -141,9 +142,10 @@ const RequestFollowUp = () => {
     setShowSaveButton(false)
     setRegisterLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
+      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
         data : data 
     })
+    console.log(response.data)
    if(response.data === "Omid"){
     setRegisterLoading(false)
     notify( "اطلاعات با موفقیت ثبت شد", "success")
@@ -167,7 +169,7 @@ const RequestFollowUp = () => {
        
    try{
     setIsLoading(true)
-    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
+    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -181,9 +183,12 @@ const RequestFollowUp = () => {
           MassorNames:finalFormData.MassorNames,
           Desc:finalFormData.Desc
     })
+    
     if(response.status === 200){
       setIsLoading(false)
       notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+      setInitialPopup(false)
+      console.log(response)
     }
    }catch(error){
     notify( "خطا", "error")
@@ -203,7 +208,8 @@ const RequestFollowUp = () => {
   return (
    <>
    {registerLoading && <LoadingComp/>}
-    {isLoading === true ? <>
+   {isLoading && <LoadingComp/>}
+    {showData === true ? <>
       <div className={styles.HeaderCustomer}>
         
         <img className={styles.LogoContainer} alt='logo' src={Logo} />
@@ -224,12 +230,20 @@ const RequestFollowUp = () => {
         </TableHead>
         <TableBody>
           {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-            <TableRow className={row.Status === "Pending" && styles.pendingView || row.Status === "Active" && styles.activeView || row.Status === "Cancel" && styles.cancelView} key={row.id}>
+            <TableRow className={
+              row.Status === "Pending" && styles.pendingView
+              || row.Status === "Reserve Finalized" && styles.activeView
+              || row.Status === "Called - Declined" && styles.cancelView
+              || row.status === "Checked Out" && styles.checkoutView
+              || row.status === "In Progress" && styles.inprogressView
+              || row.status === "Called no answer" && styles.callednoanswerView
+              || row.status === "Called - Accepted, waiting for reservation" && styles.calledacceptedView
+              } key={row.id}>
+              {/* 'Checked Out', 'In Progress', 'Pending','Called no answer','Called - Declined' , 'Called - Accepted, waiting for reservation', 'Reserve Finalized' */}
               {columns.map((column) => (
                 <TableCell key={column.id}>
                   {column.editable || column.id === 'FullName'
                   || column.id === 'Phone' || column.id === 'HamamType' || column.id === 'FirstFollow'
-                  || column.id === 'SecondFollow'
                   || column.id === 'PreferedDate'
                   ? (column.id !== "Status" ?(
                     <textarea
@@ -253,7 +267,7 @@ const RequestFollowUp = () => {
                   <option value="Cancel">Cancel</option>
                   </select>) : (column.id !== "Status" ?(row[column.id]):(
                   <select onChange={(e) => handleFieldChange(row, column.id, e.target.value)} value={row[column.id]}>
-                  {['Active', 'Cancel', 'Pending'].map(option => (
+                  {['Checked Out', 'In Progress', 'Pending','Called no answer','Called - Declined' , 'Called - Accepted, waiting for reservation', 'Reserve Finalized'].map(option => (
                     <option key={option} value={option}>
                       {option}
                     </option>

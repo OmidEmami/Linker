@@ -26,9 +26,6 @@ const NewLeads = db.define('NewLeads',{
     FirstFollow:{
         type :DataTypes.TEXT
     },
-    SecondFollow:{
-        type: DataTypes.TEXT
-    },
     Source:{
         type: DataTypes.TEXT
     },

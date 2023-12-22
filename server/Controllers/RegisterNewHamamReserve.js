@@ -1,7 +1,8 @@
 import HamamReserveDetail from "../Models/HamamReserveDetail.js";
+import NewLeads from "../Models/NewLeads.js";
 export const regNewHamamReserve = async(req,res)=>{
     try{
-        const response = HamamReserveDetail.create({
+        const responseI = await HamamReserveDetail.create({
             UniqueId:req.body.RequestKey,
             FullName:req.body.FullName,
             Phone:req.body.Phone,
@@ -14,6 +15,13 @@ export const regNewHamamReserve = async(req,res)=>{
             CateringDetails:req.body.CateringDetails,
             MassorNames:req.body.MassorNames,
             Desc:req.body.Desc
+        })
+        const response = await NewLeads.update({
+            Status : "Active"
+        },{
+            where:{
+                UniqueId : req.body.RequestKey
+            }
         })
         res.json(response)
     }catch(error){

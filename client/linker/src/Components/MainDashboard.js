@@ -16,6 +16,8 @@ import MeCaLinker from "./Send Menu & Catalog links/MeCaLinker";
 import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard";
 import { useDispatch } from "react-redux";
 import { addToken } from './action';
+import Calendar from "./Rack Hamam/Calendar";
+
  const MainDashboard = () =>{
     const dispatch = useDispatch();
     const [name, setName] = useState('');
@@ -36,7 +38,7 @@ import { addToken } from './action';
         
         try {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
            
             setToken(response.data.accessToken);
             
@@ -64,7 +66,7 @@ import { addToken } from './action';
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -113,8 +115,9 @@ import { addToken } from './action';
                 <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
-                <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ و منو</li>
-                <li value={7} onClick={showHamamManagement}>درخواست های حمام(Beta)</li>
+                <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ ، منو و حمام</li>
+                <li value={8} onClick={showHamamManagement}>بررسی درخواست های حمام</li>
+                <li value={9} onClick={(e)=>showItem(e.target.value)}>تقویم رزرو های حمام</li>
                 {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
                 <li value={6} onClick={(e)=>showItem(e.target.value)}>خروج از سیستم</li>
                 
@@ -141,6 +144,9 @@ import { addToken } from './action';
           : null}
           {item === 6 ?
          <div className={stylesNd.MainContent}><LogOutSystem /></div>
+          : null}
+          {item === 9 ?
+          <div className={stylesNd.MainContent}><Calendar /></div>
           : null}
           {item === false && <div className={stylesNd.MainContent}>
             <h3 style={{direction:"rtl"}}>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}

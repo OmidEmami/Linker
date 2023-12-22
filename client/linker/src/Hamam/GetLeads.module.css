@@ -59,6 +59,9 @@
     margin-bottom: 10vw;
     
   }
+  .FormContainer MultiSelect{
+    color: black;
+  }
   .FormContainer label{
     margin: 1rem;
     color: white;
