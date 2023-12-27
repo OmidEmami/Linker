@@ -125,7 +125,7 @@ const RequestFollowUp = () => {
   const handleFieldChange = (row,column, newValue) => {
     
     setShowSaveButton(true)
-    if(newValue === "Active"){
+    if(newValue === "Reserve Finalized"){
       setInitialPopup(true)
       
       const foundItem = data.find(item => item.id === row.id);
@@ -234,10 +234,10 @@ const RequestFollowUp = () => {
               row.Status === "Pending" && styles.pendingView
               || row.Status === "Reserve Finalized" && styles.activeView
               || row.Status === "Called - Declined" && styles.cancelView
-              || row.status === "Checked Out" && styles.checkoutView
-              || row.status === "In Progress" && styles.inprogressView
-              || row.status === "Called no answer" && styles.callednoanswerView
-              || row.status === "Called - Accepted, waiting for reservation" && styles.calledacceptedView
+              || row.Status === "Checked Out" && styles.checkoutView
+              || row.Status === "In Progress" && styles.inprogressView
+              || row.Status === "Called no answer" && styles.callednoanswerView
+              || row.Status === "Called - Accepted, waiting for reservation" && styles.calledacceptedView
               } key={row.id}>
               {/* 'Checked Out', 'In Progress', 'Pending','Called no answer','Called - Declined' , 'Called - Accepted, waiting for reservation', 'Reserve Finalized' */}
               {columns.map((column) => (
@@ -313,11 +313,11 @@ const RequestFollowUp = () => {
         <form className={styles.finalizeFormData} onSubmit={FinalReserveDetails}>
           <div className={styles.partOneFinalForm}>
           <label>نام کامل
-          <input name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} /></label>
+          <input required name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} /></label>
           <label>شماره تماس
-          <input type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} /></label>
+          <input required type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} /></label>
           <label>شماره درخواست
-          <input type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} /></label>
+          <input required type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} /></label>
           </div>
           <div className={styles.partTwoFinalForm}>
           <label>تاریخ تایید شده</label>
@@ -345,7 +345,7 @@ const RequestFollowUp = () => {
            </div>
            <div className={styles.partThreeFinalForm}>
             <label>نوع مشتری
-           <select name='CustomerType' onChange={handleFinalReserveDetailsForm} value={finalFormData.CustomerType}>
+           <select required name='CustomerType' onChange={handleFinalReserveDetailsForm} value={finalFormData.CustomerType}>
            <option value="none" selected>نوع مشتری</option>
             <option>گروه مردانه</option>
             <option>گروه زنانه</option>
@@ -353,7 +353,7 @@ const RequestFollowUp = () => {
             
            </select></label>
            <label>نوع خدمات
-           <select name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
+           <select required name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
             <option value="none" selected>نوع خدمات</option>
             <option>حمام</option>
             <option>ماساژ</option>
@@ -361,7 +361,7 @@ const RequestFollowUp = () => {
             <option>قرق بدون خدمات</option>
            </select></label>
            <label>روش ارائه
-           <select name='SelectedService' onChange={handleFinalReserveDetailsForm} value={finalFormData.SelectedService}>
+           <select required name='SelectedService' onChange={handleFinalReserveDetailsForm} value={finalFormData.SelectedService}>
             <option value="none">روش ارائه</option>
             <option>معمولی</option>
             <option>قرق</option>
@@ -369,13 +369,13 @@ const RequestFollowUp = () => {
            </select></label>
            </div>
            <div className={styles.partFourFinalForm}>
-            <select name='AccoStatus' onChange={handleFinalReserveDetailsForm} value={finalFormData.AccoStatus}>
+            <select required name='AccoStatus' onChange={handleFinalReserveDetailsForm} value={finalFormData.AccoStatus}>
               <option value="none">وضعیت اقامت</option>
               <option>مقیم هتل</option>
               <option>غیر مقیم</option>
             </select>
             <label>نوع پذیرایی</label>
-            <textarea name='CateringDetails' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.CateringDetails} />
+            <textarea  name='CateringDetails' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.CateringDetails} />
             <label>نام خدمات دهنده</label>
             <input name="MassorNames" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.MassorNames} />
             <label>توضیحات دیگر</label>
