@@ -102,7 +102,7 @@ const RequestFollowUp = () => {
         setShowData(false)
         setIsLoading(true)
         try{
-            const response = await axios.get("http://localhost:3001/api/getNewLeads")
+            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
          
                 setData(response.data)
                 setShowData(true)
@@ -142,7 +142,7 @@ const RequestFollowUp = () => {
     setShowSaveButton(false)
     setRegisterLoading(true)
     try{
-      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
+      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     })
     console.log(response.data)
@@ -169,7 +169,7 @@ const RequestFollowUp = () => {
        
    try{
     setIsLoading(true)
-    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
+    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,

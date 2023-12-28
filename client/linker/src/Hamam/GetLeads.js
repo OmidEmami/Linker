@@ -37,7 +37,7 @@ const [hamamType,setHamamType] = useState('')
     }
     
     try{
-      const response = await axios.post("http://localhost:3001/api/createNewLead",{
+      const response = await axios.post("https://gmhotel.ir/api/createNewLead",{
             FullName : fullName,
             Phone: phoneNumber,
             HamamType:hamamType.join(','),
@@ -93,13 +93,24 @@ const [hamamType,setHamamType] = useState('')
                        </select> */}
                         
                        <label>انتخاب نوع سرویس حمام</label>
-      
+                                  <div style={{display:"flex", justifyContent:'space-between', alignItems:'center'}}>
+                                    <div style={{display:"flex",flexDirection:"column"}}>
                                   {hamamTypes.map((info,index)=>(
-                                    <>
-                                    <label for={info.name}>{info.value}</label>
-                                    <input type='checkbox' name={info.name} value={info.value} onChange={(e)=>changeHamamTypes(e)}/>
-                                    </>
+                                    
+                                    
+                                    <input style={{margin:"1rem", width:"1rem"}} type='checkbox' name={info.name} value={info.value} onChange={(e)=>changeHamamTypes(e)}/>
+                                    
+                                    
                                   ))}
+                                  </div>
+                                  <div style={{display:"flex",flexDirection:"column"}}>
+                                  {hamamTypes.map((info,index)=>(
+                                    
+                                    <label>{info.value}</label>
+                                    
+                                  ))}
+                                  </div>
+                                  </div>
                                   {/* <input type="checkbox" id="hamam1" name="menhamam" value="Bike" />
                                   <label for="vehicle1"> I have a bike</label>
                                   <input type="checkbox" id="hamam2" name="womenhamam" value="Car" />

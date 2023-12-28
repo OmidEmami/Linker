@@ -99,3 +99,9 @@
     cursor: pointer;
   }
   .FormContainer form button:hover {background-color: #D1AF6E}
+  .SelectBoxContainer{
+    
+
+    justify-content: center;
+    align-items: center;
+  }

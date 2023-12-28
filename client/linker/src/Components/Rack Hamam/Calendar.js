@@ -48,7 +48,7 @@ const Calendar = () => {
     const fetchData=async()=>{
         setIsLoading(true)
         try{
-            const response = await axios.get("http://localhost:3001/api/getFixedReserves")
+            const response = await axios.get("https://gmhotel.ir/api/getFixedReserves")
             const updatedData = response.data.map(item => {
               const hoursString = item.Hours;
               
@@ -160,7 +160,7 @@ const Calendar = () => {
       const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -187,7 +187,7 @@ const Calendar = () => {
     const selectedHours = reserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:reserveDetails.UniqueId,
         FullName:reserveDetails.FullName,
         Phone:reserveDetails.Phone,
