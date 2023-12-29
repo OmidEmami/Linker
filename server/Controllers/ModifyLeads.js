@@ -1,4 +1,5 @@
 import NewLeads from "../Models/NewLeads.js";
+import moment from 'jalali-moment'
 export const modifyLeads = async(req,res)=>{
     const data = req.body.data
     try{
@@ -23,5 +24,23 @@ export const modifyLeads = async(req,res)=>{
           res.json("Omid")
     }catch(error){
         res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
+    }
+}
+export const manualNewLead = async(req,res)=>{
+    const UniqueId = Math.floor(Math.random() * 9000) + 1000
+
+    try{
+        const response = await NewLeads.create({
+            FullName:req.body.Name,
+            Phone:req.body.Phone,
+            PreferedDate:req.body.Dates,
+            HamamType:req.body.HamamType,
+            Source:req.body.leadSource,
+            UniqueId:UniqueId,
+            RequestDate:moment().locale('fa').format('YYYY-MM-DD'),
+            Status :"Pending"
+        })
+    }catch(error){
+
     }
 }

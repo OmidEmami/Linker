@@ -13,7 +13,7 @@ import { Logout } from "../Controllers/Logout.js";
 import { verifyToken } from "../Controllers/VerifyToken.js";
 import { newLead } from "../Controllers/GenerateLead.js";
 import { getNewLeads } from "../Controllers/GetNewLeads.js";
-import { modifyLeads } from "../Controllers/ModifyLeads.js";
+import { manualNewLead, modifyLeads } from "../Controllers/ModifyLeads.js";
 import { regNewHamamReserve } from "../Controllers/RegisterNewHamamReserve.js";
 import { getFixedReserves } from "../Controllers/getFixedReserves.js";
 import { modifyFixedReserves } from "../Controllers/modifyFixedReservesHamam.js";
@@ -43,4 +43,5 @@ router.post("/api/HamamReserveDetail",regNewHamamReserve);
 router.get("/api/getFixedReserves",getFixedReserves);
 router.post("/api/modifyFixedReserves",modifyFixedReserves)
 router.post("/api/sendyalda", sendyalda)
+router.post("/api/manualNewLead",manualNewLead )
 export default router;

@@ -43,11 +43,22 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  const hamamTypes = [
+    {name : 'menHamam', value:"حمام مردانه"},
+    {name : 'womenHamam', value:"حمام زنانه"},
+    {name : 'massage', value:"ماساژ"},
+    {name : 'traditionalHamam', value:"دلاکی سنتی"}
+  ]
+  const [hamamType,setHamamType] = useState('') 
+  const [newNameLead,setNewNameLead] = useState('');
+  const [newPhoneLead, setNewPhoneLead] = useState('');
+  const [leadSource, setLeadSource] = useState('')
   const [showData, setShowData] = useState(false)
   const [hamamStartHour, setHamamStartHour] = useState();
   const [hamamEndHour, setHamamEndHour] = useState();
+  const [showNewLeadModal, setShowNewLeadModal] = useState(false)
   const date = new DateObject({ calendar: persian, locale: persian_fa });
-  const [values, setValues] = useState();
+  const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const customStyles = {
     content: {
@@ -102,7 +113,7 @@ const RequestFollowUp = () => {
         setShowData(false)
         setIsLoading(true)
         try{
-            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
+            const response = await axios.get("http://localhost:3001/api/getNewLeads")
          
                 setData(response.data)
                 setShowData(true)
@@ -142,7 +153,7 @@ const RequestFollowUp = () => {
     setShowSaveButton(false)
     setRegisterLoading(true)
     try{
-      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
+      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
         data : data 
     })
     console.log(response.data)
@@ -169,7 +180,7 @@ const RequestFollowUp = () => {
        
    try{
     setIsLoading(true)
-    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
+    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -205,6 +216,32 @@ const RequestFollowUp = () => {
       [name]: value
     }));
   }
+  const saveNewManualLead = async(e)=>{
+    e.preventDefault();
+    var dates = [];
+    for(let i = 0 ; i < values.length ; i++){
+      dates = [...dates, moment.from(values[i].format(), 'fa', 'DD/MM/YYYY').format('jYYYY-jMM-jDD')]
+    }
+    try{
+      const response = await axios.post('http://localhost:3001/api/manualNewLead',{
+        Name:newNameLead,
+        Phone:newPhoneLead,
+        LeadSource:leadSource,
+        Dates:dates.toString(),
+        HamamType:hamamType.join(',')
+      })
+    }catch(error){
+
+    }
+  }
+  const changeHamamTypes = (e) =>{
+    if(e.target.checked){
+    setHamamType([...hamamType , e.target.value])
+    }else{
+      const updatedItems = hamamType.filter(item => item !== e.target.value);
+      setHamamType(updatedItems)
+    }
+  }
   return (
    <>
    {registerLoading && <LoadingComp/>}
@@ -214,11 +251,15 @@ const RequestFollowUp = () => {
         
         <img className={styles.LogoContainer} alt='logo' src={Logo} />
       </div>
+      
       <div className={styles.headerTextHolder}>
         <h2>مدیریت درخواست های حمام</h2>
         <p style={{color:"red"}}>بعد از ایجاد تغییرات حتما ذخیره کنید</p>
         </div>
-      
+        <div style={{display:"flex", direction:"rtl", marginRight:"2rem"}}>
+          <button onClick={()=>setShowNewLeadModal(true)} className={styles.buttonClass}>ایجاد سرنخ جدید</button>
+          </div>
+        
     <TableContainer className={styles.MainContainer} component={Paper}>
       <Table>
         <TableHead>
@@ -382,6 +423,70 @@ const RequestFollowUp = () => {
             <textarea name='Desc' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.Desc} />
             </div>
             <button type='submit'>ذخیره</button>   
+        </form>
+      </div>
+      </Modal>
+      <Modal
+        isOpen={showNewLeadModal}
+        //onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setShowNewLeadModal(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+        
+      >
+        <div>
+        <h3>اضافه کردن سر نخ بصورت دستی</h3>
+        <form onSubmit={saveNewManualLead}>
+          <label>نام مشتری
+            <input type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
+          </label>
+          <label>شماره تماس
+            <input type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
+          </label>
+          <label>تاریخ های پیشنهادی
+          <DatePicker 
+                       required 
+           digits={digits}
+            value={values}
+            onChange={value=>{setValues(value)
+            }}
+                style={{fontFamily:"Shabnam"}}
+             calendar={persian}
+             locale={persian_fa}
+             calendarPosition="bottom-right"
+             format="DD/MM/YYYY"
+             placeholder='تاریخ پیشنهادی دریافت خدمات'
+           ></DatePicker></label>
+           <label>منبع سر نخ
+            
+            <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
+                  {['Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+           </label>
+           <label>انتخاب نوع سرویس حمام</label>
+                                  <div style={{display:"flex", justifyContent:'space-between', alignItems:'center'}}>
+                                    <div style={{display:"flex",flexDirection:"column"}}>
+                                  {hamamTypes.map((info,index)=>(
+                                    
+                                    
+                                    <input style={{margin:"1rem", width:"1rem"}} type='checkbox' name={info.name} value={info.value} onChange={(e)=>changeHamamTypes(e)}/>
+                                    
+                                    
+                                  ))}
+                                  </div>
+                                  <div style={{display:"flex",flexDirection:"column"}}>
+                                  {hamamTypes.map((info,index)=>(
+                                    
+                                    <label>{info.value}</label>
+                                    
+                                  ))}
+                                  </div>
+                                  </div>
+          <button className={styles.buttonClass} type='submit'>ثبت</button>
         </form>
       </div>
       </Modal>
