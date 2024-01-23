@@ -68,7 +68,7 @@ const RequestFollowUp = () => {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width:"80%"
+      width:"70%"
     },
   };
   const [finalFormData, setFinalFormData] = useState({
@@ -218,11 +218,19 @@ const RequestFollowUp = () => {
   }
   const saveNewManualLead = async(e)=>{
     e.preventDefault();
+    console.log(hamamType)
+    if(hamamType !== ''){
+    
     var dates = [];
     for(let i = 0 ; i < values.length ; i++){
       dates = [...dates, moment.from(values[i].format(), 'fa', 'DD/MM/YYYY').format('jYYYY-jMM-jDD')]
     }
     try{
+      // function handleReloadPage (){
+      //   setTimeout(() => {
+      //     window.location.reload();
+      //   }, 3000); // 3000 milliseconds (3 seconds)
+      // }
       const response = await axios.post('http://localhost:3001/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
@@ -230,9 +238,22 @@ const RequestFollowUp = () => {
         Dates:dates.toString(),
         HamamType:hamamType.join(',')
       })
+      if(response.data === "ok"){
+        
+        // window.location.reload();
+        notify("سر نخ جدید با موفقیت وارد شد","success")
+        setShowNewLeadModal(false)
+        // handleReloadPage();
+      }else{
+        notify('خطا','error')
+      }
+      
     }catch(error){
-
+      notify('خطا','error')
     }
+  }else{
+    notify("لطفا همه موارد را تکمیل کنید","error")
+  }
   }
   const changeHamamTypes = (e) =>{
     if(e.target.checked){
@@ -350,7 +371,7 @@ const RequestFollowUp = () => {
         
       >
         <div>
-        <h3>لطفا جزئیات رزرو را تکمیل کنید</h3>
+        <h3 style={{direction:"rtl"}}>لطفا جزئیات رزرو را تکمیل کنید</h3>
         <form className={styles.finalizeFormData} onSubmit={FinalReserveDetails}>
           <div className={styles.partOneFinalForm}>
           <label>نام کامل
@@ -436,28 +457,28 @@ const RequestFollowUp = () => {
       >
         <div>
         <h3>اضافه کردن سر نخ بصورت دستی</h3>
-        <form onSubmit={saveNewManualLead}>
-          <label>نام مشتری
-            <input type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
-          </label>
-          <label>شماره تماس
-            <input type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
-          </label>
-          <label>تاریخ های پیشنهادی
+        <form className={styles.ManualLead} onSubmit={saveNewManualLead}>
+          <label>نام مشتری</label>
+            <input required type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
+          
+          <label>شماره تماس </label>
+            <input required type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
+         
+          <label>تاریخ های پیشنهادی</label>
           <DatePicker 
                        required 
            digits={digits}
             value={values}
             onChange={value=>{setValues(value)
             }}
-                style={{fontFamily:"Shabnam"}}
+                style={{fontFamily:"Shabnam", width:"100%"}}
              calendar={persian}
              locale={persian_fa}
              calendarPosition="bottom-right"
              format="DD/MM/YYYY"
              placeholder='تاریخ پیشنهادی دریافت خدمات'
-           ></DatePicker></label>
-           <label>منبع سر نخ
+           ></DatePicker>
+           <label>منبع سر نخ</label>
             
             <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
                   {['Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی'].map(option => (
@@ -466,14 +487,14 @@ const RequestFollowUp = () => {
                     </option>
                   ))}
                 </select>
-           </label>
+           
            <label>انتخاب نوع سرویس حمام</label>
                                   <div style={{display:"flex", justifyContent:'space-between', alignItems:'center'}}>
                                     <div style={{display:"flex",flexDirection:"column"}}>
                                   {hamamTypes.map((info,index)=>(
                                     
                                     
-                                    <input style={{margin:"1rem", width:"1rem"}} type='checkbox' name={info.name} value={info.value} onChange={(e)=>changeHamamTypes(e)}/>
+                                    <input  style={{margin:"1rem", width:"1rem", height:'1.4rem'}} type='checkbox' name={info.name} value={info.value} onChange={(e)=>changeHamamTypes(e)}/>
                                     
                                     
                                   ))}
@@ -481,7 +502,7 @@ const RequestFollowUp = () => {
                                   <div style={{display:"flex",flexDirection:"column"}}>
                                   {hamamTypes.map((info,index)=>(
                                     
-                                    <label>{info.value}</label>
+                                    <label style={{margin:"1rem"}}>{info.value}</label>
                                     
                                   ))}
                                   </div>

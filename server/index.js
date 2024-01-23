@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(router);
 
-app.use('/images', express.static('images'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 server.listen(PORT,'0.0.0.0', ()=> console.log('Server running at port 3001'));

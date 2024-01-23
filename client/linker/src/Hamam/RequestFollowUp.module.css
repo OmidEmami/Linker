@@ -6,6 +6,9 @@
 .MainContainer th{
     font-family: 'Shabnam';
 }
+.MainContainer td {
+    font-family: 'Shabnam';
+}
 .MainContainer input{
     font-family: 'Shabnam';
 }
@@ -105,4 +108,13 @@
 }
 .calledacceptedView{
     background-color: #ff00d4 ;
+}
+.ManualLead{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1vw;
+   
 }

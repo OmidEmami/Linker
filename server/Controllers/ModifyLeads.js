@@ -35,12 +35,13 @@ export const manualNewLead = async(req,res)=>{
             Phone:req.body.Phone,
             PreferedDate:req.body.Dates,
             HamamType:req.body.HamamType,
-            Source:req.body.leadSource,
+            Source:req.body.LeadSource,
             UniqueId:UniqueId,
             RequestDate:moment().locale('fa').format('YYYY-MM-DD'),
             Status :"Pending"
         })
+        res.json("ok")
     }catch(error){
-
+        res.status(404).json({ msg: 'An error occurred while making the request.' , error2 : error});
     }
 }
