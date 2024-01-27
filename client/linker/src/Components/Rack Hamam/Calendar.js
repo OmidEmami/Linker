@@ -222,6 +222,22 @@ const Calendar = () => {
       [name]: value
     }));
   }
+  const removeSpecificReserve = async(e)=>{
+    e.preventDefault();
+    console.log(reserveDetails)
+    try{
+      const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
+        UniqueId:reserveDetails.UniqueId,
+        FullName:reserveDetails.FullName,
+        Phone:reserveDetails.Phone,
+        Date:reserveDetails.Date,
+        
+      })
+      console.log(removeResponse)
+    }catch(error){
+
+    }
+  }
   return (
     <>
     {isLoading && <LoadingComp />}
@@ -325,7 +341,11 @@ const Calendar = () => {
               <textarea name='Desc' value={reserveDetails.Desc} onChange={handleFinalReserveDetailsForm} />
             
             </div>
+            <div className='Button-container'>
             <button type='submit'>ذخیره</button>
+            <button onClick={removeSpecificReserve}>حذف رزرو</button>
+            </div>
+            
           </form>
       </div>
       </Modal>

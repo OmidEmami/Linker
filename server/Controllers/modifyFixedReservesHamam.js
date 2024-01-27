@@ -26,3 +26,11 @@ export const modifyFixedReserves = async(req,res)=>{
     }
     
 }
+
+export const removeHamamReserve = async(req,res)=>{
+    try{
+
+    }catch(error){
+
+    }
+}

@@ -68,3 +68,10 @@
   background-color: aqua;
   z-index: 1; /* Ensure the header is above other elements */
 }
+.Button-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 2rem;
+}

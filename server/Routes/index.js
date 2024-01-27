@@ -16,7 +16,7 @@ import { getNewLeads } from "../Controllers/GetNewLeads.js";
 import { manualNewLead, modifyLeads } from "../Controllers/ModifyLeads.js";
 import { regNewHamamReserve } from "../Controllers/RegisterNewHamamReserve.js";
 import { getFixedReserves } from "../Controllers/getFixedReserves.js";
-import { modifyFixedReserves } from "../Controllers/modifyFixedReservesHamam.js";
+import { modifyFixedReserves, removeHamamReserve } from "../Controllers/modifyFixedReservesHamam.js";
 
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
@@ -44,4 +44,5 @@ router.get("/api/getFixedReserves",getFixedReserves);
 router.post("/api/modifyFixedReserves",modifyFixedReserves)
 router.post("/api/sendyalda", sendyalda)
 router.post("/api/manualNewLead",manualNewLead )
+router.post("/api/removeHamamReserve",removeHamamReserve)
 export default router;

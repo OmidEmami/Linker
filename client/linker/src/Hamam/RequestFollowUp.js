@@ -7,24 +7,20 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
 import Logo from '../assests/logoBrown.png';
 import axios from 'axios';
 import LoadingComp from '../Components/LoadingComp';
 import styles from './RequestFollowUp.module.css';
 import { notify } from "../Components/toast";
 import Modal from 'react-modal';
-import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picker";
+import DatePicker, {DateObject}from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
-import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+
 
 const columns = [
     { id: 'id', label: 'ردیف' },
@@ -47,7 +43,9 @@ const RequestFollowUp = () => {
     {name : 'menHamam', value:"حمام مردانه"},
     {name : 'womenHamam', value:"حمام زنانه"},
     {name : 'massage', value:"ماساژ"},
-    {name : 'traditionalHamam', value:"دلاکی سنتی"}
+    {name : 'traditionalHamam', value:"دلاکی سنتی"},
+    {name: 'normalexclusive' ,value:"قرق عادی"},
+    {name : 'vipexclusive', value:"قرق VIP"}
   ]
   const [hamamType,setHamamType] = useState('') 
   const [newNameLead,setNewNameLead] = useState('');
@@ -114,7 +112,8 @@ const RequestFollowUp = () => {
         setIsLoading(true)
         try{
             const response = await axios.get("http://localhost:3001/api/getNewLeads")
-         
+            const sortedData = response.data.sort((a, b) => new Date(b.RequestDate) - new Date(a.RequestDate));
+            setData(sortedData);
                 setData(response.data)
                 setShowData(true)
                 setIsLoading(false)
@@ -194,7 +193,7 @@ const RequestFollowUp = () => {
           MassorNames:finalFormData.MassorNames,
           Desc:finalFormData.Desc
     })
-    
+    console.log(response)
     if(response.status === 200){
       setIsLoading(false)
       notify( "اطلاعات شما با موفقیت ثبت شد", "success")
@@ -202,8 +201,14 @@ const RequestFollowUp = () => {
       console.log(response)
     }
    }catch(error){
+    if(error.response.data.msg === "interference"){
+      notify('این رزرو تداخل دارد', "error")
+      setIsLoading(false)
+    }else{
+    
     notify( "خطا", "error")
     setIsLoading(false)
+  }
    }
   }
 }
@@ -218,19 +223,15 @@ const RequestFollowUp = () => {
   }
   const saveNewManualLead = async(e)=>{
     e.preventDefault();
-    console.log(hamamType)
-    if(hamamType !== ''){
+    
+    if(hamamType !== '' && leadSource !== ''){
     
     var dates = [];
     for(let i = 0 ; i < values.length ; i++){
       dates = [...dates, moment.from(values[i].format(), 'fa', 'DD/MM/YYYY').format('jYYYY-jMM-jDD')]
     }
     try{
-      // function handleReloadPage (){
-      //   setTimeout(() => {
-      //     window.location.reload();
-      //   }, 3000); // 3000 milliseconds (3 seconds)
-      // }
+      
       const response = await axios.post('http://localhost:3001/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
@@ -244,6 +245,7 @@ const RequestFollowUp = () => {
         notify("سر نخ جدید با موفقیت وارد شد","success")
         setShowNewLeadModal(false)
         // handleReloadPage();
+         window.location.reload();
       }else{
         notify('خطا','error')
       }
@@ -456,14 +458,18 @@ const RequestFollowUp = () => {
         
       >
         <div>
-        <h3>اضافه کردن سر نخ بصورت دستی</h3>
+        <h3 style={{textAlign:"center"}}>اضافه کردن سر نخ بصورت دستی</h3>
         <form className={styles.ManualLead} onSubmit={saveNewManualLead}>
+          <div className={styles.firstRowFormManual}>
+          <div>
           <label>نام مشتری</label>
             <input required type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
-          
+          </div>
+          <div>
           <label>شماره تماس </label>
             <input required type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
-         
+         </div>
+         <div>
           <label>تاریخ های پیشنهادی</label>
           <DatePicker 
                        required 
@@ -478,10 +484,12 @@ const RequestFollowUp = () => {
              format="DD/MM/YYYY"
              placeholder='تاریخ پیشنهادی دریافت خدمات'
            ></DatePicker>
+           </div>
+           </div>
            <label>منبع سر نخ</label>
             
             <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
-                  {['Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی'].map(option => (
+                  {['منبع سر نخ را انتخاب کنید','Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی'].map(option => (
                     <option key={option} value={option}>
                       {option}
                     </option>

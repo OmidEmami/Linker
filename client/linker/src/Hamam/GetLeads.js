@@ -16,8 +16,10 @@ function GetLeads() {
     {name : 'menHamam', value:"حمام مردانه"},
     {name : 'womenHamam', value:"حمام زنانه"},
     {name : 'massage', value:"ماساژ"},
-    {name : 'traditionalHamam', value:"دلاکی سنتی"}
-]
+    {name : 'traditionalHamam', value:"دلاکی سنتی"},
+    {name: 'normalexclusive' ,value:"قرق عادی"},
+    {name : 'vipexclusive', value:"قرق VIP"}
+  ]
 const [hamamType,setHamamType] = useState('') 
     const date = new DateObject({ calendar: persian, locale: persian_fa });
   const [values, setValues] = useState([]);
