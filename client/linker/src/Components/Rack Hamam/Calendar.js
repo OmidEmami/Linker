@@ -11,6 +11,8 @@ import Modal from 'react-modal';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import { notify } from "../../Components/toast";
 
@@ -48,7 +50,7 @@ const Calendar = () => {
     const fetchData=async()=>{
         setIsLoading(true)
         try{
-            const response = await axios.get("http://localhost:3001/api/getFixedReserves")
+            const response = await axios.get("https://gmhotel.ir/api/getFixedReserves")
             const updatedData = response.data.map(item => {
               const hoursString = item.Hours;
               
@@ -160,7 +162,7 @@ const Calendar = () => {
       const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -187,7 +189,7 @@ const Calendar = () => {
     const selectedHours = reserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:reserveDetails.UniqueId,
         FullName:reserveDetails.FullName,
         Phone:reserveDetails.Phone,
@@ -224,18 +226,42 @@ const Calendar = () => {
   }
   const removeSpecificReserve = async(e)=>{
     e.preventDefault();
-    console.log(reserveDetails)
+    
+  
     try{
-      const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
-        UniqueId:reserveDetails.UniqueId,
-        FullName:reserveDetails.FullName,
-        Phone:reserveDetails.Phone,
-        Date:reserveDetails.Date,
-        
-      })
-      console.log(removeResponse)
+      submit()
+      function submit() {
+        confirmAlert({
+          title: 'تایید حذف کلی رزرو',
+          message: 'آیا مطمئن هستید؟',
+          buttons: [
+            {
+              label: 'بله',
+              onClick: () => removeReserve()
+            },
+            {
+              label: 'خیر',
+              onClick: () => null
+            }
+          ]
+        });
+      }
+      const removeReserve = async() =>{
+        setIsLoading(true)
+        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
+          UniqueId:reserveDetails.UniqueId,
+          FullName:reserveDetails.FullName,
+          Phone:reserveDetails.Phone,
+          Date:reserveDetails.Date,
+          
+        })
+        setIsLoading(false)
+        setShowPopUp(false)
+      }
+      
     }catch(error){
-
+      setIsLoading(false)
+      notify("خطا",'error')
     }
   }
   return (

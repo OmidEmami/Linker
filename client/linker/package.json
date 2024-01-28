@@ -27,6 +27,7 @@
     "persian-date": "^1.1.0",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-modal": "^3.16.1",

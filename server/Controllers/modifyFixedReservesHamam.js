@@ -28,17 +28,20 @@ export const modifyFixedReserves = async(req,res)=>{
 }
 
 export const removeHamamReserve = async(req,res)=>{
+    
     try{
         const response = await HamamReserveDetail.destroy({
             where:{
                 UniqueId:req.body.UniqueId,
                 FullName:req.body.FullName,
                 Phone:req.body.Phone,
-        Date:reserveDetails.Date,
+                Date:req.body.Date,
         
             }
         })
+        res.json(response)
+        
     }catch(error){
-
+        res.status(400).json({msg:"error"})
     }
 }
