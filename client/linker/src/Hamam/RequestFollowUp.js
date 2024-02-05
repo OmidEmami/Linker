@@ -171,13 +171,17 @@ const RequestFollowUp = () => {
     if (hamamStartHour && hamamEndHour) {
       const firstHour = hamamStartHour.hour();
       const secondHour = hamamEndHour.hour();
-
+    
       const start = firstHour < secondHour ? firstHour : secondHour;
       const end = firstHour > secondHour ? firstHour : secondHour;
-
-      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
+    
+      // Create an array from start to end and map each number to ensure it has a leading zero if it's less than 10
+      const selectedHours = Array.from({ length: end - start + 1 }, (_, index) => start + index)
+        .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
+    
        
    try{
+    console.log(selectedHours)
     setIsLoading(true)
     const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,

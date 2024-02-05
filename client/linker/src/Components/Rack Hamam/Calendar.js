@@ -27,6 +27,7 @@ const Calendar = () => {
       transform: 'translate(-50%, -50%)',
       width:"80%"
     },
+    overlay: {zIndex: 2}
   };
   const [currentDate, setCurrentDate] = useState(moment()); 
   const [showPopUp, setShowPopUp] = useState(false)
@@ -155,11 +156,14 @@ const Calendar = () => {
     if (hamamStartHour && hamamEndHour) {
       const firstHour = hamamStartHour.hour();
       const secondHour = hamamEndHour.hour();
-
+    
       const start = firstHour < secondHour ? firstHour : secondHour;
       const end = firstHour > secondHour ? firstHour : secondHour;
-
-      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
+    
+      // Create an array from start to end and map each number to ensure it has a leading zero if it's less than 10
+      const selectedHours = Array.from({ length: end - start + 1 }, (_, index) => start + index)
+        .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
+    
       try{
         setIsLoading(true)
         const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
@@ -308,7 +312,7 @@ const Calendar = () => {
             
             </div>
             <div className='formdetails-first-one'>
-            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && reserveDetails.Hours[reserveDetails.Hours.length - 1] +1}</h3></label></b>
+            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && (+reserveDetails.Hours[reserveDetails.Hours.length - 1] + 1)}</h3></label></b>
             <label>تغییر ساعت شروع</label>
            <LocalizationProvider dateAdapter={AdapterDayjs}>
            <TimePicker  onChange={(value)=>setHamamStartHour(value)} views={['hours']} />
@@ -430,7 +434,10 @@ const Calendar = () => {
                   {data !== '' && data.map((showData,index)=>(
                    <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
                     showData.Hours.map((houry,index)=>(
+                      <>
+                      {console.log(houry +"  "+ hour)}
                       <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={{backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
+                      </>
                     ))
                     }</div>}</div>
                   
