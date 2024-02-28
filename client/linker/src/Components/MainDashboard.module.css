@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     direction: rtl;
+    margin-bottom: 10vw
 }
 
 .RightContainer{

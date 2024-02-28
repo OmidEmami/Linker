@@ -82,7 +82,7 @@ const Calendar = () => {
         
     }
     fetchData();
-          }, [showPopUp]);
+          }, [showPopUp,currentDate]);
   const handleMouseDown = (day, hour) => {
     isMouseDown = true;
     initialCell = { day, hour };
