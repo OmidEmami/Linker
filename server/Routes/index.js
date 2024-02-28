@@ -40,7 +40,7 @@ router.post("/api/createNewLead", newLead);
 router.get("/api/getNewLeads",getNewLeads);
 router.post("/api/regFollowLead", modifyLeads)
 router.post("/api/HamamReserveDetail",regNewHamamReserve);
-router.get("/api/getFixedReserves",getFixedReserves);
+router.post("/api/getFixedReserves",getFixedReserves);
 router.post("/api/modifyFixedReserves",modifyFixedReserves)
 router.post("/api/sendyalda", sendyalda)
 router.post("/api/manualNewLead",manualNewLead )

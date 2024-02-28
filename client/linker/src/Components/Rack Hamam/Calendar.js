@@ -27,7 +27,9 @@ const Calendar = () => {
       transform: 'translate(-50%, -50%)',
       width:"80%"
     },
-    overlay: {zIndex: 2}
+    overlay: {
+      zIndex: 900
+    }
   };
   const [currentDate, setCurrentDate] = useState(moment()); 
   const [showPopUp, setShowPopUp] = useState(false)
@@ -51,10 +53,10 @@ const Calendar = () => {
     const fetchData=async()=>{
         setIsLoading(true)
         try{
-            const response = await axios.get("https://gmhotel.ir/api/getFixedReserves")
+            const response = await axios.post("https://gmhotel.ir/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')})
             const updatedData = response.data.map(item => {
               const hoursString = item.Hours;
-              
+              console.log(response)
                 try{
                   const parsedHoursArray = JSON.parse(hoursString);
                   return {...item, Hours:parsedHoursArray} ;
@@ -156,14 +158,11 @@ const Calendar = () => {
     if (hamamStartHour && hamamEndHour) {
       const firstHour = hamamStartHour.hour();
       const secondHour = hamamEndHour.hour();
-    
+
       const start = firstHour < secondHour ? firstHour : secondHour;
       const end = firstHour > secondHour ? firstHour : secondHour;
-    
-      // Create an array from start to end and map each number to ensure it has a leading zero if it's less than 10
-      const selectedHours = Array.from({ length: end - start + 1 }, (_, index) => start + index)
-        .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
-    
+
+      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
       try{
         setIsLoading(true)
         const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
@@ -270,6 +269,7 @@ const Calendar = () => {
   }
   return (
     <>
+    
     {isLoading && <LoadingComp />}
     <Modal
         isOpen={showPopUp}
@@ -312,7 +312,7 @@ const Calendar = () => {
             
             </div>
             <div className='formdetails-first-one'>
-            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && (+reserveDetails.Hours[reserveDetails.Hours.length - 1] + 1)}</h3></label></b>
+            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && reserveDetails.Hours[reserveDetails.Hours.length - 1] +1}</h3></label></b>
             <label>تغییر ساعت شروع</label>
            <LocalizationProvider dateAdapter={AdapterDayjs}>
            <TimePicker  onChange={(value)=>setHamamStartHour(value)} views={['hours']} />
@@ -407,7 +407,7 @@ const Calendar = () => {
            <button onClick={handleDateChange}>برو به تاریخ</button>
       </div>
       </div>
-      
+      <div className="calendar-scroll-container">
       <table className="calendar-table">
         <thead>
           <tr>
@@ -434,10 +434,7 @@ const Calendar = () => {
                   {data !== '' && data.map((showData,index)=>(
                    <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
                     showData.Hours.map((houry,index)=>(
-                      <>
-                      {console.log(houry +"  "+ hour)}
                       <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={{backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
-                      </>
                     ))
                     }</div>}</div>
                   
@@ -449,6 +446,7 @@ const Calendar = () => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
     </>
   );

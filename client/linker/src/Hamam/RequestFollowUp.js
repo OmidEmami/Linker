@@ -56,6 +56,7 @@ const RequestFollowUp = () => {
   const [hamamEndHour, setHamamEndHour] = useState();
   const [showNewLeadModal, setShowNewLeadModal] = useState(false)
   const date = new DateObject({ calendar: persian, locale: persian_fa });
+  const [finalPrice, setFinalPrice] = useState("")
   const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const customStyles = {
@@ -67,7 +68,7 @@ const RequestFollowUp = () => {
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       width:"70%"
-    },
+    }
   };
   const [finalFormData, setFinalFormData] = useState({
     RequestKey :"",
@@ -195,7 +196,8 @@ const RequestFollowUp = () => {
           AccoStatus:finalFormData.AccoStatus,
           CateringDetails:finalFormData.CateringDetails,
           MassorNames:finalFormData.MassorNames,
-          Desc:finalFormData.Desc
+          Desc:finalFormData.Desc,
+          FinalPrice:finalPrice
     })
     console.log(response)
     if(response.status === 200){
@@ -420,6 +422,8 @@ const RequestFollowUp = () => {
             <option>زوج</option>
             
            </select></label>
+           <label>قیمت نهایی
+                  <input placeholder='قیمت نهایی' type='number' value={finalPrice} onChange={(e)=>setFinalPrice(e.target.value)}/></label>
            <label>نوع خدمات
            <select required name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
             <option value="none" selected>نوع خدمات</option>
@@ -490,6 +494,8 @@ const RequestFollowUp = () => {
            ></DatePicker>
            </div>
            </div>
+           <div style={{display:"flex", flexDirection:"row",justifyContent:'center', alignItems:'center',columnGap:"1vw" }}>
+           
            <label>منبع سر نخ</label>
             
             <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
@@ -499,7 +505,7 @@ const RequestFollowUp = () => {
                     </option>
                   ))}
                 </select>
-           
+                </div>
            <label>انتخاب نوع سرویس حمام</label>
                                   <div style={{display:"flex", justifyContent:'space-between', alignItems:'center'}}>
                                     <div style={{display:"flex",flexDirection:"column"}}>
@@ -518,6 +524,8 @@ const RequestFollowUp = () => {
                                     
                                   ))}
                                   </div>
+                                  
+                                  
                                   </div>
           <button className={styles.buttonClass} type='submit'>ثبت</button>
         </form>

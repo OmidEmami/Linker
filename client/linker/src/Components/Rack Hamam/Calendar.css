@@ -24,10 +24,14 @@
   flex-direction: column;
 }
 
-.calendar-table {
-  border-collapse: collapse;
-  position: relative;
- 
+.calendar-table td {
+  border: 1px solid #ccc;
+  width: 40px; /* Adjust as needed */
+  height: 40px; /* Adjust as needed */
+  text-align: center;
+  max-width: 100px; /* Set a max-width for the cells */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent content from wrapping */
 }
 
 .calendar-table th,
@@ -74,4 +78,24 @@
   justify-content: center;
   align-items: center;
   column-gap: 2rem;
+}
+.calendar-scroll-container {
+  max-height: 500px; /* Adjust based on your needs */
+  max-width: 100%; /* Adjust based on your needs */
+  overflow-x: auto; /* Enables horizontal scrolling */
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+.calendar-table th:first-child,
+.calendar-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #fff; /* Ensure readability */
+  z-index: 2; /* Ensure it stays above horizontally scrolled cells */
+}
+.react-confirm-alert-overlay {
+  z-index: 10002 !important; /* or any value greater than 10000 */
+}
+
+.react-confirm-alert-body {
+  z-index: 10002 !important; /* Ensuring the alert box itself also has a higher z-index */
 }
