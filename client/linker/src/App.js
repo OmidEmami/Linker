@@ -14,6 +14,7 @@ import GetLeads from "./Hamam/GetLeads";
 import RequestFollowUp from "./Hamam/RequestFollowUp";
 import Calendar from "./Components/Rack Hamam/Calendar";
 import Yalda from "./Components/Yalda/Yalda.js";
+import CrmComponent from "./Components/crm/CrmComponent";
 
 
 
@@ -30,6 +31,9 @@ function App() {
     <Route exact path="/cal">
         <Calendar />
       </Route>
+    <Route exact path="/crmphone">
+      <CrmComponent />
+    </Route>
     <Route exact path="/yalda">
         <Yalda />
       </Route>

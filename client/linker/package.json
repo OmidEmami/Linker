@@ -43,6 +43,7 @@
     "react-xml-parser": "^1.1.8",
     "redux": "^4.2.1",
     "schema-utils": "^4.2.0",
+    "socket.io-client": "^4.7.4",
     "tapable": "^2.2.1",
     "web-vitals": "^2.1.4"
   },

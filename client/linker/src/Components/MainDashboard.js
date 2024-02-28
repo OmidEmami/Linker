@@ -38,7 +38,7 @@ import Calendar from "./Rack Hamam/Calendar";
         
         try {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
            
             setToken(response.data.accessToken);
             
@@ -66,7 +66,7 @@ import Calendar from "./Rack Hamam/Calendar";
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -92,6 +92,9 @@ import Calendar from "./Rack Hamam/Calendar";
             window.open('/followup', '_blank');
     
     }
+    const showCRMPhone = () =>{
+        window.open("/crmphone", '_blank')
+    }
     return(
         <>
         {isLoading && <LoadingComp />}
@@ -114,6 +117,7 @@ import Calendar from "./Rack Hamam/Calendar";
                 <li value={1} onClick={(e)=>showItem(e.target.value)}>ارسال لینک اقامت</li>
                 <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
                 <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
+                <li value={19} onClick={showCRMPhone}>CRM(beta)</li>
                 <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
                 <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ ، منو و حمام</li>
                 <li value={8} onClick={showHamamManagement}>بررسی درخواست های حمام</li>

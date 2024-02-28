@@ -1,0 +1,100 @@
+*{
+  direction: rtl;
+}
+@font-face {
+  font-family: 'shabnam'; /* Choose a suitable name for your font */
+  src: url('../../assests/Shabnam.ttf') format('truetype');
+  /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+}
+.wrapContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 10px;
+    direction: rtl;
+}
+.divMainContainer{
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    border: 2px solid transparent; 
+    animation: shining 2s infinite;
+
+}
+@keyframes shining {
+    0% {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #ff0f07; /* Shining color (adjust as needed) */
+    }
+    100% {
+      border-color: transparent;
+    }
+  }
+  
+@font-face {
+    font-family: 'yekan'; /* Choose a suitable name for your font */
+    src: url('../../assests/Shabnam.ttf') format('truetype');
+    /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+  }
+  *{
+    font-family: 'yekan';
+    font-size: 18px;
+  }
+  .CallerContainer{
+    border: 1px solid rgb(47, 0, 255);
+    padding: 5px;
+    border-radius: 10px;
+    margin: 2px;
+  }
+  .regDataForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .divider {
+    border-bottom: 1px solid #000; /* Adjust color and thickness as needed */
+    margin: 20px 0; /* Adjust spacing around the divider as needed */
+  }
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates a 2-column layout */
+    gap: 20px; /* Space between grid items */
+    margin:1vw
+  }
+  
+  .dataContainer {
+    /* Style for each dataset container */
+    background: #a39b9b; /* Example background, adjust as needed */
+    padding: 20px; /* Adds padding around the content */
+    border-radius: 5px; /* Optional: rounded corners for aesthetics */
+  }
+  
+  .divider {
+    height: 2px;
+    background-color: #ccc; /* Divider color, adjust as needed */
+    margin-top: 20px; /* Space above the divider */
+  }
+  .MainContainerCrmMenu{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    direction: rtl;
+  }
+  .leftSideContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
