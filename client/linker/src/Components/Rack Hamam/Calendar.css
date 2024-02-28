@@ -55,7 +55,7 @@
   direction: rtl;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  row-gap: 3rem;
 }
 .formdetails-first-one{
   display: flex;

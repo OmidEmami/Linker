@@ -14,7 +14,8 @@ export const modifyFixedReserves = async(req,res)=>{
             AccoStatus:req.body.AccoStatus,
             CateringDetails:req.body.CateringDetails,
             MassorNames:req.body.MassorNames,
-            Desc:req.body.Desc
+            Desc:req.body.Desc,
+            FinalPrice:req.body.FinalPrice
         },{
             where:{
                 UniqueId:req.body.UniqueId

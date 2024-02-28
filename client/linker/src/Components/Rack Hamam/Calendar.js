@@ -25,7 +25,8 @@ const Calendar = () => {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width:"80%"
+      width:"80%",
+      height:"70%"
     },
     overlay: {
       zIndex: 900
@@ -204,7 +205,8 @@ const Calendar = () => {
         AccoStatus:reserveDetails.AccoStatus,
         CateringDetails:reserveDetails.CateringDetails,
         MassorNames:reserveDetails.MassorNames,
-        Desc:reserveDetails.Desc
+        Desc:reserveDetails.Desc,
+        FinalPrice:reserveDetails.FinalPrice
         })
         setIsLoading(false)
         notify( "اطلاعات شما با موفقیت ثبت شد", "success")
@@ -278,7 +280,7 @@ const Calendar = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div>
+        <div style={{margin:"10px"}}>
           <form className='formdetails' onSubmit={modifyFixedReserves}>
             <div className='formdetails-first-one'>
             <label>کد درخواست : {reserveDetails.UniqueId}</label>
@@ -290,6 +292,9 @@ const Calendar = () => {
             </label>
             </div>
             <div className='formdetails-first-one'>
+              <label>قیمت نهایی
+                <input name='FinalPrice' type='number' value={reserveDetails.FinalPrice} onChange={handleFinalReserveDetailsForm} />
+              </label>
             <label>تاریخ دریافت خدمات : 
               {reserveDetails.Date}
         
