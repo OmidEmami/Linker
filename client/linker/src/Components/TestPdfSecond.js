@@ -22,4 +22,4 @@ const TestPdfSecond = () => {
     )
 }
 
-export default TestPdfSecond
+export default TestPdfSecond;

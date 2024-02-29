@@ -50,5 +50,5 @@ router.post("/api/removeHamamReserve",removeHamamReserve)
 
 router.get('/api/call/:phone/:type',(req,res)=>SendBack(req.params.phone,req.params.type,res))
 router.post('/api/regData', regData)
-router.get('/api/getmissedcalls', getMissedCalls)
+router.get('/api/getmissedcalls', getMissedCalls);
 export default router;

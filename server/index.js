@@ -5,44 +5,41 @@ import cors from "cors";
 import router from "./Routes/index.js";
 import bodyParser from "body-parser";
 import http from "http";
-import multer from "multer";
-import moment from 'jalali-moment';
-import path from "path";
-import fs from 'fs';
-import axios from "axios";
 import { Server } from "socket.io";
+
+// Initialize dotenv to use environment variables
 dotenv.config();
 
+// Configure CORS options
 const corsOptions = {
-    origin: ['https://gmhotel.ir','http://87.248.152.131','http://localhost:3000']
-    , // Replace with your frontend domain
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // If you're using cookies or sessions
-  };
-  const app = express();
-app.use(cors(corsOptions));
-app.use(cookieParser());
+  origin: "http://localhost:3000", // Ensure this matches your frontend URL exactly, including protocol (http/https)
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  credentials: true, // This is important for sessions or when using cookies/token authentication
+};
 
-
+const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3001;
+
+// Apply middleware
+app.use(cors(corsOptions)); // Use CORS with the specified options
+app.use(cookieParser()); // Parse Cookie header and populate req.cookies
+app.use(express.json()); // Parse incoming requests with JSON payloads
+app.use(express.urlencoded({ extended: true })); // Parse incoming requests with URL-encoded payloads
+app.use(router); // Use your routes
+
+// Create a new instance of socket.io and configure CORS for it
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", // Ensure this matches your frontend URL and is consistent with the Express CORS configuration
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
-app.use(cookieParser());
-app.use(express.json());
-app.use(router);
 
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Socket.io connection setup
 io.on("connection", (socket) => {
-  //socket.emit("receive_message","omid")
   console.log(`User Connected: ${socket.id}`);
-  
+
   socket.on("join_room", (data) => {
     socket.join(data);
   });
@@ -52,14 +49,13 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT,'0.0.0.0', ()=> console.log('Server running at port 3001'));
+// Start the server
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, '0.0.0.0', () => console.log(`Server running at port ${PORT}`));
 
-
-function transmitData (params){
+// Function to transmit data using socket.io
+function transmitData(params) {
   io.local.emit("receive_message", params);
+}
 
-  }
-
-  export default transmitData;
-
-
+export default transmitData;

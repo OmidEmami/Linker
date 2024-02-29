@@ -1,7 +1,7 @@
 import DetailedCalls from "../Models/DetailedCalls.js";
 import IncomingCallsCrm from "../Models/IncomingCallsCrm.js";
 export const regData = async(req,res)=>{
-   
+   console.log(req.body.RegUser)
     try{
         const setInComingCalls = await IncomingCallsCrm.update({
             IsResponse : 1,

@@ -8,7 +8,9 @@ import Modal from 'react-modal';
 import moment from 'jalali-moment';
 import Button from '@mui/material/Button';
 import MissedCalls from "./MissedCalls";
-
+import jwt_decode from "jwt-decode";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CrmComponent =()=>{
   const customStyles = {
@@ -22,8 +24,8 @@ const CrmComponent =()=>{
       width: '90%', // Adjust the width as needed
     },
   };
-    const socket = io.connect("http://localhost:3001");
-    const [data,setData] = useState("")
+  const realToken = useSelector((state) => state.tokenReducer.token);
+    
     const m = moment();
     const [loading, setLoading] = useState(false)
     const [guestName,setGuestName] = useState('');
@@ -36,11 +38,76 @@ const CrmComponent =()=>{
     const [guestResult, setGuestResult] = useState('')
     const [messageReceived, setMessageReceived] = useState([]);
     const [customerSource, setCustomerSource] = useState('')
-    
+    const [isLoading, setIsLoading] = useState('')
+    const [data, setData] = useState('')
     const [isModalOpen, setIsModalOpen] = useState({type : '', status : false ,
      callid : '', phone :'' , lastcall:'', fullname:'',
      firstcall:'',requesttype:'',background:'', result:''})
-     
+     const history = useHistory();
+    const [token,setToken] = useState('')
+    const [expire, setExpire] = useState('')
+
+              const refreshToken = async () => {
+                try {
+                  
+                    const response = await axios.get('http://localhost:3001/api/token');
+                    
+                    setToken(response.data.accessToken);
+                    const decoded = jwt_decode(response.data.accessToken);
+
+                    console.log(decoded)
+                    setExpire(decoded.exp);
+                    
+                } catch (error) {
+                  
+                    if (error.response) {
+                        history.push("/");
+                    }
+                }
+              }
+              
+              const axiosJWT = axios.create();
+              
+              axiosJWT.interceptors.request.use(async (config) => {
+                const currentDate = new Date();
+                if (expire * 1000 < currentDate.getTime()) {
+                  
+                    const response = await axios.get('http://localhost:3001/api/token');
+                    config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+                    setToken(response.data.accessToken);
+                    const decoded = jwt_decode(response.data.accessToken);
+                    setExpire(decoded.exp);
+                }
+                return config;
+              }, (error) => {
+                
+                Promise.reject(error);
+                return 
+              });
+              useEffect(() => {
+                refreshToken();
+                  const fetchData=async()=>{
+                    setIsLoading(true)
+                      try{
+                          const response = await axios.get("http://localhost:3001/api/getpayments",{
+                            headers:{
+                              Authorization: `Bearer ${realToken.realToken}`
+                            }
+                          })
+                          setData(response.data)
+                          setIsLoading(false)
+                      }catch(error){
+                        notify('خطا در اتصال به شبکه', 'error')
+                        setIsLoading(false)
+                      }
+                      
+                      }
+                      if(realToken.realToken !== ''){
+                        fetchData();
+                      }
+                          
+                        
+                        }, [realToken.realToken]);
     useEffect(() => {
         const socket = io.connect("http://localhost:3001");
 
@@ -85,7 +152,8 @@ const CrmComponent =()=>{
           phone : guestPhone,
           lastcalldate : m.locale('fa').format('YYYY/MM/DD HH:mm:ss'),
           firstcalldate : firstCallDate,
-          customerSource : customerSource
+          customerSource : customerSource,
+          RegUser:token.name
         })
       
         if(response.data === "ok"){
@@ -198,6 +266,7 @@ const CrmComponent =()=>{
   }
     return(
         <div className={styles.MainContainerCrmMenu}>
+          
         <div className={styles.rightSideContainer}>
          <h2>مشاهده تماس های بی پاسخ</h2>
          <MissedCalls />
