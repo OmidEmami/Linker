@@ -1,6 +1,4 @@
-*{
-  direction: rtl;
-}
+
 @font-face {
   font-family: 'shabnam'; /* Choose a suitable name for your font */
   src: url('../../assests/Shabnam.ttf') format('truetype');
@@ -88,7 +86,7 @@
   .MainContainerCrmMenu{
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     direction: rtl;
   }
@@ -96,5 +94,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    border-right: 1px solid black;
+    height: 100%;
+    width:70%;
+    margin:1vw;
+    
   }
+  .rightSideContainer{
+    width: 30%;
+    margin:1vw
+  }
+  .greenSpot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #00FF00; /* Bright green color */
+    margin: 20px;
+    animation: blink-animation 1s infinite; /* Apply the blinking animation */
+}
+
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; } /* Fully visible */
+    50% { opacity: 0; } /* Fully transparent */
+}

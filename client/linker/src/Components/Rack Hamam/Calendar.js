@@ -163,7 +163,8 @@ const Calendar = () => {
       const start = firstHour < secondHour ? firstHour : secondHour;
       const end = firstHour > secondHour ? firstHour : secondHour;
 
-      const selectedHours = Array.from({ length: end - start }, (_, index) => start + index);
+      const selectedHours = Array.from({ length: end - start + 1 }, (_, index) => start + index)
+        .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
         const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
@@ -317,7 +318,7 @@ const Calendar = () => {
             
             </div>
             <div className='formdetails-first-one'>
-            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && Number(reserveDetails.Hours[reserveDetails.Hours.length - 1]) +1}</h3></label></b>
+            <b><label><h3>ساعت های ارائه خدمات {reserveDetails.Hours !== undefined && reserveDetails.Hours[0]} تا {reserveDetails.Hours !== undefined && reserveDetails.Hours[reserveDetails.Hours.length - 1]}</h3></label></b>
             <label>تغییر ساعت شروع</label>
            <LocalizationProvider dateAdapter={AdapterDayjs}>
            <TimePicker  onChange={(value)=>setHamamStartHour(value)} views={['hours']} />

@@ -473,10 +473,10 @@ const RequestFollowUp = () => {
           <label>نام مشتری</label>
             <input required type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
           </div>
-          <div>
-          <label>شماره تماس </label>
-            <input required type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
-         </div>
+          <div>          <label>شماره تماس </label>number
+
+         </div>            <input required type='' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
+
          <div>
           <label>تاریخ های پیشنهادی</label>
           <DatePicker 

@@ -7,6 +7,8 @@ import { notify } from "../../Components/toast";
 import Modal from 'react-modal';
 import moment from 'jalali-moment';
 import Button from '@mui/material/Button';
+import MissedCalls from "./MissedCalls";
+
 
 const CrmComponent =()=>{
   const customStyles = {
@@ -17,7 +19,7 @@ const CrmComponent =()=>{
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width: '80%', // Adjust the width as needed
+      width: '90%', // Adjust the width as needed
     },
   };
     const socket = io.connect("http://localhost:3001");
@@ -197,11 +199,14 @@ const CrmComponent =()=>{
     return(
         <div className={styles.MainContainerCrmMenu}>
         <div className={styles.rightSideContainer}>
-         <button>مشاهده تماس های بی پاسخ</button>
+         <h2>مشاهده تماس های بی پاسخ</h2>
+         <MissedCalls />
    </div>
           <div className={styles.leftSideContainer}>
-      <h1 style={{direction:"rtl", display:"flex", flexDirection:"row"
+            <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:'center', direction:"rtl"}}>
+      <div className={styles.greenSpot}></div><h1 style={{direction:"rtl", display:"flex", flexDirection:"row"
       ,justifyContent:"center",alignItems:"center",margin:"2vw", fontSize:"2vw"}}>در انتظار دریافت تماس جدید</h1>
+            </div>
             <div className={styles.wrapContainer}>
             
       {messageReceived.length > 0 && messageReceived.map((info,index)=>(
@@ -240,11 +245,12 @@ const CrmComponent =()=>{
      style={customStyles}
      contentLabel="Example Modal"
    >
-     <div style={{display:"flex", flexDirection:"column",justifyContent: "center",alignItems: "center"}}>
+     <div style={{display:"flex", flexDirection:"column",justifyContent: "center",alignItems: "center", direction:"rtl"}}>
        
        <h1>ثبت و ویرایش اطلاعات مشتری</h1>
        <p>call id : {guestCallId}</p>
        <form className={styles.regDataForm} onSubmit={(e)=>regData(e)}>
+       <div style={{display:"flex", flexDirection:"column",justifyContent: "center",alignItems: "center", rowGap:"2vw"}}>
        <div style={{display:"flex", flexDirection:"row",justifyContent: "center",alignItems: "center", columnGap:"5px"}}>
          {isModalOpen.data !== '' &&  <>
          
@@ -253,7 +259,10 @@ const CrmComponent =()=>{
          {isModalOpen.data !== '' && <>
          <label>شماره تماس</label>
          <input type="text" placeholder="شماره تماس" value={guestPhone} onChange={(e)=>setGuestPhone(e.target.value)} />
+        
          </> }
+          </div>
+          <div style={{display:"flex", flexDirection:"row",justifyContent: "center",alignItems: "center", columnGap:"5px"}}>
          <label>نوع درخواست</label>
          <select
      id="selectBox1"
@@ -294,6 +303,7 @@ const CrmComponent =()=>{
      <option value="آژانس">مهمان قبلی</option>
      <option value="سایر">سایر</option>
    </select>
+   </div>
    </div>
    
          {isModalOpen.type === "haveBackGround" &&
