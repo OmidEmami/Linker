@@ -5,15 +5,19 @@ const MissedCallsComponent = ({ data }) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: 'Phone',
+            Header: 'شماره تماس',
             accessor: 'Phone',
           },
           {
-            Header: 'CallId',
+            Header: 'آیدی',
             accessor: 'CallId',
           },
           {
-            Header: 'Time',
+            Header: "بخش",
+            accessor: 'Section',
+          },
+          {
+            Header: 'زمان',
             accessor: 'Time',
             sortType: (rowA, rowB, columnId) => {
               const dateA = parseISO(rowA.original.Time);

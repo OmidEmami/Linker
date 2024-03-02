@@ -16,7 +16,10 @@ const IncomingCallsCrm = db.define('IncomingCallsCrm',{
     },
     CallId:{
         type :DataTypes.TEXT
-    }
+    },
+    Section:{
+        type: DataTypes.TEXT
+    },
     
     
 },{

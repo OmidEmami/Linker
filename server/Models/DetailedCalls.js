@@ -31,8 +31,14 @@ const DetailedCalls = db.define('DetailedCalls',{
     },
     customerSource:{
         type: DataTypes.TEXT
-    }
-    
+    },
+    RegUser:{
+        type: DataTypes.TEXT
+    },
+    Section:{
+        type: DataTypes.TEXT
+    },
+
 },{
     freezeTableName:true
 });

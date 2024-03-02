@@ -12,21 +12,23 @@ export const SendBack = async (params,type,res)=>{
         })
         if(response.length > 0){
             
-            transmitData({serverRes: response, type : "haveBackGround", Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss')})
+            transmitData({section : type, serverRes: response, type : "haveBackGround", Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss')})
             await IncomingCallsCrm.create({
                 Phone : params,
                 IsResponse : 0,
                 Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss'),
-                CallId : callid
+                CallId : callid,
+                Section: type
             })
         }else{
-            const object = {Phone : params, CallId: callid}
-            transmitData({serverRes: object, type : "firstCall", Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss')})
+            const object = {Phone : params, CallId: callid, Section : type}
+            transmitData({section : type,serverRes: object, type : "firstCall", Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss')})
             await IncomingCallsCrm.create({
                 Phone : params,
                 IsResponse : 0,
                 Time : moment().locale('fa').format('YYYY/MM/DD HH:mm:ss'),
-                CallId : callid
+                CallId : callid,
+                Section: type
             })
             
         }

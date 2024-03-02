@@ -20,7 +20,9 @@ export const regData = async(req,res)=>{
             RequestType : req.body.requestType,
             BackGround : req.body.background,
             Result : req.body.result,
-            customerSource: req.body.customerSource
+            customerSource: req.body.customerSource,
+            RegUser : req.body.RegUser,
+            Section : req.body.Section
         });
         res.json("ok")
     }catch(error){

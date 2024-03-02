@@ -22,8 +22,12 @@ const CrmComponent =()=>{
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       width: '90%', // Adjust the width as needed
+      overflow: 'auto',
+      height:"90%", // This will make the content scrollable,
+      borderRadius: "15px",
     },
   };
+  
   const realToken = useSelector((state) => state.tokenReducer.token);
     
     const m = moment();
@@ -46,16 +50,18 @@ const CrmComponent =()=>{
      const history = useHistory();
     const [token,setToken] = useState('')
     const [expire, setExpire] = useState('')
+    const [regUser, setRegUser] = useState('');
+    const [hotelSection, setHotelSection] = useState('')
 
               const refreshToken = async () => {
                 try {
                   
-                    const response = await axios.get('http://localhost:3001/api/token');
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
 
-                    console.log(decoded)
+                    setRegUser(decoded.name)
                     setExpire(decoded.exp);
                     
                 } catch (error) {
@@ -72,7 +78,7 @@ const CrmComponent =()=>{
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
                   
-                    const response = await axios.get('http://localhost:3001/api/token');
+                    const response = await axios.get('https://gmhotel.ir/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -89,7 +95,7 @@ const CrmComponent =()=>{
                   const fetchData=async()=>{
                     setIsLoading(true)
                       try{
-                          const response = await axios.get("http://localhost:3001/api/getpayments",{
+                          const response = await axios.get("https://gmhotel.ir/api/getpayments",{
                             headers:{
                               Authorization: `Bearer ${realToken.realToken}`
                             }
@@ -109,7 +115,7 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
     useEffect(() => {
-        const socket = io.connect("http://localhost:3001");
+        const socket = io.connect("https://gmhotel.ir");
 
         socket.on("receive_message", (data) => {
           setMessageReceived(prevArray => [...prevArray, data]);
@@ -143,7 +149,7 @@ const CrmComponent =()=>{
            
         }
         
-        const response = await axios.post("http://localhost:3001/api/regData",{
+        const response = await axios.post("https://gmhotel.ir/api/regData",{
           callId : CallId,
           guestName : guestName,
           requestType : guestRequestType,
@@ -153,7 +159,8 @@ const CrmComponent =()=>{
           lastcalldate : m.locale('fa').format('YYYY/MM/DD HH:mm:ss'),
           firstcalldate : firstCallDate,
           customerSource : customerSource,
-          RegUser:token.name
+          RegUser:regUser,
+          Section : hotelSection
         })
       
         if(response.data === "ok"){
@@ -176,7 +183,7 @@ const CrmComponent =()=>{
             setGuestBackGround('')
             setGuestResult('')
             setCustomerSource('')
-           
+           setHotelSection('')
             for(let i = 0 ; i < messageReceived.length ; i++){
               console.log(targetValue)
               if(typeof(messageReceived[i].serverRes) === "object" && !messageReceived[i].serverRes.length >0){
@@ -215,6 +222,8 @@ const CrmComponent =()=>{
       setGuestBackGround(data.serverRes.BackGround)
       setGuestResult(data.serverRes.Result)
       setCustomerSource(data.serverRes.customerSource)
+      setHotelSection(data.section)
+      
       }else{
         setIsModalOpen({type :"haveBackGround",
       status : true, data : data, phone : data.serverRes[0].Phone})
@@ -224,6 +233,7 @@ const CrmComponent =()=>{
         setGuestResult(data.serverRes[data.serverRes.length - 1].Result)
         setGuestCallId(data.serverRes[0].CallId)
         setCustomerSource(data.serverRes[0].customerSource)
+        setHotelSection(data.section)
       }
     }else{
       
@@ -232,7 +242,7 @@ const CrmComponent =()=>{
       })
       setGuestPhone(data.serverRes.Phone)
       setGuestCallId(data.serverRes.CallId)
-      
+      setHotelSection(data.section)
     }
   
   }
@@ -249,6 +259,7 @@ const CrmComponent =()=>{
         setGuestBackGround('')
         setGuestResult('')
         setCustomerSource('')
+        setHotelSection('')
   }
   const closeRegData = (info,index) =>{
     const targetValue = info.serverRes.CallId;
@@ -294,6 +305,7 @@ const CrmComponent =()=>{
        <div className={styles.CallerContainer}>Call Id : {info.serverRes.CallId}</div>:
        <div className={styles.CallerContainer}>Call Id : {info.serverRes[0].CallId}</div>}
        <div className={styles.CallerContainer}>تاریخ و زمان تماس : {info.Time}</div>
+       <div className={styles.CallerContainer}>  بخش : {info.section}</div>
         <div style={{display:"flex",justifyContent: "space-between",alignItems: "center",margin:"10px"}}>
         <Button sx={{fontFamily:"shabnam"}} onClick={()=>openModalRegData(info,index)} variant="outlined">ثبت اطلاعات</Button>
 
@@ -314,7 +326,7 @@ const CrmComponent =()=>{
      style={customStyles}
      contentLabel="Example Modal"
    >
-     <div style={{display:"flex", flexDirection:"column",justifyContent: "center",alignItems: "center", direction:"rtl"}}>
+     <div style={{display:"flex", flexDirection:"column",justifyContent: "center",alignItems: "center", direction:"rtl",padding:"5vw"}}>
        
        <h1>ثبت و ویرایش اطلاعات مشتری</h1>
        <p>call id : {guestCallId}</p>
@@ -382,6 +394,8 @@ const CrmComponent =()=>{
              <h3>تاریخ تماس :  {value.LastCall}</h3>
              <h3>نوع درخواست : {value.RequestType}</h3>
              <h3>نتیجه : {value.Result}</h3>
+             <h3>اپراتور : {value.RegUser}</h3>
+             <h3>بخش : {value.Section}</h3>
              <div className={styles.divider}></div>
            </div>
          ))}
