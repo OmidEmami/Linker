@@ -3,59 +3,58 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import router from "./Routes/index.js";
-import bodyParser from "body-parser";
 import http from "http";
 import { Server } from "socket.io";
 
 // Initialize dotenv to use environment variables
 dotenv.config();
 
-// Configure CORS options
+// Retrieve environment variables
+const { PORT = 3001, FRONTEND_URL = "https://gmhotel.ir" } = process.env;
+
+// Configure CORS options based on environment variables
 const corsOptions = {
-  origin: "https://gmhotel.ir", // Ensure this matches your frontend URL exactly, including protocol (http/https)
+  origin: FRONTEND_URL,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  credentials: true, // This is important for sessions or when using cookies/token authentication
+  credentials: true,
 };
 
 const app = express();
 const server = http.createServer(app);
 
 // Apply middleware
-app.use(cors(corsOptions)); // Use CORS with the specified options
-app.use(cookieParser()); // Parse Cookie header and populate req.cookies
-app.use(express.json()); // Parse incoming requests with JSON payloads
-app.use(express.urlencoded({ extended: true })); // Parse incoming requests with URL-encoded payloads
-app.use(router); // Use your routes
+app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(router);
 
-// Create a new instance of socket.io and configure CORS for it
-const io = new Server(server, {
-  cors: {
-    origin: "https://gmhotel.ir", // Ensure this matches your frontend URL and is consistent with the Express CORS configuration
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    credentials: true,
-  },
-});
+// Initialize Socket.IO with CORS and attach to the server
+const io = new Server(server, { cors: { ...corsOptions, methods: ["GET", "POST"] } });
 
-// Socket.io connection setup
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  socket.on("join_room", (data) => {
-    socket.join(data);
+  socket.on("join_room", (room) => {
+    console.log(`Socket ${socket.id} joined room ${room}`);
+    socket.join(room);
   });
 
-  socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data);
+  socket.on("send_message", (message) => {
+    console.log(`Message sent in room ${message.room}: ${message.content}`);
+    io.to(message.room).emit("receive_message", message);
   });
 });
 
-// Start the server
-const PORT = process.env.PORT || 3001;
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 server.listen(PORT, '0.0.0.0', () => console.log(`Server running at port ${PORT}`));
 
-// Function to transmit data using socket.io
-function transmitData(params) {
-  io.local.emit("receive_message", params);
-}
-
-export default transmitData;
+// Exposing transmitData for external use
+export const transmitData = (params) => {
+  io.emit("receive_message", params);
+};

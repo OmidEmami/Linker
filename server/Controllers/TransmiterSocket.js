@@ -1,4 +1,4 @@
-import transmitData from "../index.js";
+import { transmitData } from "../index.js";
 import IncomingCallsCrm from "../Models/IncomingCallsCrm.js";
 import moment from "jalali-moment";
 import DetailedCalls from "../Models/DetailedCalls.js"

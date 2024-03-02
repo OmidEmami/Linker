@@ -115,7 +115,7 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
     useEffect(() => {
-        const socket = io.connect("https://gmhotel.ir");
+        const socket = io.connect("http://localhost:3001");
 
         socket.on("receive_message", (data) => {
           setMessageReceived(prevArray => [...prevArray, data]);
