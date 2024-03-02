@@ -12,7 +12,7 @@ dotenv.config();
 
 // Configure CORS options
 const corsOptions = {
-  origin: "http://localhost:3000", // Ensure this matches your frontend URL exactly, including protocol (http/https)
+  origin: "https://gmhotel.ir", // Ensure this matches your frontend URL exactly, including protocol (http/https)
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true, // This is important for sessions or when using cookies/token authentication
 };
@@ -30,8 +30,8 @@ app.use(router); // Use your routes
 // Create a new instance of socket.io and configure CORS for it
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Ensure this matches your frontend URL and is consistent with the Express CORS configuration
-    methods: ["GET", "POST"],
+    origin: "https://gmhotel.ir", // Ensure this matches your frontend URL and is consistent with the Express CORS configuration
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
   },
 });
