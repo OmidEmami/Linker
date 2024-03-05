@@ -21,7 +21,7 @@ export default function PdfGenerator() {
     useEffect(() => {
       const getDateForPdf = async()=>{
         try{
-        const response = await axios.post("https://gmhotel.ir/api/findReserveForPdf", {
+        const response = await axios.post("http://gmhotel.ir/api/findReserveForPdf", {
           ReserveKey : param
         })
         if(response.data.length === 0){

@@ -56,7 +56,7 @@ const CrmComponent =()=>{
               const refreshToken = async () => {
                 try {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://gmhotel.ir/api/token');
                     
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -78,7 +78,7 @@ const CrmComponent =()=>{
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://gmhotel.ir/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -95,7 +95,7 @@ const CrmComponent =()=>{
                   const fetchData=async()=>{
                     setIsLoading(true)
                       try{
-                          const response = await axios.get("https://gmhotel.ir/api/getpayments",{
+                          const response = await axios.get("http://gmhotel.ir/api/getpayments",{
                             headers:{
                               Authorization: `Bearer ${realToken.realToken}`
                             }
@@ -156,7 +156,7 @@ const CrmComponent =()=>{
            
         }
         
-        const response = await axios.post("https://gmhotel.ir/api/regData",{
+        const response = await axios.post("http://gmhotel.ir/api/regData",{
           callId : CallId,
           guestName : guestName,
           requestType : guestRequestType,

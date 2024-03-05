@@ -18,7 +18,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
               // const refreshToken = async () => {
               //   try {
                   
-              //       const response = await axios.get('https://gmhotel.ir/api/token');
+              //       const response = await axios.get('http://gmhotel.ir/api/token');
                     
               //       setToken(response.data.accessToken);
               //       const decoded = jwt_decode(response.data.accessToken);
@@ -38,7 +38,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
               //   const currentDate = new Date();
               //   if (expire * 1000 < currentDate.getTime()) {
                   
-              //       const response = await axios.get('https://gmhotel.ir/api/token');
+              //       const response = await axios.get('http://gmhotel.ir/api/token');
               //       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
               //       setToken(response.data.accessToken);
               //       const decoded = jwt_decode(response.data.accessToken);
@@ -55,7 +55,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
         const fetchData=async()=>{
           setIsLoading(true)
             try{
-                const response = await axios.get("https://gmhotel.ir/api/getpayments",{
+                const response = await axios.get("http://gmhotel.ir/api/getpayments",{
                   headers:{
                     Authorization: `Bearer ${realToken.realToken}`
                   }

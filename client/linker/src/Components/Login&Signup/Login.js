@@ -27,7 +27,7 @@ const Login =()=>{
     const refreshToken = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://gmhotel.ir/api/token');
             
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -52,7 +52,7 @@ const Login =()=>{
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://gmhotel.ir/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -91,7 +91,7 @@ const Login =()=>{
             setIsLoading(true)
         try{
             setIsLoading(true)
-            await axios.post("https://gmhotel.ir/api/loginUser",{
+            await axios.post("http://gmhotel.ir/api/loginUser",{
                 user : user,
                 pass : pass
             })

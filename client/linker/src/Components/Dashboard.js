@@ -116,7 +116,7 @@ export default function Dashboard() {
     setIsLoading(true)
     
     try{
-      const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
+      const response = await axios.post("http://gmhotel.ir/api/sendGuestLink",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
