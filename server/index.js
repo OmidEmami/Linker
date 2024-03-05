@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import router from "./Routes/index.js";
 import http from "http";
-import { Server } from "socket.io";
+import { WebSocketServer } from 'ws';
 
 // Initialize dotenv to use environment variables
 dotenv.config();
@@ -14,42 +14,42 @@ const { PORT = 3001, FRONTEND_URL = "https://gmhotel.ir" } = process.env;
 
 // Configure CORS options based on environment variables
 const corsOptions = {
-  origin: FRONTEND_URL, // Reflect the request origin, as defined by `req.header('Origin')`
+  origin: FRONTEND_URL,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  credentials: true, // Allow cookies and other credentials to be sent along with the request
+  credentials: true,
 };
 
 const app = express();
-app.use(cors(corsOptions));
 const server = http.createServer(app);
 
 // Apply middleware
-
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
-// Initialize Socket.IO with CORS and attach to the server
-const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_URL, // Allow any origin
-    methods: ["GET", "POST"], // Specify which methods are allowed from the client
-    credentials: true, // Necessary if your frontend is sending credentials like cookies or basic auth
-  }
-});
+// Initialize WebSocketServer and attach to the server
+const wss = new WebSocketServer({ server });
 
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+wss.on('connection', (ws) => {
+  console.log('User connected');
 
-  socket.on("join_room", (room) => {
-    console.log(`Socket ${socket.id} joined room ${room}`);
-    socket.join(room);
-  });
+  // ws.on('message', (data) => {
+  //   const message = JSON.parse(data);
+  //   console.log(`Received message: ${message.content} in room: ${message.room}`);
 
-  socket.on("send_message", (message) => {
-    console.log(`Message sent in room ${message.room}: ${message.content}`);
-    io.to(message.room).emit("receive_message", message);
+  //   // Broadcast received message to all connected clients
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(message));
+      }
+    });
+  // });
+
+  // Optional: Handle WebSocket close
+  ws.on('close', () => {
+    console.log('Client disconnected');
   });
 });
 
@@ -62,6 +62,14 @@ app.use((err, req, res, next) => {
 server.listen(PORT, '0.0.0.0', () => console.log(`Server running at port ${PORT}`));
 
 // Exposing transmitData for external use
-export const transmitData = (params) => {
-  io.emit("receive_message", params);
+export const transmitData = async (params) => {
+  console.log(params);
+
+  const dataString = JSON.stringify(params); // Convert params to a string
+
+  await wss.clients.forEach((client) => {
+    
+      client.send(dataString); // Send the stringified data
+    
+  });
 };

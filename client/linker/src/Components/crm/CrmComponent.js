@@ -114,21 +114,28 @@ const CrmComponent =()=>{
                           
                         
                         }, [realToken.realToken]);
-    useEffect(() => {
-        const socket = io.connect("https://gmhotel.ir");
-
-        socket.on("receive_message", (data) => {
-          setMessageReceived(prevArray => [...prevArray, data]);
-          notify( "تماس جدید دریافت شد", "success");
-          
-        console.log(data)
-        });
-    
-        return () => {
-          socket.disconnect(); // Clean up the socket connection when the component unmounts
-        };
-      }, []);
-      
+                        useEffect(() => {
+                          const ws = new WebSocket('ws://gmhotel.ir');
+                      
+                          // Listen for messages
+                          ws.onmessage = (event) => {
+                            const data = JSON.parse(event.data); // Parse the JSON string back into an object
+                            setMessageReceived((prevArray) => [...prevArray, data]);
+                            notify("تماس جدید دریافت شد", "success");
+                            console.log(data);
+                            console.log(event)
+                          };
+                      
+                          // Listen for errors
+                          ws.onerror = (error) => {
+                            console.log('WebSocket Error: ', error);
+                          };
+                      
+                          // Clean up the WebSocket connection when the component unmounts
+                          return () => {
+                            ws.close(); // This is the correct method to close a WebSocket connection
+                          };
+                        }, []);
    
   
     const regData = async(e) =>{
