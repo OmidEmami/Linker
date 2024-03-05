@@ -14,23 +14,30 @@ const { PORT = 3001, FRONTEND_URL = "https://gmhotel.ir" } = process.env;
 
 // Configure CORS options based on environment variables
 const corsOptions = {
-  origin: FRONTEND_URL,
+  origin: FRONTEND_URL, // Reflect the request origin, as defined by `req.header('Origin')`
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  credentials: true,
+  credentials: true, // Allow cookies and other credentials to be sent along with the request
 };
 
 const app = express();
+app.use(cors(corsOptions));
 const server = http.createServer(app);
 
 // Apply middleware
-app.use(cors(corsOptions));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
 // Initialize Socket.IO with CORS and attach to the server
-const io = new Server(server, { cors: { ...corsOptions, methods: ["GET", "POST"] } });
+const io = new Server(server, {
+  cors: {
+    origin: FRONTEND_URL, // Allow any origin
+    methods: ["GET", "POST"], // Specify which methods are allowed from the client
+    credentials: true, // Necessary if your frontend is sending credentials like cookies or basic auth
+  }
+});
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);

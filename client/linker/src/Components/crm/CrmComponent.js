@@ -115,13 +115,13 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
     useEffect(() => {
-        const socket = io.connect("http://localhost:3001");
+        const socket = io.connect("https://gmhotel.ir");
 
         socket.on("receive_message", (data) => {
           setMessageReceived(prevArray => [...prevArray, data]);
           notify( "تماس جدید دریافت شد", "success");
           
-        
+        console.log(data)
         });
     
         return () => {
