@@ -115,7 +115,7 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
                         useEffect(() => {
-                          const ws = new WebSocket('ws://gmhotel.ir');
+                          const ws = new WebSocket('wss://gmhotel.ir');
                       
                           // Listen for messages
                           ws.onmessage = (event) => {
