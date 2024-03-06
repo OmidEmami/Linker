@@ -115,36 +115,44 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
                         useEffect(() => {
-                          const ws = new WebSocket('wss://gmhotel.ir');
+                          let ws;
                         
-                          ws.onopen = () => {
-                            console.log('WebSocket connection established');
+                          const connect = () => {
+                            ws = new WebSocket('wss://gmhotel.ir');
+                        
+                            ws.onopen = () => {
+                              console.log('WebSocket connection established');
+                            };
+                        
+                            ws.onmessage = (event) => {
+                              const data = JSON.parse(event.data);
+                        
+                              if (data.type === 'ping') {
+                                ws.send(JSON.stringify({ type: 'pong' }));
+                              } else {
+                                setMessageReceived((prevArray) => [...prevArray, data]);
+                                notify("تماس جدید دریافت شد", "success");
+                              }
+                            };
+                        
+                            ws.onerror = (error) => {
+                              console.log('WebSocket Error: ', error);
+                            };
+                        
+                            ws.onclose = (e) => {
+                              console.log('WebSocket connection closed', e.reason);
+                              // Attempt to reconnect with a delay
+                              setTimeout(() => {
+                                connect(); // Reconnect
+                              }, 5000); // Reconnect after 5 seconds
+                            };
                           };
                         
-                          ws.onmessage = (event) => {
-                            const data = JSON.parse(event.data);
+                          connect(); // Initial connection attempt
                         
-                            // Check for a "ping" message and respond with "pong"
-                            if (data.type === 'ping') {
-                              ws.send(JSON.stringify({ type: 'pong' }));
-                            } else {
-                              // Handle other messages
-                              setMessageReceived((prevArray) => [...prevArray, data]);
-                              notify("تماس جدید دریافت شد", "success");
-                            }
+                          return () => {
+                            ws.close(); // Clean up WebSocket connection when the component unmounts
                           };
-                        
-                          ws.onerror = (error) => {
-                            console.log('WebSocket Error: ', error);
-                          };
-                        
-                          ws.onclose = () => {
-                            console.log('WebSocket connection closed');
-                          };
-                        
-                          // return () => {
-                          //   ws.close();
-                          // };
                         }, []);
                         
    
