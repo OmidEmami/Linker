@@ -142,9 +142,9 @@ const CrmComponent =()=>{
                             console.log('WebSocket connection closed');
                           };
                         
-                          return () => {
-                            ws.close();
-                          };
+                          // return () => {
+                          //   ws.close();
+                          // };
                         }, []);
                         
    
