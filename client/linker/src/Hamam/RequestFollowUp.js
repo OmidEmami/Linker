@@ -67,7 +67,8 @@ const RequestFollowUp = () => {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width:"70%"
+      width:"80%",
+      height:"90%"
     }
   };
   const [finalFormData, setFinalFormData] = useState({
@@ -382,12 +383,12 @@ const RequestFollowUp = () => {
         <h3 style={{direction:"rtl"}}>لطفا جزئیات رزرو را تکمیل کنید</h3>
         <form className={styles.finalizeFormData} onSubmit={FinalReserveDetails}>
           <div className={styles.partOneFinalForm}>
-          <label>نام کامل
-          <input required name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} /></label>
-          <label>شماره تماس
-          <input required type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} /></label>
-          <label>شماره درخواست
-          <input required type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} /></label>
+          <label>نام کامل</label>
+          <input required name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} />
+          <label>شماره تماس</label>
+          <input required type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} />
+          <label>شماره درخواست</label>
+          <input required type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} />
           </div>
           <div className={styles.partTwoFinalForm}>
           <label>تاریخ تایید شده</label>
@@ -401,7 +402,7 @@ const RequestFollowUp = () => {
              locale={persian_fa}
              calendarPosition="bottom-right"
              format="DD/MM/YYYY"
-             placeholder='تاریخ پیشنهادی دریافت خدمات'
+             placeholder='تاریخ تایید شده'
            ></DatePicker>
            
            <label>ساعت شروع</label>
@@ -414,31 +415,31 @@ const RequestFollowUp = () => {
            </LocalizationProvider>
            </div>
            <div className={styles.partThreeFinalForm}>
-            <label>نوع مشتری
+            <label>نوع مشتری</label>
            <select required name='CustomerType' onChange={handleFinalReserveDetailsForm} value={finalFormData.CustomerType}>
            <option value="none" selected>نوع مشتری</option>
             <option>گروه مردانه</option>
             <option>گروه زنانه</option>
             <option>زوج</option>
             
-           </select></label>
-           <label>قیمت نهایی
-                  <input placeholder='قیمت نهایی' type='number' value={finalPrice} onChange={(e)=>setFinalPrice(e.target.value)}/></label>
-           <label>نوع خدمات
+           </select>
+           <label>قیمت نهایی</label>
+                  <input placeholder='قیمت نهایی' type='number' value={finalPrice} onChange={(e)=>setFinalPrice(e.target.value)}/>
+           <label>نوع خدمات</label>
            <select required name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
             <option value="none" selected>نوع خدمات</option>
             <option>حمام</option>
             <option>ماساژ</option>
             <option>قرق با خدمات</option>
             <option>قرق بدون خدمات</option>
-           </select></label>
-           <label>روش ارائه
+           </select>
+           <label>روش ارائه</label>
            <select required name='SelectedService' onChange={handleFinalReserveDetailsForm} value={finalFormData.SelectedService}>
             <option value="none">روش ارائه</option>
             <option>معمولی</option>
             <option>قرق</option>
             <option>VIP</option>
-           </select></label>
+           </select>
            </div>
            <div className={styles.partFourFinalForm}>
             <select required name='AccoStatus' onChange={handleFinalReserveDetailsForm} value={finalFormData.AccoStatus}>
@@ -465,7 +466,7 @@ const RequestFollowUp = () => {
         contentLabel="Example Modal"
         
       >
-        <div>
+        <div style={{padding:"2vw"}}>
         <h3 style={{textAlign:"center"}}>اضافه کردن سر نخ بصورت دستی</h3>
         <form className={styles.ManualLead} onSubmit={saveNewManualLead}>
           <div className={styles.firstRowFormManual}>
@@ -473,9 +474,8 @@ const RequestFollowUp = () => {
           <label>نام مشتری</label>
             <input required type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
           </div>
-          <div>          <label>شماره تماس </label>number
-
-         </div>            <input required type='' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
+          <label>شماره تماس </label>
+         <input required type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
 
          <div>
           <label>تاریخ های پیشنهادی</label>
@@ -494,8 +494,8 @@ const RequestFollowUp = () => {
            ></DatePicker>
            </div>
            </div>
-           <div style={{display:"flex", flexDirection:"row",justifyContent:'center', alignItems:'center',columnGap:"1vw" }}>
-           
+           <div style={{display:"flex", flexDirection:"row",justifyContent:'center', alignItems:'center',columnGap:"2vw" }}>
+           <div style={{display:"flex", flexDirection:"column",justifyContent:'center', alignItems:'center',rowGap:"2vw" }}>
            <label>منبع سر نخ</label>
             
             <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
@@ -506,6 +506,8 @@ const RequestFollowUp = () => {
                   ))}
                 </select>
                 </div>
+                </div>
+
            <label>انتخاب نوع سرویس حمام</label>
                                   <div style={{display:"flex", justifyContent:'space-between', alignItems:'center'}}>
                                     <div style={{display:"flex",flexDirection:"column"}}>

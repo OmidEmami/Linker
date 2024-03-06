@@ -10,7 +10,7 @@ import { WebSocketServer } from 'ws';
 dotenv.config();
 
 // Retrieve environment variables
-const { PORT = 3001, FRONTEND_URL = "https://gmhotel.ir" } = process.env;
+const { PORT = 3001, FRONTEND_URL = "https://gmhotel" } = process.env;
 
 // Configure CORS options based on environment variables
 const corsOptions = {

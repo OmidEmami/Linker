@@ -127,3 +127,40 @@
     align-items: center;
     column-gap: 1rem;
 }
+@media (max-width: 600px) {
+    .firstRowFormManual{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2rem;
+    }
+    .partOneFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partTwoFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partThreeFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partFourFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+}
