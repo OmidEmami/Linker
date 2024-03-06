@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import io from "socket.io-client";
+
 import styles from "./CrmComponent.module.css";
 import { FcCallback } from "react-icons/fc";
 import { notify } from "../../Components/toast";
@@ -11,7 +11,7 @@ import MissedCalls from "./MissedCalls";
 import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import LoadingComp from "../LoadingComp";
 const CrmComponent =()=>{
   const customStyles = {
     content: {
@@ -174,7 +174,7 @@ const CrmComponent =()=>{
            CallId = isModalOpen.data.serverRes[0].CallId
            
         }
-        
+        setIsLoading(true)
         const response = await axios.post("https://gmhotel.ir/api/regData",{
           callId : CallId,
           guestName : guestName,
@@ -192,7 +192,7 @@ const CrmComponent =()=>{
         if(response.data === "ok"){
           notify( "اطلاعات ثبت شد.", "success");
           
-         
+         setIsLoading(false)
           const targetValue = isModalOpen.phone
           setIsModalOpen({type :"",
             status : false, callid : '', phone :'',
@@ -225,9 +225,11 @@ const CrmComponent =()=>{
             
         }else{
           notify( "خطا", "error");
+          setIsLoading(false)
         }
       }catch{
-
+        setIsLoading(false)
+        notify('خطا','error')
       }
     }
   const openModalRegData = async(data,index)=>{
@@ -303,7 +305,7 @@ const CrmComponent =()=>{
   }
     return(
         <div className={styles.MainContainerCrmMenu}>
-          
+          {isLoading && <LoadingComp />}
         <div className={styles.rightSideContainer}>
          <h2>مشاهده تماس های بی پاسخ</h2>
          <MissedCalls />
