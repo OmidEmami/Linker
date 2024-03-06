@@ -156,7 +156,7 @@ const RequestFollowUp = () => {
       const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     })
-    console.log(response.data)
+    
    if(response.data === "Omid"){
     setRegisterLoading(false)
     notify( "اطلاعات با موفقیت ثبت شد", "success")
@@ -182,7 +182,7 @@ const RequestFollowUp = () => {
     
        
    try{
-    console.log(selectedHours)
+    
     setIsLoading(true)
     const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
@@ -199,12 +199,12 @@ const RequestFollowUp = () => {
           Desc:finalFormData.Desc,
           FinalPrice:finalPrice
     })
-    console.log(response)
+    
     if(response.status === 200){
       setIsLoading(false)
       notify( "اطلاعات شما با موفقیت ثبت شد", "success")
       setInitialPopup(false)
-      console.log(response)
+     
     }
    }catch(error){
     if(error.response.data.msg === "interference"){

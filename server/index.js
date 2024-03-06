@@ -35,21 +35,18 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('User connected');
 
-  // ws.on('message', (data) => {
-  //   const message = JSON.parse(data);
-  //   console.log(`Received message: ${message.content} in room: ${message.room}`);
+  // Send a ping to the client every 30 seconds
+  const intervalId = setInterval(() => {
+      ws.ping();
+  }, 30000);
 
-  //   // Broadcast received message to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(message));
-      }
-    });
-  // });
+  ws.on('pong', () => {
+      console.log('Pong received from client');
+  });
 
-  // Optional: Handle WebSocket close
   ws.on('close', () => {
-    console.log('Client disconnected');
+      console.log('Client disconnected');
+      clearInterval(intervalId); // Clear the interval on client disconnect
   });
 });
 
@@ -63,8 +60,14 @@ server.listen(PORT, '0.0.0.0', () => console.log(`Server running at port ${PORT}
 
 // Exposing transmitData for external use
 export const transmitData = async (params) => {
-  console.log(params);
-
+  
+  setInterval(() => {
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocketServer.OPEN) {
+        client.send(JSON.stringify({ type: 'ping' }));
+      }
+    });
+  }, 30000);
   const dataString = JSON.stringify(params); // Convert params to a string
 
   await wss.clients.forEach((client) => {

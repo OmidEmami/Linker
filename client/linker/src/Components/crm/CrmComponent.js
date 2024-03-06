@@ -116,26 +116,37 @@ const CrmComponent =()=>{
                         }, [realToken.realToken]);
                         useEffect(() => {
                           const ws = new WebSocket('wss://gmhotel.ir');
-                      
-                          // Listen for messages
-                          ws.onmessage = (event) => {
-                            const data = JSON.parse(event.data); // Parse the JSON string back into an object
-                            setMessageReceived((prevArray) => [...prevArray, data]);
-                            notify("تماس جدید دریافت شد", "success");
-                            console.log(data);
-                            console.log(event)
+                        
+                          ws.onopen = () => {
+                            console.log('WebSocket connection established');
                           };
-                      
-                          // Listen for errors
+                        
+                          ws.onmessage = (event) => {
+                            const data = JSON.parse(event.data);
+                        
+                            // Check for a "ping" message and respond with "pong"
+                            if (data.type === 'ping') {
+                              ws.send(JSON.stringify({ type: 'pong' }));
+                            } else {
+                              // Handle other messages
+                              setMessageReceived((prevArray) => [...prevArray, data]);
+                              notify("تماس جدید دریافت شد", "success");
+                            }
+                          };
+                        
                           ws.onerror = (error) => {
                             console.log('WebSocket Error: ', error);
                           };
-                      
-                          // Clean up the WebSocket connection when the component unmounts
+                        
+                          ws.onclose = () => {
+                            console.log('WebSocket connection closed');
+                          };
+                        
                           return () => {
-                            ws.close(); // This is the correct method to close a WebSocket connection
+                            ws.close();
                           };
                         }, []);
+                        
    
   
     const regData = async(e) =>{
