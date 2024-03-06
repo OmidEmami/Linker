@@ -132,16 +132,8 @@ const CrmComponent =()=>{
                           };
                       
                           // Clean up the WebSocket connection when the component unmounts
-                          const heartbeatInterval = setInterval(() => {
-                            if (ws.readyState === WebSocket.OPEN) {
-                              ws.send(JSON.stringify({ type: 'ping' }));
-                            }
-                          }, 30000); // Send ping every 30 seconds
-                        
-                          // Clean up the WebSocket connection and heartbeat when the component unmounts
                           return () => {
-                            ws.close(); // Close the WebSocket connection
-                            clearInterval(heartbeatInterval); // Clear the heartbeat interval
+                            ws.close(); // This is the correct method to close a WebSocket connection
                           };
                         }, []);
    
