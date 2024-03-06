@@ -112,7 +112,7 @@ const RequestFollowUp = () => {
         setShowData(false)
         setIsLoading(true)
         try{
-            const response = await axios.get("http://gmhotel.ir/api/getNewLeads")
+            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
             const sortedData = response.data.sort((a, b) => new Date(b.RequestDate) - new Date(a.RequestDate));
             setData(sortedData);
                 setData(response.data)
@@ -153,7 +153,7 @@ const RequestFollowUp = () => {
     setShowSaveButton(false)
     setRegisterLoading(true)
     try{
-      const response = await axios.post("http://gmhotel.ir/api/regFollowLead",{
+      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     })
     console.log(response.data)
@@ -184,7 +184,7 @@ const RequestFollowUp = () => {
    try{
     console.log(selectedHours)
     setIsLoading(true)
-    const response = await axios.post("http://gmhotel.ir/api/HamamReserveDetail",{
+    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -238,7 +238,7 @@ const RequestFollowUp = () => {
     }
     try{
       
-      const response = await axios.post('http://gmhotel.ir/api/manualNewLead',{
+      const response = await axios.post('https://gmhotel.ir/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
         LeadSource:leadSource,
