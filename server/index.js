@@ -35,19 +35,21 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('User connected');
 
-  // ws.on('message', (data) => {
-  //   const message = JSON.parse(data);
-  //   console.log(`Received message: ${message.content} in room: ${message.room}`);
+  // Listen for messages from the client
+  ws.on('message', (data) => {
+    const message = JSON.parse(data);
 
-  //   // Broadcast received message to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(message));
-      }
-    });
-  // });
+    // Check if the received message is a "ping"
+    if (message.type === "ping") {
+      console.log("Ping received");
+      // Respond with a "pong" message
+      ws.send(JSON.stringify({ type: "pong" }));
+    }
 
-  // Optional: Handle WebSocket close
+    // Here you can add additional handling for other types of messages
+  });
+
+  // Handle WebSocket close
   ws.on('close', () => {
     console.log('Client disconnected');
   });
@@ -67,9 +69,9 @@ export const transmitData = async (params) => {
 
   const dataString = JSON.stringify(params); // Convert params to a string
 
-  await wss.clients.forEach((client) => {
-    
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
       client.send(dataString); // Send the stringified data
-    
+    }
   });
 };

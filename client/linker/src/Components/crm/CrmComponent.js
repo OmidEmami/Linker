@@ -115,26 +115,46 @@ const CrmComponent =()=>{
                         
                         }, [realToken.realToken]);
                         useEffect(() => {
-                          const ws = new WebSocket('ws://gmhotel.ir');
+                          const connect = () => {
+                            const ws = new WebSocket('wss://gmhotel.ir');
                       
-                          // Listen for messages
-                          ws.onmessage = (event) => {
-                            const data = JSON.parse(event.data); // Parse the JSON string back into an object
-                            setMessageReceived((prevArray) => [...prevArray, data]);
-                            notify("تماس جدید دریافت شد", "success");
-                            console.log(data);
-                            console.log(event)
+                            ws.onopen = () => {
+                              console.log('Connected');
+                              // Reset or clear any reconnection attempts or timeouts here
+                            };
+                      
+                            ws.onmessage = (event) => {
+                              const data = JSON.parse(event.data);
+                              setMessageReceived((prevArray) => [...prevArray, data]);
+                              notify("تماس جدید دریافت شد", "success");
+                            };
+                      
+                            ws.onerror = (error) => {
+                              console.error('WebSocket Error: ', error);
+                            };
+                      
+                            ws.onclose = () => {
+                              console.log('Disconnected. Attempting to reconnect...');
+                              setTimeout(connect, 10000); // Try to reconnect every 10 seconds
+                            };
+                      
+                            // Set up heartbeat
+                            const heartbeatInterval = setInterval(() => {
+                              if (ws.readyState === WebSocket.OPEN) {
+                                ws.send(JSON.stringify({ type: 'ping' }));
+                              }
+                            }, 30000); // Send ping every 30 seconds
+                      
+                            return () => {
+                              ws.close(); // This will close the WebSocket connection when the component unmounts
+                              clearInterval(heartbeatInterval); // This will clear the heartbeat interval when the component unmounts
+                            };
                           };
                       
-                          // Listen for errors
-                          ws.onerror = (error) => {
-                            console.log('WebSocket Error: ', error);
-                          };
+                          // Initial connection setup
+                          const cleanup = connect();
                       
-                          // Clean up the WebSocket connection when the component unmounts
-                          return () => {
-                            ws.close(); // This is the correct method to close a WebSocket connection
-                          };
+                          return cleanup; // This will be called when the component unmounts
                         }, []);
    
   
