@@ -32,6 +32,9 @@ const NewLeads = db.define('NewLeads',{
     Status:{
         type: DataTypes.TEXT
     },
+    User:{
+        type: DataTypes.TEXT
+    }
 
     
     

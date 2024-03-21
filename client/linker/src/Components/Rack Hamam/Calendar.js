@@ -13,10 +13,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-
+import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
 
 const Calendar = () => {
+  const realToken = useSelector((state) => state.tokenReducer.token);
   const customStyles = {
     content: {
       top: '50%',
@@ -54,7 +55,11 @@ const Calendar = () => {
     const fetchData=async()=>{
         setIsLoading(true)
         try{
-            const response = await axios.post("https://gmhotel.ir/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')})
+            const response = await axios.post("http://localhost:3001/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')},{
+              headers:{
+                Authorization: `Bearer ${realToken.realToken}`
+              }
+            })
             const updatedData = response.data.map(item => {
               const hoursString = item.Hours;
               console.log(response)
@@ -167,7 +172,7 @@ const Calendar = () => {
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
-        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -179,7 +184,14 @@ const Calendar = () => {
           AccoStatus:reserveDetails.AccoStatus,
           CateringDetails:reserveDetails.CateringDetails,
           MassorNames:reserveDetails.MassorNames,
-          Desc:reserveDetails.Desc
+          Desc:reserveDetails.Desc,
+          CurrentStatus:reserveDetails.CurrentStatus,
+          SatisfactionText:reserveDetails.SatisfactionText,
+          Satisfaction:reserveDetails.Satisfaction
+          },{
+            headers:{
+              Authorization: `Bearer ${realToken.realToken}`
+            }
           })
           setIsLoading(false)
           notify( "اطلاعات شما با موفقیت ثبت شد", "success")
@@ -194,7 +206,7 @@ const Calendar = () => {
     const selectedHours = reserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
         UniqueId:reserveDetails.UniqueId,
         FullName:reserveDetails.FullName,
         Phone:reserveDetails.Phone,
@@ -207,7 +219,14 @@ const Calendar = () => {
         CateringDetails:reserveDetails.CateringDetails,
         MassorNames:reserveDetails.MassorNames,
         Desc:reserveDetails.Desc,
-        FinalPrice:reserveDetails.FinalPrice
+        FinalPrice:reserveDetails.FinalPrice,
+        CurrentStatus:reserveDetails.CurrentStatus,
+        SatisfactionText:reserveDetails.SatisfactionText,
+        Satisfaction:reserveDetails.Satisfaction
+        },{
+          headers:{
+            Authorization: `Bearer ${realToken.realToken}`
+          }
         })
         setIsLoading(false)
         notify( "اطلاعات شما با موفقیت ثبت شد", "success")
@@ -254,12 +273,16 @@ const Calendar = () => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
+        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
           Date:reserveDetails.Date,
           
+        },{
+          headers:{
+            Authorization: `Bearer ${realToken.realToken}`
+          }
         })
         setIsLoading(false)
         setShowPopUp(false)
@@ -283,7 +306,9 @@ const Calendar = () => {
       >
         <div style={{margin:"10px"}}>
           <form className='formdetails' onSubmit={modifyFixedReserves}>
+            <label>ثبت کننده : {reserveDetails.User}</label>
             <div className='formdetails-first-one'>
+
             <label>کد درخواست : {reserveDetails.UniqueId}</label>
             <label>نام مهمان  
               <input name='FullName' type='text' value={reserveDetails.FullName} onChange={handleFinalReserveDetailsForm} />
@@ -291,6 +316,30 @@ const Calendar = () => {
             <label>شماره تماس
               <input name='Phone' type='number' value={reserveDetails.Phone} onChange={handleFinalReserveDetailsForm} />
             </label>
+            <label>تعیین وضعیت
+              <select name='CurrentStatus' onChange={handleFinalReserveDetailsForm} value={reserveDetails.CurrentStatus}>
+                  {['Fixed','CheckedOut'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select></label>
+                {reserveDetails.CurrentStatus === "CheckedOut" && 
+                <div style={{display:"flex",flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+                <label>
+                  <select name='Satisfaction' onChange={handleFinalReserveDetailsForm} value={reserveDetails.Satisfaction}>
+                  {['راضی','ناراضی'].map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+               
+                </label>
+                 <textarea style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={reserveDetails.SatisfactionText} onChange={handleFinalReserveDetailsForm} />
+                 </div>
+                }
+            
             </div>
             <div className='formdetails-first-one'>
               <label>قیمت نهایی
@@ -440,7 +489,7 @@ const Calendar = () => {
                   {data !== '' && data.map((showData,index)=>(
                    <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
                     showData.Hours.map((houry,index)=>(
-                      <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={{backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
+                      <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={showData.CurrentStatus === "Fixed" ? {backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"} :{backgroundColor:"red", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
                     ))
                     }</div>}</div>
                   

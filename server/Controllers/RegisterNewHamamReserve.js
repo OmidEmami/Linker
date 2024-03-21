@@ -30,7 +30,9 @@ export const regNewHamamReserve = async(req,res)=>{
                     CateringDetails:req.body.CateringDetails,
                     MassorNames:req.body.MassorNames,
                     Desc:req.body.Desc,
-                    FinalPrice:req.body.FinalPrice
+                    FinalPrice:req.body.FinalPrice,
+                    CurrentStatus :"Fixed",
+                    User:req.body.User
                 })
                 const response = await NewLeads.update({
                     Status : "Reserve Finalized"
@@ -55,7 +57,9 @@ export const regNewHamamReserve = async(req,res)=>{
             CateringDetails:req.body.CateringDetails,
             MassorNames:req.body.MassorNames,
             Desc:req.body.Desc,
-            FinalPrice:req.body.FinalPrice
+            FinalPrice:req.body.FinalPrice,
+            CurrentStatus :"Fixed",
+            User:req.body.User
         })
         const response = await NewLeads.update({
             Status : "Reserve Finalized"

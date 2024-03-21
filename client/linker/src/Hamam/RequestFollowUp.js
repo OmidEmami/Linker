@@ -20,8 +20,7 @@ import moment from 'jalali-moment';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-
-
+import jwt_decode from "jwt-decode";
 const columns = [
     { id: 'id', label: 'ردیف' },
     { id: 'FullName', label: 'نام مهمان',editable: true  },
@@ -32,13 +31,20 @@ const columns = [
     {id:'RequestDate', label:'تاریخ ثبت',sortable:"true"},
     {id: 'FirstFollow', label:'نتیجه پیگیری اول'},
     {id :'Status', label :'وضعیت',sortable:"true"},
-    {id : 'Source', label :'منبع',sortable:"true"}
+    {id : 'Source', label :'منبع',sortable:"true"},
+    {id: 'User', label: 'کاربر',sortable:"true"}
   // Add more columns as needed
 ];
 
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  const [userName, setUserName] = useState('')
+  const [token, setToken] = useState('');
+  
+  
+
+  
   const hamamTypes = [
     {name : 'menHamam', value:"حمام مردانه"},
     {name : 'womenHamam', value:"حمام زنانه"},
@@ -112,8 +118,18 @@ const RequestFollowUp = () => {
     const fetchData=async()=>{
         setShowData(false)
         setIsLoading(true)
+      
         try{
-            const response = await axios.get("https://gmhotel.ir/api/getNewLeads")
+          
+          const responseToken = await axios.get('http://localhost:3001/api/token');
+          setToken(responseToken.data.accessToken)
+          const decoded = jwt_decode(responseToken.data.accessToken);
+          setUserName(decoded.name)
+            const response = await axios.get("http://localhost:3001/api/getNewLeads",{
+              headers:{
+                Authorization: `Bearer ${responseToken.data.accessToken}`
+              }
+            })
             const sortedData = response.data.sort((a, b) => new Date(b.RequestDate) - new Date(a.RequestDate));
             setData(sortedData);
                 setData(response.data)
@@ -153,9 +169,14 @@ const RequestFollowUp = () => {
   const saveNewData = async()=>{
     setShowSaveButton(false)
     setRegisterLoading(true)
+   
     try{
-      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
+      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
         data : data 
+    },{
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
     })
     
    if(response.data === "Omid"){
@@ -185,7 +206,7 @@ const RequestFollowUp = () => {
    try{
     
     setIsLoading(true)
-    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
+    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -198,7 +219,12 @@ const RequestFollowUp = () => {
           CateringDetails:finalFormData.CateringDetails,
           MassorNames:finalFormData.MassorNames,
           Desc:finalFormData.Desc,
-          FinalPrice:finalPrice
+          FinalPrice:finalPrice,
+          User:userName
+    },{
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
     })
     
     if(response.status === 200){
@@ -239,12 +265,17 @@ const RequestFollowUp = () => {
     }
     try{
       
-      const response = await axios.post('https://gmhotel.ir/api/manualNewLead',{
+      const response = await axios.post('http://localhost:3001/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
         LeadSource:leadSource,
         Dates:dates.toString(),
-        HamamType:hamamType.join(',')
+        HamamType:hamamType.join(','),
+        User:userName
+      },{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
       })
       if(response.data === "ok"){
         

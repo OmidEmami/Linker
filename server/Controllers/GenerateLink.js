@@ -5,7 +5,7 @@ import { farazSendPattern } from "@aspianet/faraz-sms";
 import moment from 'jalali-moment' ;
 export const stLinkGenerator = async(req,res)=>{
   
-    const ReserveId = Math.floor(Math.random() * 9000) + 1000
+    const ReserveId = Math.floor(Math.random() * 90000) + 10000
     var tarianaResponse = []
         try{
             

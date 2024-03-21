@@ -39,13 +39,13 @@ router.post('/api/sendrestaurantmenu', sendrestaurantmenu);
 router.post('/api/sendhamam', sendhamam);
 router.delete('/api/logout', Logout);
 router.post("/api/createNewLead", newLead);
-router.get("/api/getNewLeads",getNewLeads);
-router.post("/api/regFollowLead", modifyLeads)
-router.post("/api/HamamReserveDetail",regNewHamamReserve);
-router.post("/api/getFixedReserves",getFixedReserves);
-router.post("/api/modifyFixedReserves",modifyFixedReserves)
+router.get("/api/getNewLeads",verifyToken,getNewLeads);
+router.post("/api/regFollowLead",verifyToken, modifyLeads)
+router.post("/api/HamamReserveDetail",verifyToken,regNewHamamReserve);
+router.post("/api/getFixedReserves",verifyToken,getFixedReserves);
+router.post("/api/modifyFixedReserves",verifyToken,modifyFixedReserves)
 router.post("/api/sendyalda", sendyalda)
-router.post("/api/manualNewLead",manualNewLead )
+router.post("/api/manualNewLead",verifyToken,manualNewLead )
 router.post("/api/removeHamamReserve",removeHamamReserve)
 
 router.get('/api/:phone-:type',(req,res)=>SendBack(req.params.phone,req.params.type,res))

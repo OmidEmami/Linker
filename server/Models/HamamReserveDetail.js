@@ -44,6 +44,18 @@ const HamamReserveDetail = db.define('HamamReserveDetail',{
     FinalPrice:{
         type:DataTypes.TEXT
     },
+    User:{
+        type: DataTypes.TEXT
+    },
+    CurrentStatus:{
+        type:DataTypes.TEXT
+    },
+    SatisfactionText:{
+        type:DataTypes.TEXT
+    },
+    Satisfaction:{
+        type:DataTypes.TEXT
+    }
   
 
 },{

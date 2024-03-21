@@ -38,7 +38,8 @@ export const manualNewLead = async(req,res)=>{
             Source:req.body.LeadSource,
             UniqueId:UniqueId,
             RequestDate:moment().locale('fa').format('YYYY-MM-DD'),
-            Status :"Pending"
+            Status :"Pending",
+            User:req.body.User
         })
         res.json("ok")
     }catch(error){
