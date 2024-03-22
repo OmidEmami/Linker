@@ -121,11 +121,11 @@ const RequestFollowUp = () => {
       
         try{
           
-          const responseToken = await axios.get('http://localhost:3001/api/token');
+          const responseToken = await axios.get('https://gmhotel.ir/api/token');
           setToken(responseToken.data.accessToken)
           const decoded = jwt_decode(responseToken.data.accessToken);
           setUserName(decoded.name)
-            const response = await axios.get("http://localhost:3001/api/getNewLeads",{
+            const response = await axios.get("https://gmhotel.ir/api/getNewLeads",{
               headers:{
                 Authorization: `Bearer ${responseToken.data.accessToken}`
               }
@@ -171,7 +171,7 @@ const RequestFollowUp = () => {
     setRegisterLoading(true)
    
     try{
-      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
+      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     },{
       headers:{
@@ -206,7 +206,7 @@ const RequestFollowUp = () => {
    try{
     
     setIsLoading(true)
-    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
+    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -265,7 +265,7 @@ const RequestFollowUp = () => {
     }
     try{
       
-      const response = await axios.post('http://localhost:3001/api/manualNewLead',{
+      const response = await axios.post('https://gmhotel.ir/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
         LeadSource:leadSource,

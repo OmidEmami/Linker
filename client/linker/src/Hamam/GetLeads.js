@@ -39,7 +39,7 @@ const [hamamType,setHamamType] = useState('')
     }
     
     try{
-      const response = await axios.post("http://localhost:3001/api/createNewLead",{
+      const response = await axios.post("https://gmhotel.ir/api/createNewLead",{
             FullName : fullName,
             Phone: phoneNumber,
             HamamType:hamamType.join(','),

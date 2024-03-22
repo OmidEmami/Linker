@@ -55,7 +55,7 @@ const Calendar = () => {
     const fetchData=async()=>{
         setIsLoading(true)
         try{
-            const response = await axios.post("http://localhost:3001/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')},{
+            const response = await axios.post("https://gmhotel.ir/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')},{
               headers:{
                 Authorization: `Bearer ${realToken.realToken}`
               }
@@ -172,7 +172,7 @@ const Calendar = () => {
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -206,7 +206,7 @@ const Calendar = () => {
     const selectedHours = reserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:reserveDetails.UniqueId,
         FullName:reserveDetails.FullName,
         Phone:reserveDetails.Phone,
@@ -273,7 +273,7 @@ const Calendar = () => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
+        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
