@@ -93,7 +93,12 @@ import Calendar from "./Rack Hamam/Calendar";
     
     }
     const showCRMPhone = () =>{
+        console.log(accessType)
+        if(accessType === "editor" || accessType === "admin" || accessType === "reservation"){
         window.open("/crmphone", '_blank')
+        }else if(accessType === "reception"){
+        window.open("/crmphonereception", '_blank')
+        }
     }
     return(
         <>

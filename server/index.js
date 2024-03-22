@@ -20,10 +20,11 @@ const corsOptions = {
 };
 
 const app = express();
+app.use(cors(corsOptions));
 const server = http.createServer(app);
 
 // Apply middleware
-app.use(cors(corsOptions));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
