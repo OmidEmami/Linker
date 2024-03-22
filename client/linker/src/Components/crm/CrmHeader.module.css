@@ -1,0 +1,34 @@
+.mainHeader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #D2AF6F;
+    width: 100%;
+    
+}
+.logoContainer{
+    margin:10px
+}
+.menuCrmContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.menuCrmContainer h3 {
+    margin: 2rem;
+    border: 1px #004288 solid;
+    padding: 0.5rem;
+    border-radius: 3vw;
+    /* Optional: add a transition for a smooth effect */
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.menuCrmContainer h3:hover {
+    /* Add your desired background property on hover */
+    background-color: #0059ff; /* Example: a light grey background */
+    /* You can also use a background-image here if you prefer */
+    color: white;
+}

@@ -12,6 +12,7 @@ import jwt_decode from "jwt-decode";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingComp from "../LoadingComp";
+import CrmHeader from "./CrmHeader";
 const CrmComponent =()=>{
   const customStyles = {
     content: {
@@ -305,6 +306,7 @@ const CrmComponent =()=>{
   }
     return(
         <div className={styles.MainContainerCrmMenu}>
+          <CrmHeader />
           {isLoading && <LoadingComp />}
         {/* <div className={styles.rightSideContainer}>
          <h2>مشاهده تماس های بی پاسخ</h2>

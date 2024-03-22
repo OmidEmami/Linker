@@ -121,6 +121,8 @@ function ManageUsers() {
                                         <option  enabled value="none" >نقش کاربر را انتخاب کنید</option>
                                         <option value="editor">editor</option>
                                         <option value="admin">admin</option>
+                                        <option value="reception">reception</option>
+                                        <option value="reservation">reservation</option>
                         
                                     </select></td>
           </tr>
