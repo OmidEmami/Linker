@@ -9,7 +9,7 @@ export const getFixedReserves = async(req,res)=>{
           where: Sequelize.where(Sequelize.fn('LEFT', Sequelize.col('Date'), 7), date)
         });
         res.json(result)
-        console.log(result)
+        
         // if (result.length > 0) {
         //   res.send({ message: 'Date exists in records.', data: result });
         // } else {

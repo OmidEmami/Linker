@@ -118,7 +118,7 @@ const CrmComponent =()=>{
                           let ws;
                         
                           const connect = () => {
-                            ws = new WebSocket('wss://gmhotel.ir');
+                            ws = new WebSocket('ws://localhost:3001');
                         
                             ws.onopen = () => {
                               console.log('WebSocket connection established');
@@ -306,10 +306,10 @@ const CrmComponent =()=>{
     return(
         <div className={styles.MainContainerCrmMenu}>
           {isLoading && <LoadingComp />}
-        <div className={styles.rightSideContainer}>
+        {/* <div className={styles.rightSideContainer}>
          <h2>مشاهده تماس های بی پاسخ</h2>
          <MissedCalls />
-   </div>
+   </div> */} 
           <div className={styles.leftSideContainer}>
             <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:'center', direction:"rtl"}}>
       <div className={styles.greenSpot}></div><h1 style={{direction:"rtl", display:"flex", flexDirection:"row"
