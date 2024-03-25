@@ -16,6 +16,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
 import { debounce } from 'lodash';
+import ReserveDetailsInput from './ReserveDetailsInput';
 const CalendarDay = memo(({ day, hours, data, showReserveDetails }) => {
   return (
       <tr>
@@ -90,7 +91,7 @@ const Calendar = () => {
         // Data processing remains the same...
         const updatedData = response.data.map(item => {
           const hoursString = item.Hours;
-          console.log(response)
+          
             try{
               const parsedHoursArray = JSON.parse(hoursString);
               return {...item, Hours:parsedHoursArray} ;
@@ -120,7 +121,7 @@ const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
       ...prevFormData,
       [name]: value
   }));
-}, 3), []); 
+}, 10), []);
   // const handleMouseDown = (day, hour) => {
   //   isMouseDown = true;
   //   initialCell = { day, hour };
@@ -339,10 +340,10 @@ const handleFinalReserveDetailsForm = (e) => {
 
             <label>کد درخواست : {reserveDetails.UniqueId}</label>
             <label>نام مهمان  
-              <input name='FullName' type='text' value={reserveDetails.FullName} onChange={handleFinalReserveDetailsForm} />
+              <ReserveDetailsInput name='FullName' type='text' value={reserveDetails.FullName} onChange={handleFinalReserveDetailsForm} />
             </label>
             <label>شماره تماس
-              <input name='Phone' type='number' value={reserveDetails.Phone} onChange={handleFinalReserveDetailsForm} />
+              <ReserveDetailsInput name='Phone' type='number' value={reserveDetails.Phone} onChange={handleFinalReserveDetailsForm} />
             </label>
             <label>تعیین وضعیت
               <select name='CurrentStatus' onChange={handleFinalReserveDetailsForm} value={reserveDetails.CurrentStatus}>
@@ -364,14 +365,14 @@ const handleFinalReserveDetailsForm = (e) => {
                 </select>
                
                 </label>
-                 <textarea style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={reserveDetails.SatisfactionText} onChange={handleFinalReserveDetailsForm} />
+                 <ReserveDetailsInput style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={reserveDetails.SatisfactionText} onChange={handleFinalReserveDetailsForm} />
                  </div>
                 }
             
             </div>
             <div className='formdetails-first-one'>
               <label>قیمت نهایی
-                <input name='FinalPrice' type='number' value={reserveDetails.FinalPrice} onChange={handleFinalReserveDetailsForm} />
+                <ReserveDetailsInput name='FinalPrice' type='number' value={reserveDetails.FinalPrice} onChange={handleFinalReserveDetailsForm} />
               </label>
             <label>تاریخ دریافت خدمات : 
               {reserveDetails.Date}
@@ -445,13 +446,13 @@ const handleFinalReserveDetailsForm = (e) => {
             </div>
             <div className='formdetails-first-one'>
             <label>نوع پذیرایی </label>
-              <textarea name='CateringDetails' value={reserveDetails.CateringDetails} onChange={handleFinalReserveDetailsForm}/>
+              <ReserveDetailsInput name='CateringDetails' value={reserveDetails.CateringDetails} onChange={handleFinalReserveDetailsForm}/>
            
             <label>نام خدمات دهنده</label>
-              <input type='text' name='MassorNames' value={reserveDetails.MassorNames} onChange={handleFinalReserveDetailsForm} />
+              <ReserveDetailsInput type='text' name='MassorNames' value={reserveDetails.MassorNames} onChange={handleFinalReserveDetailsForm} />
             
             <label>توضیحات</label>
-              <textarea name='Desc' value={reserveDetails.Desc} onChange={handleFinalReserveDetailsForm} />
+              <ReserveDetailsInput name='Desc' value={reserveDetails.Desc} onChange={handleFinalReserveDetailsForm} />
             
             </div>
             <div className='Button-container'>
