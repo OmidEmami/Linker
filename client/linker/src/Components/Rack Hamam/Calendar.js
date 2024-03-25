@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useCallback, memo  } from 'react';
 import moment from 'jalali-moment';
 import './Calendar.css'; // Import a CSS file for styling
 import DatePicker, { DateObject}from "react-multi-date-picker";
@@ -15,7 +15,32 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
-
+import { debounce } from 'lodash';
+const CalendarDay = memo(({ day, hours, data, showReserveDetails }) => {
+  return (
+      <tr>
+          <td>{moment(day, 'YYYY-MM-DD').locale('fa').format('jDD ddd')}</td>
+          {hours.map((hour) => (
+              <td key={`${day.format('YYYY-MM-DD')}-${hour}`} className="calendar-cell">
+                  {data !== '' && data.map((showData, index) => (
+                      <div key={index}>
+                          {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && (
+                              showData.Hours.map((houry, hourIndex) => (
+                                  houry.toString() === hour && (
+                                      <div key={hourIndex} onClick={() => showReserveDetails(showData)}
+                                          style={showData.CurrentStatus === "Fixed" ? { backgroundColor: "lightblue", padding: "1rem", cursor: "pointer" } : { backgroundColor: "red", padding: "1rem", cursor: "pointer" }}>
+                                          {showData.FullName}
+                                      </div>
+                                  )
+                              ))
+                          )}
+                      </div>
+                  ))}
+              </td>
+          ))}
+      </tr>
+  );
+});
 const Calendar = () => {
   const realToken = useSelector((state) => state.tokenReducer.token);
   const customStyles = {
@@ -50,69 +75,77 @@ const Calendar = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
 
-  useEffect(() => {
-    
-    const fetchData=async()=>{
-        setIsLoading(true)
-        try{
-            const response = await axios.post("https://gmhotel.ir/api/getFixedReserves",{date:currentDate.locale('fa').format('YYYY-MM')},{
-              headers:{
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      
+        const response = await axios.post("https://gmhotel.ir/api/getFixedReserves", {
+            date: currentDate.locale('fa').format('YYYY-MM')
+        }, {
+            headers: {
                 Authorization: `Bearer ${realToken.realToken}`
-              }
-            })
-            const updatedData = response.data.map(item => {
-              const hoursString = item.Hours;
-              console.log(response)
-                try{
-                  const parsedHoursArray = JSON.parse(hoursString);
-                  return {...item, Hours:parsedHoursArray} ;
-                  
-                }catch(error){
-                  console.error("Error parsing 'Hours' string:", error);
-                 
-                  return { ...item, Hours: [] };
-                }
-                
-              
-              
-            })
-            
-            setData(updatedData)
-                
-                setIsLoading(false)
-        }catch(error){
-                setIsLoading(false)
-                notify("خطا",error)
-        }
+            }
+        });
         
+        // Data processing remains the same...
+        const updatedData = response.data.map(item => {
+          const hoursString = item.Hours;
+          console.log(response)
+            try{
+              const parsedHoursArray = JSON.parse(hoursString);
+              return {...item, Hours:parsedHoursArray} ;
+              
+            }catch(error){
+              console.error("Error parsing 'Hours' string:", error);
+             
+              return { ...item, Hours: [] };
+            }
+            
+          
+          
+        })
+        setData(updatedData);
+        setIsLoading(false);
+    } catch (error) {
+        setIsLoading(false);
+        notify("خطا", error);
     }
+}, [currentDate, realToken,showPopUp]); // Removed showPopUp from dependencies
+
+useEffect(() => {
     fetchData();
-          }, [showPopUp,currentDate]);
-  const handleMouseDown = (day, hour) => {
-    isMouseDown = true;
-    initialCell = { day, hour };
+}, [fetchData]);
+const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
+  setReserveDetails(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+  }));
+}, 3), []); 
+  // const handleMouseDown = (day, hour) => {
+  //   isMouseDown = true;
+  //   initialCell = { day, hour };
    
  
-  };
+  // };
 
-  const handleMouseEnter = (day, hour) => {
+  // const handleMouseEnter = (day, hour) => {
     
-    if (!isMouseDown) return;
-    // Calculate selected cells and update UI accordingly
+  //   if (!isMouseDown) return;
+  //   // Calculate selected cells and update UI accordingly
    
     
-  };
+  // };
 
-  const handleMouseUp = (day,hour) => {
+  // const handleMouseUp = (day,hour) => {
     
-    if (!isMouseDown) return;
-    // Handle the mouse-up event to finalize selection
-    isMouseDown = false;
-    // initialCell = null;
-    lastCell = {day,hour}
+  //   if (!isMouseDown) return;
+  //   // Handle the mouse-up event to finalize selection
+  //   isMouseDown = false;
+  //   // initialCell = null;
+  //   lastCell = {day,hour}
     
     
-  };
+  // };
   const getDaysArray = () => {
     const daysCount = daysInMonth();
     const daysArray = [];
@@ -240,15 +273,10 @@ const Calendar = () => {
 
 
 }
-  const handleFinalReserveDetailsForm =async(e)=>{
-   
-    const { name, value } = e.target;
-
-    setReserveDetails(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }));
-  }
+const handleFinalReserveDetailsForm = (e) => {
+  const { name, value } = e.target;
+  debouncedSetReserveDetails(name, value);
+};
   const removeSpecificReserve = async(e)=>{
     e.preventDefault();
     
@@ -473,33 +501,10 @@ const Calendar = () => {
           </tr>
         </thead>
         <tbody>
-          {days.map((day, index) => (
-            <tr key={index}>
-              <td>
-                
-                {moment(day, 'YYYY-MM-DD').locale('fa').format('jDD ddd')}
-              </td>
-              {hours.map((hour) => (
-                <td key={`${day.format('YYYY-MM-DD')}-${hour}`}  className="calendar-cell"
-                onMouseDown={() => handleMouseDown(day, hour)}
-                onMouseEnter={() => handleMouseEnter(day, hour)}
-                onMouseUp={()=>handleMouseUp(day, hour)}
-                >
-                  
-                  {data !== '' && data.map((showData,index)=>(
-                   <div> {showData.Date === moment(day, 'YYYY/MM/DD').locale('fa').format('YYYY-MM-DD') && <div>{
-                    showData.Hours.map((houry,index)=>(
-                      <div key={index}>{houry.toString() === hour && <div key={index} onClick={()=>showReserveDetails(showData)} style={showData.CurrentStatus === "Fixed" ? {backgroundColor:"lightblue", padding:"1rem", cursor:"pointer"} :{backgroundColor:"red", padding:"1rem", cursor:"pointer"}}>{showData.FullName}</div>}</div>
-                    ))
-                    }</div>}</div>
-                  
-                ))}
-                
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+                            {days.map((day, index) => (
+                                <CalendarDay key={index} day={day} hours={hours} data={data} showReserveDetails={showReserveDetails} />
+                            ))}
+                        </tbody>
       </table>
       </div>
     </div>
