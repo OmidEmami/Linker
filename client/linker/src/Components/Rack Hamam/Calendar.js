@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
 import { debounce } from 'lodash';
 import ReserveDetailsInput from './ReserveDetailsInput';
+import ReserveModal from './ReserveModal';
 const CalendarDay = memo(({ day, hours, data, showReserveDetails }) => {
   return (
       <tr>
@@ -75,7 +76,11 @@ const Calendar = () => {
   const daysInMonth = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
-
+  const handleSaveModalData = (formData) => {
+    // Logic to update global state with formData
+    // For example, setReserveDetails(formData);
+    // Plus, any additional logic you need after saving modal data
+  };
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -117,11 +122,12 @@ useEffect(() => {
     fetchData();
 }, [fetchData]);
 const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
+  console.log(reserveDetails)
   setReserveDetails(prevFormData => ({
       ...prevFormData,
       [name]: value
   }));
-}, 10), []);
+}, 1), []);
   // const handleMouseDown = (day, hour) => {
   //   isMouseDown = true;
   //   initialCell = { day, hour };
@@ -326,7 +332,7 @@ const handleFinalReserveDetailsForm = (e) => {
     <>
     
     {isLoading && <LoadingComp />}
-    <Modal
+    {/* <Modal
         isOpen={showPopUp}
         //onAfterOpen={afterOpenModal}
         onRequestClose={()=>setShowPopUp(false)}
@@ -462,7 +468,13 @@ const handleFinalReserveDetailsForm = (e) => {
             
           </form>
       </div>
-      </Modal>
+      </Modal> */}
+      <ReserveModal
+        isOpen={showPopUp}
+        onClose={() => setShowPopUp(false)}
+        reserveDetails={reserveDetails}
+        onSave={handleSaveModalData}
+      />
     <div className="calendar-container">
       <div className="calendar-nav">
         <button onClick={previousMonth}>ماه قبلی</button>
