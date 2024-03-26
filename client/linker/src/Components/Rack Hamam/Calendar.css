@@ -56,6 +56,9 @@
   justify-content: center;
   align-items: center;
   row-gap: 3rem;
+  border: 1px solid #D1AF6E;
+  padding: 1rem;
+  border-radius: 15px;
 }
 .formdetails-first-one{
   display: flex;
@@ -98,4 +101,14 @@
 
 .react-confirm-alert-body {
   z-index: 10002 !important; /* Ensuring the alert box itself also has a higher z-index */
+}
+@media (max-width: 600px) {
+  .formdetails-first-one{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: center;
+    align-items: center;
+    row-gap: 15px;
+  }
 }
