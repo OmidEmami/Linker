@@ -16,7 +16,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
 import { debounce } from 'lodash';
-import ReserveDetailsInput from './ReserveDetailsInput';
+
+
 import ReserveModal from './ReserveModal';
 const CalendarDay = memo(({ day, hours, data, showReserveDetails }) => {
   return (
@@ -44,7 +45,9 @@ const CalendarDay = memo(({ day, hours, data, showReserveDetails }) => {
   );
 });
 const Calendar = () => {
+
   const realToken = useSelector((state) => state.tokenReducer.token);
+
   const customStyles = {
     content: {
       top: '50%',
@@ -122,7 +125,7 @@ useEffect(() => {
     fetchData();
 }, [fetchData]);
 const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
-  console.log(reserveDetails)
+ 
   setReserveDetails(prevFormData => ({
       ...prevFormData,
       [name]: value
@@ -328,6 +331,33 @@ const handleFinalReserveDetailsForm = (e) => {
       notify("خطا",'error')
     }
   }
+  const downloadHamamDetails = async () => {
+    try {
+        setIsLoading(true);
+        const response = await axios.get("https://gmhotel.ir/api/downloadhamamdetails", {
+            responseType: 'blob', 
+            headers: {
+                Authorization: `Bearer ${realToken.realToken}`
+            }
+        });
+
+     
+        const blob = response.data; 
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', 'data.xlsx'); // Set the file name
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setIsLoading(false);
+    } catch (error) {
+        setIsLoading(false);
+        notify("خطا", 'error');
+        console.log(error);
+    }
+};
+
   return (
     <>
     
@@ -504,6 +534,8 @@ const handleFinalReserveDetailsForm = (e) => {
       </div>
       </div>
       <div className="calendar-scroll-container">
+        {realToken.user === "admin" && <button onClick={downloadHamamDetails} style={{padding:"1rem", margin:"1rem"}}>دانلود اکسل رزرو ها</button> }
+        
       <table className="calendar-table">
         <thead>
           <tr>

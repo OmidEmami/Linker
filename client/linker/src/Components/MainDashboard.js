@@ -49,7 +49,8 @@ import Calendar from "./Rack Hamam/Calendar";
             setPhone(decoded.phone)
             setExpire(decoded.exp);
             setAccessType(decoded.accessType)
-            const token = {userName : decoded.name, realToken:response.data.accessToken}
+            
+            const token = {userName : decoded.name, realToken:response.data.accessToken, user : decoded.accessType}
             dispatch(addToken(token));
             setIsLoading(false)
         } catch (error) {

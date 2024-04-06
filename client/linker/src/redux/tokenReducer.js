@@ -1,14 +1,15 @@
 const initialState = {
     token: {
         userName : '',
-        realToken  :''
+        realToken  :'',
+        user:''
     },
   };
   
   const tokenReducer = (state = initialState, action) => {
     switch (action.type) {
       case "ADDTOKEN":
-        return { ...state, token: {userName : action.payload.userName, realToken : action.payload.realToken} };
+        return { ...state, token: {userName : action.payload.userName, realToken : action.payload.realToken,user:action.payload.user} };
       default:
         return state;
     }

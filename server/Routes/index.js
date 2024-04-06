@@ -20,6 +20,7 @@ import { modifyFixedReserves, removeHamamReserve } from "../Controllers/modifyFi
 import { SendBack } from "../Controllers/TransmiterSocket.js";
 import { regData } from "../Controllers/ModifyData.js";
 import { getMissedCalls } from "../Controllers/GetMissedCalls.js";
+import { downloadHamamDetails } from "../Controllers/downloadHamamDetails.js";
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
@@ -51,4 +52,5 @@ router.post("/api/removeHamamReserve",removeHamamReserve)
 router.get('/api/:phone-:type',(req,res)=>SendBack(req.params.phone,req.params.type,res))
 router.post('/api/regData', regData)
 router.get('/api/getmissedcalls', getMissedCalls);
+router.get('/api/downloadhamamdetails', verifyToken,downloadHamamDetails)
 export default router;
