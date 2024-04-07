@@ -335,18 +335,17 @@ const handleFinalReserveDetailsForm = (e) => {
     try {
         setIsLoading(true);
         const response = await axios.get("https://gmhotel.ir/api/downloadhamamdetails", {
-            responseType: 'blob', 
+            responseType: 'blob', // You can keep this as 'blob' since it's a binary type
             headers: {
                 Authorization: `Bearer ${realToken.realToken}`
             }
         });
 
-     
-        const blob = response.data; 
+        const blob = response.data; // The data should already be a blob due to the responseType
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.setAttribute('download', 'data.xlsx'); // Set the file name
+        link.setAttribute('download', 'hamam-details.csv'); // Change the file extension to .csv
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -357,6 +356,7 @@ const handleFinalReserveDetailsForm = (e) => {
         console.log(error);
     }
 };
+
 
   return (
     <>

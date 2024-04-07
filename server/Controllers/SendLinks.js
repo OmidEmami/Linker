@@ -38,7 +38,7 @@ export const sendrestaurantmenu = async(req,res)=>{
         const patternCodeToGuestGenerateLink = "e8v47k4821nq8nc";
             const sms = await farazSendPattern( patternCodeToGuestGenerateLink,
                  "+983000505", req.body.Phone,
-                  { link : "https://B2n.ir/n87891"});
+                  { link : "https://B2n.ir/f41377"});
         res.json("ok")
     }catch(error){
         res.status(500).json({ error: 'An error occurred while making the request.'});
