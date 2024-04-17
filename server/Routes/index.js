@@ -21,6 +21,8 @@ import { SendBack } from "../Controllers/TransmiterSocket.js";
 import { regData } from "../Controllers/ModifyData.js";
 import { getMissedCalls } from "../Controllers/GetMissedCalls.js";
 import { downloadHamamDetails } from "../Controllers/downloadHamamDetails.js";
+import { getCallsReport, receptionGetRawLeads, receptionModifyLead, receptionPutRawLeads } from "../Controllers/ReceptionLeadsEntry.js";
+import { sendtestemail } from "../Controllers/SendTestEmail.js";
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
@@ -52,5 +54,10 @@ router.post("/api/removeHamamReserve",removeHamamReserve)
 router.get('/api/:phone-:type',(req,res)=>SendBack(req.params.phone,req.params.type,res))
 router.post('/api/regData', regData)
 router.get('/api/getmissedcalls', getMissedCalls);
-router.get('/api/downloadhamamdetails', verifyToken,downloadHamamDetails)
+router.get('/api/downloadhamamdetails', verifyToken,downloadHamamDetails);
+router.get('/api/getFreshLeadsReception', receptionGetRawLeads)
+router.post('/api/receptionPutRawLeads', verifyToken,receptionPutRawLeads);
+router.post('/api/receptionModifyLead',receptionModifyLead);
+router.post('/api/receptionManualNewLead',receptionPutRawLeads)
+router.get('/api/getCallsReport',getCallsReport);
 export default router;

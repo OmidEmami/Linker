@@ -38,6 +38,24 @@ const DetailedCalls = db.define('DetailedCalls',{
     Section:{
         type: DataTypes.TEXT
     },
+    RequestDateAcco:{
+        type: DataTypes.TEXT
+    },
+    AccoRequestType:{
+        type: DataTypes.TEXT
+    },
+    ActionEghamat:{
+        type: DataTypes.TEXT
+    },
+    ActionEghamatZarfiat:{
+        type: DataTypes.TEXT
+    },
+    OtherAccoTypes:{
+        type: DataTypes.TEXT
+    },
+    OtherguestRequestType:{
+        type: DataTypes.TEXT
+    },
 
 },{
     freezeTableName:true

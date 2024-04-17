@@ -1,0 +1,166 @@
+@font-face {
+    font-family: 'Shabnam'; /* Choose a suitable name for your font */
+    src: url('../../../assests/Shabnam.ttf') format('truetype');
+    /* Add more font formats (e.g., woff, woff2) for cross-browser support */
+  }
+.MainContainer th{
+    font-family: 'Shabnam';
+}
+.MainContainer td {
+    font-family: 'Shabnam';
+}
+.MainContainer input{
+    font-family: 'Shabnam';
+}
+.buttonClass{
+    background-color: #07478B;
+    color: white;
+    font-size: 1rem;
+    border:none;
+    border-radius: 10px;
+    margin: 1rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    cursor: pointer;
+}
+.buttonClass:hover {background-color: #D1AF6E}
+.pager p{
+    font-family: 'Shabnam';
+}
+.LogoContainer{
+    width: 4.5rem;
+    padding: 0.3rem;
+}
+.HeaderCustomer{
+    border-bottom: 3px solid #D1AF6E;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.MainContainer textarea{
+    border-radius: 5px;
+}
+.MainContainer select{
+    padding: 10px;
+    font-size: 1rem;
+}
+.headerTextHolder{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.cancelView{
+    background-color: rgb(248, 76, 76);
+}
+.activeView{
+    background-color: greenyellow
+}   
+.pendingView{
+    background-color: yellow;
+}
+.finalizeFormData{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    row-gap: 2vw;
+   
+}
+.partOneFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 2vw;
+}
+.partTwoFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.3vw;
+}
+.partThreeFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1vw;
+}
+.partFourFinalForm{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1vw;
+}
+.checkoutView{
+    background-color: #00ccff;
+}
+.inprogressView{
+    background-color: aquamarine;
+}
+.callednoanswerView{
+    background-color: #8400ff;
+}
+.calledacceptedView{
+    background-color: #ff00d4 ;
+}
+.ManualLead{
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1vw;
+   border: #D1AF6E 2px solid;
+   padding: 2rem;
+   border-radius: 10px;
+}
+.firstRowFormManual{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+}
+@media (max-width: 600px) {
+    .firstRowFormManual{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2rem;
+    }
+    .partOneFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partTwoFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partThreeFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+    .partFourFinalForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 2.8vw;
+    }
+}

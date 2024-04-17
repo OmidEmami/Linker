@@ -15,6 +15,8 @@ import RequestFollowUp from "./Hamam/RequestFollowUp";
 import Calendar from "./Components/Rack Hamam/Calendar";
 import Yalda from "./Components/Yalda/Yalda.js";
 import CrmComponent from "./Components/crm/CrmComponent";
+import ReceptionLeadEntry from "./Components/crm/ReceptionSpecialComponents/ReceptionLeadEntry.js";
+import ReportComponent from "./Components/crm/ReportComponent.js";
 
 
 
@@ -27,7 +29,12 @@ function App() {
                   flexDirection: "column"}}>
    <BrowserRouter>
     <Switch>
-    
+      <Route exact path="/report">
+        <ReportComponent />
+      </Route>
+    <Route exact path="/receptionlead">
+      <ReceptionLeadEntry />
+    </Route>
     <Route exact path="/cal">
         <Calendar />
       </Route>

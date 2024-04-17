@@ -1,11 +1,14 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-
+import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import DatePanel from "react-multi-date-picker/plugins/date_panel"
+import moment from 'jalali-moment';
 import styles from "./CrmComponent.module.css";
 import { FcCallback } from "react-icons/fc";
 import { notify } from "../../Components/toast";
 import Modal from 'react-modal';
-import moment from 'jalali-moment';
 import Button from '@mui/material/Button';
 import MissedCalls from "./MissedCalls";
 import jwt_decode from "jwt-decode";
@@ -30,7 +33,8 @@ const CrmComponent =()=>{
   };
   
   const realToken = useSelector((state) => state.tokenReducer.token);
-    
+  const [values, setValues] = useState('');
+  const digits=["0","1","2","3","4","5","6","7","8","9"];
     const m = moment();
     const [loading, setLoading] = useState(false)
     const [guestName,setGuestName] = useState('');
@@ -44,7 +48,8 @@ const CrmComponent =()=>{
     const [messageReceived, setMessageReceived] = useState([]);
     const [customerSource, setCustomerSource] = useState('')
     const [isLoading, setIsLoading] = useState('')
-    const [data, setData] = useState('')
+    const [data, setData] = useState('');
+    const [otherguestRequestType, setotherguestRequestType] = useState('')
     const [isModalOpen, setIsModalOpen] = useState({type : '', status : false ,
      callid : '', phone :'' , lastcall:'', fullname:'',
      firstcall:'',requesttype:'',background:'', result:''})
@@ -52,8 +57,11 @@ const CrmComponent =()=>{
     const [token,setToken] = useState('')
     const [expire, setExpire] = useState('')
     const [regUser, setRegUser] = useState('');
-    const [hotelSection, setHotelSection] = useState('')
-
+    const [hotelSection, setHotelSection] = useState('');
+    const [AccoRequestType, setAccoRequestType] = useState('');
+    const [ActionEghamat,setActionEghamat] = useState('')
+    const [ActionEghamatZarfiat,setActionEghamatZarfiat] = useState('')
+    const [otherAccoTypes,setOtherAccoTypes] = useState('')
               const refreshToken = async () => {
                 try {
                   
@@ -168,7 +176,7 @@ const CrmComponent =()=>{
       try{
         var CallId;
         
-        if(typeof(isModalOpen.data.serverRes) === "object" && !isModalOpen.data.serverRes.length >0){
+        if(typeof(isModalOpen.data.serverRes) === "object" && !isModalOpen.data.serverRes.length > 0){
              CallId = isModalOpen.data.serverRes.CallId
             
         }else{
@@ -187,7 +195,14 @@ const CrmComponent =()=>{
           firstcalldate : firstCallDate,
           customerSource : customerSource,
           RegUser:regUser,
-          Section : hotelSection
+          Section : hotelSection,
+          RequestDateAcco : values !== "" && values.format('YYYY/MM/DD'),
+          AccoRequestType : AccoRequestType,
+          ActionEghamat:ActionEghamat,
+          ActionEghamatZarfiat:ActionEghamatZarfiat,
+          OtherAccoTypes: otherAccoTypes,          
+          OtherguestRequestType :otherguestRequestType
+
         })
       
         if(response.data === "ok"){
@@ -210,7 +225,12 @@ const CrmComponent =()=>{
             setGuestBackGround('')
             setGuestResult('')
             setCustomerSource('')
-           setHotelSection('')
+            setHotelSection('')
+            setAccoRequestType('')
+            setActionEghamat('')
+            setActionEghamatZarfiat('')
+            setOtherAccoTypes('');
+            setotherguestRequestType('')
             for(let i = 0 ; i < messageReceived.length ; i++){
               console.log(targetValue)
               if(typeof(messageReceived[i].serverRes) === "object" && !messageReceived[i].serverRes.length >0){
@@ -226,11 +246,13 @@ const CrmComponent =()=>{
             
         }else{
           notify( "خطا", "error");
+
           setIsLoading(false)
         }
-      }catch{
+      }catch(error){
         setIsLoading(false)
         notify('خطا','error')
+        console.log(error)
       }
     }
   const openModalRegData = async(data,index)=>{
@@ -304,6 +326,9 @@ const CrmComponent =()=>{
     }
 
   }
+  const sendHamamIntro = async()=>{
+    console.log("hamam")
+  }
     return(
         <div className={styles.MainContainerCrmMenu}>
           <CrmHeader />
@@ -365,43 +390,120 @@ const CrmComponent =()=>{
        <div style={{display:"flex", flexDirection:"row",justifyContent: "center",alignItems: "center", columnGap:"5px"}}>
          {isModalOpen.data !== '' &&  <>
          
-         <label>نام مهمان</label>
-         <input placeholder="نام مهمان" value={guestName} onChange={(e)=>setGuestName(e.target.value)} /></>}
+         <label>نام مهمان
+         <input placeholder="نام مهمان" value={guestName} onChange={(e)=>setGuestName(e.target.value)} /></label></>}
          {isModalOpen.data !== '' && <>
-         <label>شماره تماس</label>
+         <label>شماره تماس
          <input type="text" placeholder="شماره تماس" value={guestPhone} onChange={(e)=>setGuestPhone(e.target.value)} />
-        
+        </label>
          </> }
           </div>
           <div style={{display:"flex", flexDirection:"row",justifyContent: "center",alignItems: "center", columnGap:"5px"}}>
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
          <label>نوع درخواست</label>
          <select
      id="selectBox1"
      value={guestRequestType}
      onChange={(e)=>setGuestRequestType(e.target.value)}>
-       {guestRequestType === '' && <option value="">نوع درخواست را انتخاب کنید</option>}
-       {guestRequestType !== '' && <option value={guestRequestType}>{guestRequestType}</option>}
+       <option value="default">انتخاب کنید</option>
      <option value="رستوران">رستوران</option>
      <option value="اقامت">اقامت</option>
      <option value="حمام سنتی">حمام سنتی</option>
      <option value="سایر">سایر</option>
    </select>
-   
-           <lable>نتیجه</lable>
-           <select
-     id="selectBox2"
-     value={guestResult}
-     onChange={(e)=>setGuestResult(e.target.value)}>
-       {guestResult === '' && <option value="">نتیجه تماس را مشخص کنید</option>}
-       {guestResult !== '' && <option value={guestResult}>{guestResult}</option>}
-     <option value="بررسی لیست قیمت ها">بررسی لیست قیمت ها</option>
-     <option value="بررسی قیمت و ظرفیت">بررسی قیمت و ظرفیت</option>
-     <option value="ارسال کاتالوگ">ارسال کاتالوگ</option>
-     <option value="رزرو انجام شد">رزرو انجام شد</option>
-     <option value="ارجاع به رستوران">ارجاع به رستوران</option>
-     <option value="ارجاع به حمام">ارجاع به حمام</option>
+   </div>
+   {guestRequestType === "اقامت" &&
+   <>
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+   <label>تاریخ ورود</label>
+    <DatePicker
+        required 
+        digits={digits}
+        value={values}
+        onChange={value=>{setValues(value)}} 
+         calendar={persian}
+         locale={persian_fa}
+         format="DD/MM/YYYY"
+         placeholder="تاریخ ورود"
+         inputMode="single"
+          single
+         
+       ></DatePicker>
+       </div>
+       </>
+   }
+   {guestRequestType === "اقامت" &&
+   <>
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+   <label>موضوع اقامت</label>
+   <select
+     id="selectBoxEghamat"
+     value={AccoRequestType}
+     onChange={(e)=>setAccoRequestType(e.target.value)}
+     
+     >
+      <option value="null">انتخاب کنید</option>
+     <option value="بررسی قیمت">بررسی قیمت</option>
+     <option value="بررسی ظرفیت">بررسی ظرفیت</option>
      <option value="سایر">سایر</option>
+     <option value="پیگیری رزرو">پیگیری رزرو</option>
+     <option value="کنسل">کنسل</option>
+   </select></div></>}
+   {AccoRequestType === "بررسی قیمت" &&  guestRequestType === "اقامت" &&
+   <>
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+   <label>نوع لیست قیمت</label>
+   <select
+   id="selectBoxActionEghamat"
+   value={ActionEghamat}
+   onChange={(e)=>setActionEghamat(e.target.value)}>
+    <option value="null">انتخاب کنید</option>
+    <option value="priceListIrani">ارسال کاتالوگ قیمت دار ایرانی</option>
+    <option value="priceListKhareji">ارسال کاتالوگ قیمت دار خارجی</option>
+    <option value="priceListOral">قیمت ها شفاهی گفته شد</option>
    </select>
+   </div>
+   </>}
+   {AccoRequestType === "بررسی ظرفیت" && guestRequestType === "اقامت" &&
+   <>
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+    <label>نتیجه</label>
+   <select
+   id="ActionEghamatZarfiat"
+   value={ActionEghamatZarfiat}
+   onChange={(e)=>setActionEghamatZarfiat(e.target.value)}>
+    <option value="null">انتخاب کنید</option>
+    <option value="عدم موجودی ظرفیت">عدم موجودی ظرفیت</option>
+    <option value="ظرفیت موجود">ظرفیت موجود</option>
+    <option value="رزرو انجام شد">رزرو انجام شد</option>
+    <option value="رزرو انجام نشد">رزرو انجام نشد</option>
+   </select>
+   </div>
+   </>}
+   {AccoRequestType === "سایر" || AccoRequestType === "پیگیری رزرو" || AccoRequestType === "کنسل"  ?
+   <>
+   {guestRequestType === "اقامت" && 
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+   <label>توضیحات</label>
+   <textarea id="otherAccoTypes" name="otherAccoTypes" value={otherAccoTypes} onChange={(e)=>setOtherAccoTypes(e.target.value)} rows="4" cols="50" />
+   </div>}
+   
+   </>
+   :
+   null
+   }
+   {guestRequestType === "حمام سنتی" && <></>}
+   {guestRequestType === "رستوران" && <></>}
+   {guestRequestType === "سایر" && 
+   <>
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
+   <label>توضیحات</label>
+   <textarea placeholder="توضیحات" id="otherguestRequestType" name="otherguestRequestType" value={otherguestRequestType} onChange={(e)=>setotherguestRequestType(e.target.value)} rows="4" cols="50" />
+   
+   </div>
+   </>}
+
+   <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
    <label>نحوه آشنایی</label>
    <select
      id="selectBox3"
@@ -416,6 +518,7 @@ const CrmComponent =()=>{
    </select>
    </div>
    </div>
+   </div>
    
          {isModalOpen.type === "haveBackGround" &&
          <div className={styles.gridContainer}>
@@ -423,7 +526,7 @@ const CrmComponent =()=>{
            <div key={index} className={styles.dataContainer}>
              <h3>تاریخ تماس :  {value.LastCall}</h3>
              <h3>نوع درخواست : {value.RequestType}</h3>
-             <h3>نتیجه : {value.Result}</h3>
+             <h3>نتیجه : {value.OtherguestRequestType, value.OtherAccoTypes, value.ActionEghamatZarfiat, value.ActionEghamat, value.AccoRequestType}</h3>
              <h3>اپراتور : {value.RegUser}</h3>
              <h3>بخش : {value.Section}</h3>
              <div className={styles.divider}></div>
