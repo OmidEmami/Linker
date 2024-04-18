@@ -63,7 +63,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
@@ -97,7 +97,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
     const selectedHours = localReserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:localReserveDetails.UniqueId,
         FullName:localReserveDetails.FullName,
         Phone:localReserveDetails.Phone,
@@ -156,7 +156,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
+        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,

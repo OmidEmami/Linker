@@ -88,7 +88,7 @@ const Calendar = () => {
     setIsLoading(true);
     try {
       
-        const response = await axios.post("http://localhost:3001/api/getFixedReserves", {
+        const response = await axios.post("https://gmhotel.ir/api/getFixedReserves", {
             date: currentDate.locale('fa').format('YYYY-MM')
         }, {
             headers: {
@@ -215,7 +215,7 @@ const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -249,7 +249,7 @@ const debouncedSetReserveDetails = useCallback(debounce((name, value) => {
     const selectedHours = reserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:reserveDetails.UniqueId,
         FullName:reserveDetails.FullName,
         Phone:reserveDetails.Phone,
@@ -311,7 +311,7 @@ const handleFinalReserveDetailsForm = (e) => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
+        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
           UniqueId:reserveDetails.UniqueId,
           FullName:reserveDetails.FullName,
           Phone:reserveDetails.Phone,
@@ -334,7 +334,7 @@ const handleFinalReserveDetailsForm = (e) => {
   const downloadHamamDetails = async () => {
     try {
         setIsLoading(true);
-        const response = await axios.get("http://localhost:3001/api/downloadhamamdetails", {
+        const response = await axios.get("https://gmhotel.ir/api/downloadhamamdetails", {
             responseType: 'blob', // You can keep this as 'blob' since it's a binary type
             headers: {
                 Authorization: `Bearer ${realToken.realToken}`
