@@ -65,7 +65,7 @@ const CrmComponent =()=>{
               const refreshToken = async () => {
                 try {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://localhost:3001/api/token');
                     
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -87,7 +87,7 @@ const CrmComponent =()=>{
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://localhost:3001/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -104,7 +104,7 @@ const CrmComponent =()=>{
                   const fetchData=async()=>{
                     setIsLoading(true)
                       try{
-                          const response = await axios.get("https://gmhotel.ir/api/getpayments",{
+                          const response = await axios.get("http://localhost:3001/api/getpayments",{
                             headers:{
                               Authorization: `Bearer ${realToken.realToken}`
                             }
@@ -127,7 +127,7 @@ const CrmComponent =()=>{
                           let ws;
                         
                           const connect = () => {
-                            ws = new WebSocket('wss://gmhotel.ir');
+                            ws = new WebSocket('ws://localhost:3001');
                         
                             ws.onopen = () => {
                               console.log('WebSocket connection established');
@@ -184,7 +184,7 @@ const CrmComponent =()=>{
            
         }
         setIsLoading(true)
-        const response = await axios.post("https://gmhotel.ir/api/regData",{
+        const response = await axios.post("http://localhost:3001/api/regData",{
           callId : CallId,
           guestName : guestName,
           requestType : guestRequestType,
@@ -526,7 +526,7 @@ const CrmComponent =()=>{
            <div key={index} className={styles.dataContainer}>
              <h3>تاریخ تماس :  {value.LastCall}</h3>
              <h3>نوع درخواست : {value.RequestType}</h3>
-             <h3>نتیجه : {value.Result, value.OtherguestRequestType, value.OtherAccoTypes, value.ActionEghamatZarfiat, value.ActionEghamat, value.AccoRequestType}</h3>
+             <h3>نتیجه :{value.Result}-{value.OtherguestRequestType}-{value.OtherAccoTypes}-{value.ActionEghamatZarfiat}-{value.ActionEghamat}-{value.AccoRequestType}</h3>
              <h3>اپراتور : {value.RegUser}</h3>
              <h3>بخش : {value.Section}</h3>
              <div className={styles.divider}></div>

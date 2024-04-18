@@ -103,7 +103,7 @@ const rowsPerPageOptions = [5, 10, 25];
       
      
       try{
-        const response = await axios.post("https://gmhotel.ir/api/receptionModifyLead",{
+        const response = await axios.post("http://localhost:3001/api/receptionModifyLead",{
           data : rawData 
       })
       console.log(response)
@@ -121,7 +121,7 @@ const rowsPerPageOptions = [5, 10, 25];
 const fetchData =async()=>{
     try{    
       
-        const response = await axios.get("https://gmhotel.ir/api/getFreshLeadsReception")
+        const response = await axios.get("http://localhost:3001/api/getFreshLeadsReception")
         
           
           setRawData(response.data)
@@ -164,7 +164,7 @@ fetchData();
 
       try{
         
-        const response = await axios.post('https://gmhotel.ir/api/receptionManualNewLead',{
+        const response = await axios.post('http://localhost:3001/api/receptionManualNewLead',{
           Name:newNameLead,
           Phone:newPhoneLead,
           LeadSource:leadSource,

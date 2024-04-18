@@ -16,7 +16,7 @@ function ReportComponent() {
   
   useEffect(() => {
     
-    axios.get('https://gmhotel.ir/api/getCallsReport')
+    axios.get('http://localhost:3001/api/getCallsReport')
       .then(response => {
         setData(response.data); 
         setIsLoading(false); 
@@ -31,7 +31,7 @@ function ReportComponent() {
   if (error) return <div>Error: {error}</div>;
   const sendEmail = async() =>{
     try{
-      const response = await axios.get("https://gmhotel.ir/api/sendtestemail")
+      const response = await axios.get("http://localhost:3001/api/sendtestemail")
       console.log(response)
     }
       catch(error){
