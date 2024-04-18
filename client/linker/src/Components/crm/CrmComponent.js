@@ -526,7 +526,7 @@ const CrmComponent =()=>{
            <div key={index} className={styles.dataContainer}>
              <h3>تاریخ تماس :  {value.LastCall}</h3>
              <h3>نوع درخواست : {value.RequestType}</h3>
-             <h3>نتیجه : {value.OtherguestRequestType, value.OtherAccoTypes, value.ActionEghamatZarfiat, value.ActionEghamat, value.AccoRequestType}</h3>
+             <h3>نتیجه : {value.Result, value.OtherguestRequestType, value.OtherAccoTypes, value.ActionEghamatZarfiat, value.ActionEghamat, value.AccoRequestType}</h3>
              <h3>اپراتور : {value.RegUser}</h3>
              <h3>بخش : {value.Section}</h3>
              <div className={styles.divider}></div>

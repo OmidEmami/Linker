@@ -22,7 +22,7 @@ import { regData } from "../Controllers/ModifyData.js";
 import { getMissedCalls } from "../Controllers/GetMissedCalls.js";
 import { downloadHamamDetails } from "../Controllers/downloadHamamDetails.js";
 import { getCallsReport, receptionGetRawLeads, receptionModifyLead, receptionPutRawLeads } from "../Controllers/ReceptionLeadsEntry.js";
-import { sendtestemail } from "../Controllers/SendTestEmail.js";
+
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
