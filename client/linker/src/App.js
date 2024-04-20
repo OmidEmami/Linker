@@ -39,7 +39,9 @@ function App() {
         <Calendar />
       </Route>
     <Route exact path="/crmphone">
+      
       <CrmComponent />
+      
     </Route>
     <Route exact path="/yalda">
         <Yalda />
