@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useContext} from 'react'
 import { useSelector } from "react-redux";
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -22,9 +22,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import jwt_decode from "jwt-decode";
-import CrmComponent from '../CrmComponent';
-
+import { useHistory } from 'react-router-dom';
+import LeadContext from '../../../context/LeadContext';
+import CrmComponentReception from './CrmComponentReception';
 const ReceptionLeadEntry = () =>{
+  const history = useHistory();
+    const { phoneNumberSocket, removePhoneNumber } = useContext(LeadContext);
+  
   const customStyles = {
     content: {
       top: '50%',
@@ -40,7 +44,10 @@ const ReceptionLeadEntry = () =>{
   const [newNameLead,setNewNameLead]=useState('');
   const [newPhoneLead, setNewPhoneLead] = useState('');
   const [leadSource,setLeadSource] = useState('');
-  const [userName, setUserName] = useState('omid')
+ 
+  const [token,setToken] = useState('');
+  const [expire, setExpire] = useState('')
+  const [regUser, setRegUser] = useState('')
   const [showSaveButton, setShowSaveButton] = useState(true)
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [finalFormData, setFinalFormData] = useState({
@@ -72,7 +79,7 @@ const ReceptionLeadEntry = () =>{
 const statusTypes = [
   {name : 'Pending', value:"Pending"},
   {name : 'Follow up again', value:"Follow up again"},
-  {name : 'Called - Reserved', value:"Called - Reserved"},
+  {name : 'Looked in', value:"Looked in"},
 ]
 const rowsPerPageOptions = [5, 10, 25];
     const [showNewLeadModal, setShowNewLeadModal] = useState(false)
@@ -98,43 +105,88 @@ const rowsPerPageOptions = [5, 10, 25];
       });
       setRawData(sortedData);
     };
+    const refreshToken = async () => {
+      try {
+        setIsLoading(true)
+          const response = await axios.get('https://gmhotel.ir/api/token');
+          
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+
+          setRegUser(decoded.name)
+          setExpire(decoded.exp);
+          setIsLoading(false)
+      } catch (error) {
+        setIsLoading(false)
+          if (error.response) {
+              history.push("/");
+          }
+      }
+    }
+    
+    const axiosJWT = axios.create();
+    
+    axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        
+          const response = await axios.get('https://gmhotel.ir/api/token');
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setExpire(decoded.exp);
+      }
+      return config;
+    }, (error) => {
+      
+      Promise.reject(error);
+      return 
+    });
+    useEffect(() => {
+      refreshToken();
+        
+                
+              
+              }, []);
     const saveNewData = async()=>{
-      console.log(rawData)
+    
       
      
       try{
+        setIsLoading(true)
         const response = await axios.post("https://gmhotel.ir/api/receptionModifyLead",{
           data : rawData 
       })
-      console.log(response)
+      setIsLoading(false)
       
      
      
       notify( "اطلاعات با موفقیت ثبت شد", "success")
      
       }catch(error){
-        
+        setIsLoading(false)
         notify( "خطا", "error")
       }
     }
     useEffect(()=>{
 const fetchData =async()=>{
     try{    
-      
+      setIsLoading(true)
         const response = await axios.get("https://gmhotel.ir/api/getFreshLeadsReception")
         
           
           setRawData(response.data)
-          setIsLoading(false)
-          notify("اطلاعات با موفقیت دریافت شد",'success')
+          
+          
           setShowData(true)
+          setIsLoading(false)
     }catch(error){
         setIsLoading(false)
         notify("خطا",'error')
     }
 }
 fetchData();
-    },[showNewLeadModal])
+    },[showNewLeadModal,phoneNumberSocket])
     const handleChangePage = (_, newPage) => {
       setPage(newPage);
     };
@@ -159,30 +211,42 @@ fetchData();
      
       setRawData(updatedData);
     };
-    const saveNewManualLead = async(e)=>{
-      e.preventDefault();
 
-      try{
-        
-        const response = await axios.post('https://gmhotel.ir/api/receptionManualNewLead',{
-          Name:newNameLead,
-          Phone:newPhoneLead,
-          LeadSource:leadSource,
-          User:userName,
-          
-        })
-        
-       
-        
-      }catch(error){
-        notify('خطا','error')
-      }
-   
+const saveNewManualLead = async (e) => {
+  e.preventDefault();
+  try {
+    setIsLoading(true)
+    
+    const response = await axios.post('https://gmhotel.ir/api/receptionManualNewLead', {
+      Name: newNameLead,
+      Phone: newPhoneLead,
+      LeadSource: leadSource,
+      User: regUser,
+    });
+
+    if (response.status === 200) {
+     setIsLoading(false)
+      notify("اطلاعات با موفقیت ثبت شد", "success");
+      setShowNewLeadModal(false)
+    } else {
+      setIsLoading(false)
+      notify("خطا",'error')
+      throw new Error('Failed to save data'); 
+      
+      // Handling unexpected response codes
     }
+  } catch (error) {
+    notify('خطا', 'error');
+    console.error(error);
+    setIsLoading(false)
+  }
+};
+
    
   return (
     <>
-    <CrmComponent />
+    {isloading && <LoadingComp />}
+    <CrmComponentReception />
      {showData === true ? <>
        
        
@@ -206,49 +270,39 @@ fetchData();
          <TableBody>
      {rawData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
              <TableRow className={
-               row.Status === "Pending" && styles.pendingView
-               || row.Status === "Called - Reserved" && styles.activeView
-               || row.Status === "Follow up again" && styles.cancelView
-               } key={row.id}>
-               {/* 'Checked Out', 'In Progress', 'Pending','Called no answer','Called - Declined' , 'Called - Accepted, waiting for reservation', 'Reserve Finalized' */}
+              row.Status === "Pending" && styles.pendingView
+              || row.Status === "Looked in" && styles.activeView
+              || row.Status === "Follow up again" && styles.cancelView
+              } key={row.id}>
                {columns.map((column) => (
-                 <TableCell key={column.id}>
-                   {column.editable || column.id === 'FullName'
-                   || column.id === 'Phone' || column.id === 'HamamType' || column.id === 'FirstFollow'
-                   || column.id === 'PreferedDate'
-                   ? (column.id !== "Status" ?(
-                     <textarea
-                     sx={{
-                       '--Textarea-focusedInset': 'var(--any, )',
-                       '--Textarea-focusedThickness': '0.25rem',
-                       '--Textarea-focusedHighlight': 'rgba(13,110,253,.25)',
-                       '&::before': {
-                         transition: 'box-shadow .15s ease-in-out',
-                       },
-                       '&:focus-within': {
-                         borderColor: '#86b7fe',
-                       },
-                     }}
-                       value={row[column.id]}
-                       onChange={(e) => handleFieldChange(row,column.id, e.target.value)}
-                       style={{ width: `${row.width}px`, height: `${row.height}px` }}
-                     />
-                   ): <select onChange={(e) => handleFieldChange(row,column.id, e.target.value)} value={row[column.id]}><option value={row[column.id]}>{row[column.id]}</option>
-                   <option value="Active">Active</option>
-                   <option value="Cancel">Cancel</option>
-                   </select>) : (column.id !== "Status" ?(row[column.id]):(
-                   <select onChange={(e) => handleFieldChange(row, column.id, e.target.value)} value={row[column.id]}>
-                   {['Pending', 'Called - Reserved', 'Follow up again','Declined'].map(option => (
-                     <option key={option} value={option}>
-                       {option}
-                     </option>
-                   ))}
-                 </select>)
-                    
-                   )}
-                   
-                 </TableCell>
-               ))}
+  <TableCell key={column.id}>
+    {column.editable || column.id === 'FullName'
+    || column.id === 'Phone' ? (
+      column.id !== "Status" ? (
+        <textarea
+          value={row[column.id]}
+          onChange={(e) => handleFieldChange(row, column.id, e.target.value)}
+          style={{ width: `${row.width}px`, height: `${row.height}px` }}
+        />
+      ) : (
+        // For Status column, use dynamic options from statusTypes
+        <select 
+          value={row[column.id]}
+          onChange={(e) => handleFieldChange(row, column.id, e.target.value)}
+        >
+          {statusTypes.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      )
+    ) : (
+      row[column.id]
+    )}
+  </TableCell>
+))}
+
              </TableRow>
            ))}
          </TableBody>
@@ -283,17 +337,14 @@ fetchData();
          <div style={{padding:"2vw"}}>
          <h3 style={{textAlign:"center"}}>افزودن سرنخ</h3>
          <form className={styles.ManualLead} onSubmit={saveNewManualLead}>
-           <div className={styles.firstRowFormManual}>
-           <div>
+           
            <label>نام مشتری</label>
              <input required type='text' value={newNameLead} onChange={(e)=>setNewNameLead(e.target.value)} />
-           </div>
+          
            <label>شماره تماس </label>
           <input required type='number' value={newPhoneLead} onChange={(e)=>setNewPhoneLead(e.target.value)} />
  
           
-            <div style={{display:"flex", flexDirection:"row",justifyContent:'center', alignItems:'center',columnGap:"2vw" }}>
-            <div style={{display:"flex", flexDirection:"column",justifyContent:'center', alignItems:'center',rowGap:"2vw" }}>
             <label>منبع سر نخ</label>
              
              <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
@@ -303,9 +354,7 @@ fetchData();
                      </option>
                    ))}
                  </select>
-                 </div>
-                 </div>
-                  </div>
+                 
            <button className={styles.buttonClass} type='submit'>ثبت</button>
          </form>
        </div>

@@ -1,4 +1,6 @@
 
+import React, { useState } from 'react';
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./Components/Login&Signup/Login";
 import SignUp from "./Components/Login&Signup/SignUp";
@@ -17,18 +19,25 @@ import Yalda from "./Components/Yalda/Yalda.js";
 import CrmComponent from "./Components/crm/CrmComponent";
 import ReceptionLeadEntry from "./Components/crm/ReceptionSpecialComponents/ReceptionLeadEntry.js";
 import ReportComponent from "./Components/crm/ReportComponent.js";
-
-
+import LeadContext from "./context/LeadContext.js";
+import WaitingListReserveByRec from './Components/crm/WaitingListReserveByRec.js';
 
 
 function App() {
+  const [phoneNumberSocket, setPhoneNumberSocket] = useState('');
+
   return (
    <>
+    <LeadContext.Provider value={{ phoneNumberSocket, setPhoneNumberSocket }}>
+
    <div style={{minHeight: "95vh",
                 display: "flex",
                   flexDirection: "column"}}>
    <BrowserRouter>
     <Switch>
+      <Route exact path = "/waitinglist" >
+        <WaitingListReserveByRec />
+      </Route>
       <Route exact path="/report">
         <ReportComponent />
       </Route>
@@ -84,6 +93,7 @@ function App() {
       </BrowserRouter>
       </div>
      <Footer />
+     </LeadContext.Provider>
       </>
   );
 }

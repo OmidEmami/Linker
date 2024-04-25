@@ -12,34 +12,32 @@ export const receptionGetRawLeads = async(req,res)=>{
                 
        }
 }
-export const receptionModifyLead = async(req,res)=>{
-  const data = req.body.data
+export const receptionModifyLead = async (req, res) => {
+  const data = req.body.data;
+  const results = [];
 
-  for( let i = 0 ; i < data.length ; i++){
-    try{
-      const response = await ReceptionLeads.update({
-      
-      FullName : data[i].FullName,
-      Phone: data[i].Phone,
-      Date : data[i].Date,
-      Status : data[i].Status,
-      Description : data[i].Description,
-      RequestType : data[i].RequestType,
-      FinalResult : data[i].FinalResult,
-      
-      },{
-        where:{
-          UniqueId : data[i].UniqueId
+  for (let i = 0; i < data.length; i++) {
+      try {
+          const response = await ReceptionLeads.update({
+              FullName: data[i].FullName,
+              Phone: data[i].Phone,
+              Date: data[i].Date,
+              Status: data[i].Status,
+              Description: data[i].Description,
+              RequestType: data[i].RequestType,
+              FinalResult: data[i].FinalResult,
+          }, {
+              where: { UniqueId: data[i].UniqueId }
+          });
+          results.push(response);
+      } catch (error) {
+          console.log(error);
+          results.push(error);
       }
-  
-      })
-      res.json(response)
-    }catch(error){
-  res.json(error)
-    }
   }
-  
-}
+  res.json({ results });
+};
+
 export const receptionPutRawLeads = async(req,res)=>{
   try{
     const response = await ReceptionLeads.create({
@@ -51,9 +49,9 @@ export const receptionPutRawLeads = async(req,res)=>{
         User:req.body.User,
         RequestType : "َAccoReserve"
     })
-   
+            res.json(response)
   }catch(error){
-            
+            res.json(error)
    }
 }
 export const getCallsReport = async(req,res)=>{
@@ -62,5 +60,28 @@ export const getCallsReport = async(req,res)=>{
     res.json(response)
   }catch(error){
 
+  }
+}
+
+export const regDataReceptionLeadSocket = async(req,res)=>{
+  try{
+    const response = await ReceptionLeads.create({
+      
+      UniqueId : req.body.callId,
+      FullName  : req.body.guestName,
+      Phone : req.body.phone,
+      Date : req.body.lastcalldate,
+      Status :"Pending",
+      RequestType : "َAccoReserve",
+      User :   req.body.User 
+          
+          
+          
+          
+        
+    })
+    res.json(response)
+  }catch(error){
+    
   }
 }

@@ -55,12 +55,19 @@
 }
 .cancelView{
     background-color: rgb(248, 76, 76);
+    cursor: pointer;
 }
 .activeView{
-    background-color: greenyellow
+    background-color: greenyellow;
+    cursor: pointer;
 }   
 .pendingView{
     background-color: yellow;
+    cursor: pointer;
+}
+.newCancelView{
+    background-color: cyan;
+    cursor: pointer;
 }
 .finalizeFormData{
     display: flex;

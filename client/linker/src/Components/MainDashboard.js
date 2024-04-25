@@ -98,7 +98,7 @@ import Calendar from "./Rack Hamam/Calendar";
         if(accessType === "editor" || accessType === "admin" || accessType === "reservation"){
         window.open("/crmphone", '_blank')
         }else if(accessType === "reception"){
-        window.open("/crmphonereception", '_blank')
+        window.open("/receptionlead", '_blank')
         }
     }
     return(
