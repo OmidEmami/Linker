@@ -175,7 +175,7 @@ const CrmComponentReception =()=>{
                             e.preventDefault();
                             try {
                               var CallId;
-                          console.log(phoneNumberSocket.serverRes)
+                          
                               // Safely accessing nested properties using optional chaining
                               if (phoneNumberSocket?.serverRes?.length > 0) {
                                 CallId = phoneNumberSocket.serverRes[0].CallId;
@@ -197,7 +197,7 @@ const CrmComponentReception =()=>{
                                 User: regUser
                               });
                           
-                              if (response.statusText === "OK") {
+                              if (response.status === 200) {
                                 notify("اطلاعات ثبت شد.", "success");
                                 setIsLoading(false);
                                 closeModalRegData();
