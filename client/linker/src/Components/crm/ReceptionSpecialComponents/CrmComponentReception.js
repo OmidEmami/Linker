@@ -131,7 +131,7 @@ const CrmComponentReception =()=>{
                           let ws;
                         
                           const connect = () => {
-                            ws = new WebSocket('ws://localhost:3001');
+                            ws = new WebSocket('wss://gmhotel.ir');
                         
                             ws.onopen = () => {
                               console.log('WebSocket connection established');
