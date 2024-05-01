@@ -157,7 +157,7 @@ const CrmComponent =()=>{
                               // Attempt to reconnect with a delay
                               setTimeout(() => {
                                 connect(); // Reconnect
-                              }, 5000); // Reconnect after 5 seconds
+                              }, 1000); // Reconnect after 5 seconds
                             };
                           };
                         
@@ -515,16 +515,22 @@ const CrmComponent =()=>{
    <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
    <label>نحوه آشنایی</label>
    <select
-     id="selectBox3"
-     value={customerSource}
-     onChange={(e)=>setCustomerSource(e.target.value)}>
-       {customerSource === '' && <option value="">نحوه آشنایی</option>}
-       {customerSource !== '' && <option value={customerSource}>{customerSource}</option>}
-     <option value="اینستاگرام">اینستاگرام</option>
-     <option value="اینترنت">اینترنت</option>
-     <option value="آژانس">مهمان قبلی</option>
-     <option value="سایر">سایر</option>
-   </select>
+  id="selectBox3"
+  value={customerSource}
+  onChange={(e) => setCustomerSource(e.target.value)}
+>
+  {customerSource === '' && <option value="">نحوه آشنایی</option>}
+  {/* Render the customerSource option only if it is not a predefined option */}
+  {!['اینستاگرام', 'اینترنت', 'مهمان قبلی', 'آژانس', 'سایر'].includes(customerSource) &&
+    customerSource !== '' && <option value={customerSource}>{customerSource}</option>}
+  
+  <option value="اینستاگرام">اینستاگرام</option>
+  <option value="اینترنت">اینترنت</option>
+  <option value="مهمان قبلی">مهمان قبلی</option>
+  <option value="آژانس">آژانس</option>
+  <option value="سایر">سایر</option>
+</select>
+
    </div>
    </div>
    </div>

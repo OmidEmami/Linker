@@ -1,0 +1,39 @@
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .styled-table th, .styled-table td {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+  }
+  
+  .styled-table thead th {
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  .header-col-0 {
+    background-color: #f9f9fb;
+  }
+  
+  .header-col-1 {
+    background-color: #eef1f6;
+  }
+  
+  .even-row {
+    background-color: #f7f7f9;
+  }
+  
+  .odd-row {
+    background-color: #fff;
+  }
+  
+  .styled-table th {
+    cursor: pointer;
+  }
+  
+  .styled-table th:hover {
+    background-color: #e1e1e3;
+  }
+  

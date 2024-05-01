@@ -1,6 +1,7 @@
 import ReceptionLeads from "../Models/ReceptionLeads.js";
 import moment from "jalali-moment";
 import DetailedCalls from "../Models/DetailedCalls.js";
+import IncomingCallsCrm from "../Models/IncomingCallsCrm.js";
 export const receptionGetRawLeads = async(req,res)=>{
       try{
        
@@ -73,8 +74,8 @@ export const regDataReceptionLeadSocket = async(req,res)=>{
       Date : req.body.lastcalldate,
       Status :"Pending",
       RequestType : "َAccoReserve",
-      User :   req.body.User 
-          
+      User :   req.body.User,
+      LastCall : moment().locale('fa').format('YYYY/MM/DD')
           
           
           
@@ -82,6 +83,15 @@ export const regDataReceptionLeadSocket = async(req,res)=>{
     })
     res.json(response)
   }catch(error){
-    
+    res.json(error)
   }
+}
+export const getAllCallsReport = async(req,res)=>{
+  try{
+    const response = await IncomingCallsCrm.findAll({})
+    res.json(response)
+  }catch(error){
+    res.json(error)
+  }
+
 }

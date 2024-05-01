@@ -258,16 +258,22 @@ notify('خطا','error')
    <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", columnGap:"1rem"}}>
    <label>نحوه آشنایی</label>
    <select
-     id="selectBox3"
-     value={customerSource}
-     onChange={(e)=>setCustomerSource(e.target.value)}>
-       {customerSource === '' && <option value="">نحوه آشنایی</option>}
-       {customerSource !== '' && <option value={customerSource}>{customerSource}</option>}
-     <option value="اینستاگرام">اینستاگرام</option>
-     <option value="اینترنت">اینترنت</option>
-     <option value="آژانس">مهمان قبلی</option>
-     <option value="سایر">سایر</option>
-   </select>
+  id="selectBox3"
+  value={customerSource}
+  onChange={(e) => setCustomerSource(e.target.value)}
+>
+  {customerSource === '' && <option value="">نحوه آشنایی</option>}
+  {/* Render the customerSource option only if it is not a predefined option */}
+  {!['اینستاگرام', 'اینترنت', 'مهمان قبلی', 'آژانس', 'سایر'].includes(customerSource) &&
+    customerSource !== '' && <option value={customerSource}>{customerSource}</option>}
+  
+  <option value="اینستاگرام">اینستاگرام</option>
+  <option value="اینترنت">اینترنت</option>
+  <option value="مهمان قبلی">مهمان قبلی</option>
+  <option value="آژانس">آژانس</option>
+  <option value="سایر">سایر</option>
+</select>
+
    </div>
    </div>
    </div>
@@ -302,6 +308,7 @@ notify('خطا','error')
       <h3 onClick={() => window.open("/waitinglist", "_blank", "noopener,noreferrer")}>لیست انتظار تماس</h3>
       <h3>ارسال لینک اقامت</h3>
       <h3>ارسال کاتالوگ</h3>
+      <h3 onClick={() => window.open("/report", "_blank", "noopener,noreferrer")}>مشاهده گزارشات</h3>
       </div>
     </div>
     </>
