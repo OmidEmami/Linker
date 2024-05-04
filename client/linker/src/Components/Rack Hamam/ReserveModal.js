@@ -52,6 +52,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    console.log(reserveDetails)
     if (hamamStartHour && hamamEndHour) {
       const firstHour = hamamStartHour.hour();
       const secondHour = hamamEndHour.hour();
@@ -177,11 +178,18 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
       notify("خطا",'error')
     }
   }
+  const onCloseHandler = () => {
+    setShowPopUp(false);  
+    setLocalReserveDetails({});
+    setHamamStartHour('');
+    setHamamEndHour('');
+    onClose();  
+  };
   return (
     <>
     {isLoading && <LoadingComp />}
    <Modal
-   isOpen={isOpen} onRequestClose={onClose}
+   isOpen={isOpen} onRequestClose={onCloseHandler}
         //onAfterOpen={afterOpenModal}
         
         style={customStyles}
@@ -189,10 +197,13 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
       >
         <div style={{margin:"10px"}}>
           <form className='formdetails' onSubmit={handleSubmit}>
+            <div style={{display:"flex", flexDirection:"row", columnGap:"5rem", justifyContent:"center", alignItems:"center"}}>
             <label>ثبت کننده : {localReserveDetails.User}</label>
+            <label>کد درخواست : {localReserveDetails.UniqueId}</label>
+            </div>
             <div className='formdetails-first-one'>
 
-            <label>کد درخواست : {localReserveDetails.UniqueId}</label>
+            
             <label>نام مهمان  
               <ReserveDetailsInput name='FullName' type='text' value={localReserveDetails.FullName} onChange={handleChange} />
             </label>
@@ -219,7 +230,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
                 </select>
                
                 </label>
-                 <ReserveDetailsInput style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={localReserveDetails.SatisfactionText} onChange={handleChange} />
+                 <textarea style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={localReserveDetails.SatisfactionText} onChange={handleChange} />
                  </div>
                 }
             
@@ -306,7 +317,7 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
               <ReserveDetailsInput type='text' name='MassorNames' value={localReserveDetails.MassorNames} onChange={handleChange} />
             
             <label>توضیحات</label>
-              <ReserveDetailsInput name='Desc' value={localReserveDetails.Desc} onChange={handleChange} />
+              <textarea name='Desc' value={localReserveDetails.Desc} onChange={handleChange} />
             
             </div>
             <div className='Button-container'>

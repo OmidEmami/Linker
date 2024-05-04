@@ -23,6 +23,7 @@ import { getMissedCalls } from "../Controllers/GetMissedCalls.js";
 import { downloadHamamDetails } from "../Controllers/downloadHamamDetails.js";
 import { getAllCallsReport,getCallsReport, receptionGetRawLeads, receptionModifyLead, receptionPutRawLeads, regDataReceptionLeadSocket } from "../Controllers/ReceptionLeadsEntry.js";
 import { setmanualcalllead } from "../Controllers/ManualCallLeadEntry.js";
+import { addNewMassor, addNewPackage, getAllMassors, getAllPackages, modifyPackages, removeMassor, removePackage } from "../Controllers/ControllerDynamicItems.js";
 
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
@@ -63,5 +64,12 @@ router.post('/api/receptionManualNewLead',receptionPutRawLeads)
 router.get('/api/getCallsReport',getCallsReport);
 router.post('/api/setmanualcalllead', setmanualcalllead);
 router.post('/api/regDataReception',regDataReceptionLeadSocket)
-router.get('/api/getAllCallsReport',getAllCallsReport)
+router.get('/api/getAllCallsReport',getAllCallsReport);
+router.get('/api/getallpackages', getAllPackages);
+router.get('/api/getallmassornames', getAllMassors);
+router.post('/api/regnewmassor', addNewMassor);
+router.post('/api/removemassor', removeMassor);
+router.post('/api/removehamampackage', removePackage)
+router.post('/api/addnewpackage', addNewPackage);
+router.post('/api/modifypackages', modifyPackages)
 export default router;

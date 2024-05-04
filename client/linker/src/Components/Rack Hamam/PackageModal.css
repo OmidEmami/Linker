@@ -1,0 +1,33 @@
+.hover-effect {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 145, 0, 0.336);
+    padding: 0.5rem;
+    direction: rtl;
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out;
+    cursor:pointer;
+    margin-top: 2rem;
+    
+}
+.hover-effect Button{
+    font-family: 'yekan';
+}
+
+.hover-effect:hover {
+    animation: pulse 0.6s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
