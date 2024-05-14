@@ -50,7 +50,9 @@ const Calendar = () => {
   const digits=["0","1","2","3","4","5","6","7","8","9"]
   const date = new DateObject({ calendar: persian, locale: persian_fa });
   const [showMassorModal,setShowMassorModal] = useState(false)
-  const [showPackageModal,setShowPackageModal] = useState(false)
+  const [showPackageModal,setShowPackageModal] = useState(false);
+  const [packageList , setPackageList] = useState([]);
+  const [massorNames, setMassorNames] = useState([])
   const daysInMonth = () => {
     return currentDate.clone().endOf('jMonth').jDate();
   };
@@ -65,9 +67,10 @@ const Calendar = () => {
                 Authorization: `Bearer ${realToken.realToken}`
             }
         });
-        
-     
-        const updatedData = response.data.map(item => {
+        setPackageList(response.data.packagesList)
+        console.log(response.data.massorNames)
+        setMassorNames(response.data.massorNames)
+        const updatedData = response.data.result.map(item => {
           const hoursString = item.Hours;
           
             try{
@@ -174,7 +177,8 @@ useEffect(() => {
         isOpen={showPopUp}
         onClose={() => setShowPopUp(false)}
         reserveDetails={reserveDetails}
-        
+        packageList = {packageList}
+        massorNames = {massorNames}
       />
       <MassorModal
       isOpen = {showMassorModal}

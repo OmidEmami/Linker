@@ -14,7 +14,7 @@ export const addNewMassor = async(req,res)=>{
 }
 export const removeMassor = async(req,res)=>{
     try{
-        const fullName = req.body.FullName;
+        const fullName = req.body.fullName;
         const response = await MassorModel.destroy({
             where:{
                 FullName : fullName

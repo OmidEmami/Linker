@@ -40,7 +40,7 @@ export const loginUser = async(req,res) =>{
         });
         
      
-        res.json({ accessToken });
+        res.json({ accessToken })
         
     
     }catch(error){

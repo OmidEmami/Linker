@@ -18,13 +18,39 @@ import { useSelector } from "react-redux";
 import { notify } from "../../Components/toast";
 import './Calendar.css';
 import LoadingComp from '../LoadingComp';
-const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
+const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave,packageList,massorNames }) => {
+  console.log(reserveDetails)
     const realToken = useSelector((state) => state.tokenReducer.token);
+    const [massorNamesSelected, setMassorNamesSelected] = useState([]);
     const digits=["0","1","2","3","4","5","6","7","8","9"]
     const [showPopUp, setShowPopUp] = useState(false)
     const [hamamStartHour, setHamamStartHour] = useState();
     const [hamamEndHour, setHamamEndHour] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [showPackageSelector, setShowPackageSelector] = useState(false);
+    const [selectedPackage, setSelectedPackage] = useState({});
+    const handlePackageChange = (e) => {
+      setSelectedPackage(e.target.value);
+  };
+  
+    const handleAddMassor = () => {
+      const defaultValue = massorNames.length > 0 ? massorNames[0].FullName : '';
+      setMassorNamesSelected([...massorNamesSelected, defaultValue]); 
+  };
+  
+  const handleRemoveMassor = (index) => {
+    setMassorNamesSelected(prevMassors => prevMassors.filter((_, i) => i !== index));
+};
+  const togglePackageSelector = () => {
+    setShowPackageSelector(!showPackageSelector);
+};
+const handleMassorChange = (index, event) => {
+  const value = event.target.value || (massorNames.length > 0 ? massorNames[0].FullName : ''); 
+  const newMassors = [...massorNamesSelected];
+  newMassors[index] = value;
+  setMassorNamesSelected(newMassors);
+};
+
   const [localReserveDetails, setLocalReserveDetails] = useState(reserveDetails);
   const customStyles = {
     content: {
@@ -42,8 +68,21 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
     }
   };
   useEffect(() => {
-    setLocalReserveDetails(reserveDetails);
-  }, [reserveDetails]);
+    if (packageList.length > 0) {
+        setSelectedPackage(packageList[0].PackageName); // Set default to the first package's name
+    }
+}, [packageList]); // Dependency array to ensure this runs only when packageList changes
+useEffect(() => {
+  if(reserveDetails !== ''){
+  setLocalReserveDetails(reserveDetails);
+  setSelectedPackage(reserveDetails.SelectedPackage);
+  console.log(reserveDetails)
+  if(reserveDetails.SelectedMassorNames !== ''){
+  const parsedArray = JSON.parse(reserveDetails.SelectedMassorNames);
+  setMassorNamesSelected(parsedArray)
+}
+  }
+}, [reserveDetails]);
   const handleChange = (e) => {
     
     const { name, value } = e.target;
@@ -52,7 +91,8 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(reserveDetails)
+   
+   
     if (hamamStartHour && hamamEndHour) {
       const firstHour = hamamStartHour.hour();
       const secondHour = hamamEndHour.hour();
@@ -69,13 +109,15 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
           Date:localReserveDetails.Date,
+          SelectedPackage: selectedPackage,
+          SelectedMassors : JSON.stringify(massorNamesSelected),
           Hours:JSON.stringify(selectedHours),
           CustomerType:localReserveDetails.CustomerType,
           ServiceType:localReserveDetails.ServiceType,
           SelectedService:localReserveDetails.SelectedService,
           AccoStatus:localReserveDetails.AccoStatus,
           CateringDetails:localReserveDetails.CateringDetails,
-          MassorNames:localReserveDetails.MassorNames,
+          
           Desc:localReserveDetails.Desc,
           CurrentStatus:localReserveDetails.CurrentStatus,
           SatisfactionText:localReserveDetails.SatisfactionText,
@@ -87,10 +129,15 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
           })
           setIsLoading(false)
           notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+          setSelectedPackage({})
+          setMassorNamesSelected([])
+          setShowPackageSelector(false)
           setShowPopUp(false)
+          setShowPackageSelector(false)
       }catch(error){
           setIsLoading(false)
           notify("خطا",error)
+          console.log(error)
       }
       
       
@@ -109,8 +156,9 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
         SelectedService:localReserveDetails.SelectedService,
         AccoStatus:localReserveDetails.AccoStatus,
         CateringDetails:localReserveDetails.CateringDetails,
-        MassorNames:localReserveDetails.MassorNames,
         Desc:localReserveDetails.Desc,
+        SelectedPackage: selectedPackage,
+        SelectedMassors : JSON.stringify(massorNamesSelected),
         FinalPrice:localReserveDetails.FinalPrice,
         CurrentStatus:localReserveDetails.CurrentStatus,
         SatisfactionText:localReserveDetails.SatisfactionText,
@@ -122,13 +170,17 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
         })
         setIsLoading(false)
         notify( "اطلاعات شما با موفقیت ثبت شد", "success")
+        setSelectedPackage({})
+        setMassorNamesSelected([])
+        setShowPackageSelector(false)
         setShowPopUp(false)
+        setShowPackageSelector(false)
     }catch(error){
         setIsLoading(false)
         notify("خطا",error)
     }
   }
-    onSave(localReserveDetails);
+    // onSave(localReserveDetails);
     onClose();
   };
 
@@ -183,6 +235,10 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
     setLocalReserveDetails({});
     setHamamStartHour('');
     setHamamEndHour('');
+    setLocalReserveDetails('')
+    setSelectedPackage('')
+    setMassorNamesSelected([])
+    setShowPackageSelector(false)
     onClose();  
   };
   return (
@@ -202,8 +258,6 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
             <label>کد درخواست : {localReserveDetails.UniqueId}</label>
             </div>
             <div className='formdetails-first-one'>
-
-            
             <label>نام مهمان  
               <ReserveDetailsInput name='FullName' type='text' value={localReserveDetails.FullName} onChange={handleChange} />
             </label>
@@ -313,20 +367,59 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave }) => {
             <label>نوع پذیرایی </label>
               <ReserveDetailsInput name='CateringDetails' value={localReserveDetails.CateringDetails} onChange={handleChange}/>
            
-            <label>نام خدمات دهنده</label>
-              <ReserveDetailsInput type='text' name='MassorNames' value={localReserveDetails.MassorNames} onChange={handleChange} />
+            
             
             <label>توضیحات</label>
               <textarea name='Desc' value={localReserveDetails.Desc} onChange={handleChange} />
             
             </div>
-            <div className='Button-container'>
+           
+            <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
+    {massorNamesSelected.map((selectedMassor, index) => (
+       <>   
+       <div style={{display:"flex", flexDirection:"column",alignItems:"center", justifyContent:"center", rowGap:"5px" }}>
+            <select 
+                value={selectedMassor}
+                onChange={(e) => handleMassorChange(index, e)}
+                style={{ marginRight: '10px' }}>
+                {massorNames.map(massor => (
+                
+                    <option key={massor.id} value={massor.FullName}>{massor.FullName}</option>
+                ))}
+            </select>
+            <div  onClick={() => handleRemoveMassor(index)} style={{backgroundColor:"#FF2A00" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}}>
+                حذف خدمات دهنده
+            </div>
+            </div>
+       </>
+    ))}
+    <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}} onClick={handleAddMassor}>اضافه کردن خدمات دهنده</div>
+    <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer" }} onClick={togglePackageSelector}>
+    {showPackageSelector ? "حذف پکیج" : "انتخاب پکبج"}
+</div >
+{showPackageSelector || selectedPackage ? (
+    <select 
+        name='SelectedPackage' 
+        onChange={handlePackageChange} 
+        value={selectedPackage}
+    >
+        {packageList.map(pkg => (
+            <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
+        ))}
+    </select>
+          ):null}
+          </div>
+
+
+        <div className='Button-container'>
             <button type='submit'>ذخیره</button>
             <button onClick={removeSpecificReserve}>حذف رزرو</button>
             </div>
-            
+
           </form>
-      </div>
+          
+          
+</div>
       </Modal> 
       </>
   );

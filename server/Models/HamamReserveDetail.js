@@ -38,6 +38,12 @@ const HamamReserveDetail = db.define('HamamReserveDetail',{
     MassorNames:{
         type:DataTypes.TEXT
     },
+    SelectedMassorNames:{
+        type:DataTypes.TEXT
+    },
+    SelectedPackage:{
+        type:DataTypes.TEXT
+    },
     Desc:{
         type:DataTypes.TEXT
     },
