@@ -375,7 +375,7 @@ useEffect(() => {
             </div>
            
             <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
-    {massorNamesSelected.map((selectedMassor, index) => (
+    {massorNamesSelected?.map((selectedMassor, index) => (
        <>   
        <div style={{display:"flex", flexDirection:"column",alignItems:"center", justifyContent:"center", rowGap:"5px" }}>
             <select 
