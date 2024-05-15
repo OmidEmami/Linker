@@ -112,7 +112,7 @@ const fetchDataRaw = async()=>{
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
-        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
@@ -153,7 +153,7 @@ const fetchDataRaw = async()=>{
     const selectedHours = localReserveDetails.Hours;
     try{
       setIsLoading(true)
-      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
         UniqueId:localReserveDetails.UniqueId,
         FullName:localReserveDetails.FullName,
         Phone:localReserveDetails.Phone,
@@ -217,7 +217,7 @@ const fetchDataRaw = async()=>{
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
+        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,

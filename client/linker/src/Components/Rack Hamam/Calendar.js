@@ -60,7 +60,7 @@ const Calendar = () => {
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-        const response = await axios.post("https://gmhotel.ir/api/getFixedReserves", {
+        const response = await axios.post("http://localhost:3001/api/getFixedReserves", {
             date: currentDate.locale('fa').format('YYYY-MM')
         }, {
             headers: {
@@ -146,7 +146,7 @@ useEffect(() => {
   const downloadHamamDetails = async () => {
     try {
         setIsLoading(true);
-        const response = await axios.get("https://gmhotel.ir/api/downloadhamamdetails", {
+        const response = await axios.get("http://localhost:3001/api/downloadhamamdetails", {
             responseType: 'blob', 
             headers: {
                 Authorization: `Bearer ${realToken.realToken}`

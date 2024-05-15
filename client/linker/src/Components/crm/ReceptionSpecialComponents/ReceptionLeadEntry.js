@@ -108,7 +108,7 @@ const rowsPerPageOptions = [5, 10, 25];
     const refreshToken = async () => {
       try {
         setIsLoading(true)
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -130,7 +130,7 @@ const rowsPerPageOptions = [5, 10, 25];
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
         
-          const response = await axios.get('https://gmhotel.ir/api/token');
+          const response = await axios.get('http://localhost:3001/api/token');
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -154,7 +154,7 @@ const rowsPerPageOptions = [5, 10, 25];
      
       try{
         setIsLoading(true)
-        const response = await axios.post("https://gmhotel.ir/api/receptionModifyLead",{
+        const response = await axios.post("http://localhost:3001/api/receptionModifyLead",{
           data : rawData 
       })
       setIsLoading(false)
@@ -172,7 +172,7 @@ const rowsPerPageOptions = [5, 10, 25];
 const fetchData =async()=>{
     try{    
       setIsLoading(true)
-        const response = await axios.get("https://gmhotel.ir/api/getFreshLeadsReception")
+        const response = await axios.get("http://localhost:3001/api/getFreshLeadsReception")
         
           
           setRawData(response.data)
@@ -217,7 +217,7 @@ const saveNewManualLead = async (e) => {
   try {
     setIsLoading(true)
     
-    const response = await axios.post('https://gmhotel.ir/api/receptionManualNewLead', {
+    const response = await axios.post('http://localhost:3001/api/receptionManualNewLead', {
       Name: newNameLead,
       Phone: newPhoneLead,
       LeadSource: leadSource,

@@ -62,7 +62,7 @@ function PackageModal({ isOpen, onClose }) {
     const fetchData = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get("https://gmhotel.ir/api/getallpackages");
+            const response = await axios.get("http://localhost:3001/api/getallpackages");
             console.log(response.data);
             setAllPackages(response.data);
             const initialPackageNames = {};
@@ -89,7 +89,7 @@ function PackageModal({ isOpen, onClose }) {
     const addNewPackage = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/addnewpackage', {
+            const response = await axios.post('http://localhost:3001/api/addnewpackage', {
                 PackageName: newPackageName,
                 PackageItems: newPackageItems
             });
@@ -107,7 +107,7 @@ function PackageModal({ isOpen, onClose }) {
     const modifyPackage = async(pack)=>{
         try{
             setIsLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/modifypackages',{
+            const response = await axios.post('http://localhost:3001/api/modifypackages',{
                 PackageName : editPackageNames[pack.id],
                 PackageItems : editPackageItems[pack.id],
                 id: pack.id
@@ -122,7 +122,7 @@ function PackageModal({ isOpen, onClose }) {
     const removePackage = async(pack)=>{
         try{
             setIsLoading(true)
-            const response = await axios.post('https://gmhotel.ir/api/removehamampackage',{
+            const response = await axios.post('http://localhost:3001/api/removehamampackage',{
                 PackageName : editPackageNames[pack.id],
             })
             fetchData();
