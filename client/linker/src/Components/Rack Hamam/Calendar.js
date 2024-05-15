@@ -173,21 +173,22 @@ useEffect(() => {
     <>
     
     {isLoading && <LoadingComp />}
-      <ReserveModal
+    {showPopUp && <ReserveModal
         isOpen={showPopUp}
         onClose={() => setShowPopUp(false)}
         reserveDetails={reserveDetails}
         packageList = {packageList}
         massorNames = {massorNames}
-      />
-      <MassorModal
+      />}
+      {showMassorModal && <MassorModal
       isOpen = {showMassorModal}
       onClose = {()=>setShowMassorModal(false)}
-      />
-      <PackageModal
+      />}
+      {showPackageModal &&  <PackageModal
       isOpen = {showPackageModal}
       onClose = {()=>setShowPackageModal(false)}
-      />
+      />}
+     
     <div className="calendar-container">
       <div className="calendar-nav">
         <button onClick={previousMonth}>ماه قبلی</button>

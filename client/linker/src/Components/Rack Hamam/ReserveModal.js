@@ -19,7 +19,7 @@ import { notify } from "../../Components/toast";
 import './Calendar.css';
 import LoadingComp from '../LoadingComp';
 const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave,packageList,massorNames }) => {
-  console.log(reserveDetails)
+
     const realToken = useSelector((state) => state.tokenReducer.token);
     const [massorNamesSelected, setMassorNamesSelected] = useState([]);
     const digits=["0","1","2","3","4","5","6","7","8","9"]
@@ -76,7 +76,7 @@ useEffect(() => {
   if(reserveDetails !== ''){
   setLocalReserveDetails(reserveDetails);
   setSelectedPackage(reserveDetails.SelectedPackage);
-  console.log(reserveDetails)
+ 
   if(reserveDetails.SelectedMassorNames !== ''){
   const parsedArray = JSON.parse(reserveDetails.SelectedMassorNames);
   setMassorNamesSelected(parsedArray)
@@ -375,8 +375,10 @@ useEffect(() => {
             </div>
            
             <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
-    {massorNamesSelected?.map((selectedMassor, index) => (
+              {console.log(massorNamesSelected)}
+    {massorNamesSelected.map((selectedMassor, index) => (
        <>   
+       
        <div style={{display:"flex", flexDirection:"column",alignItems:"center", justifyContent:"center", rowGap:"5px" }}>
             <select 
                 value={selectedMassor}
