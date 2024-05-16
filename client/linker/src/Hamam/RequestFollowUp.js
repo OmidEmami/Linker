@@ -39,6 +39,36 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
+  const [showPackageSelector, setShowPackageSelector] = useState(false);
+  const [massorNamesSelected, setMassorNamesSelected] = useState([]);
+  const [massorNames, setMassorNames] = useState([]);
+  const [packageList, setPackageList] = useState([]);
+  const [selectedPackage, setSelectedPackage] = useState({});
+  const handlePackageChange = (e) => {
+        setSelectedPackage(e.target.value);
+    };
+    const handleAddMassor = () => {
+      const defaultValue = massorNames.length > 0 ? massorNames[0].FullName : '';
+      setMassorNamesSelected(prev => [...prev, defaultValue]);
+  };
+  
+  const handleRemoveMassor = (index) => {
+      setMassorNamesSelected(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleMassorChange = (index, event) => {
+      const newMassors = [...massorNamesSelected];
+      newMassors[index] = event.target.value;
+      setMassorNamesSelected(newMassors);
+  };
+  
+    const togglePackageSelector = () => {
+      setShowPackageSelector(!showPackageSelector);
+      const defaultValue = packageList.length > 0 ? packageList[0].PackageName : '';
+      
+        setSelectedPackage(defaultValue); 
+  };
+
   const [userName, setUserName] = useState('')
   const [token, setToken] = useState('');
   
@@ -121,22 +151,25 @@ const RequestFollowUp = () => {
       
         try{
           
-          const responseToken = await axios.get('http://localhost:3001/api/token');
+          const responseToken = await axios.get('https://gmhotel.ir/api/token');
           setToken(responseToken.data.accessToken)
           const decoded = jwt_decode(responseToken.data.accessToken);
           setUserName(decoded.name)
-            const response = await axios.get("http://localhost:3001/api/getNewLeads",{
+            const response = await axios.get("https://gmhotel.ir/api/getNewLeads",{
               headers:{
                 Authorization: `Bearer ${responseToken.data.accessToken}`
               }
             })
-            const sortedData = response.data.sort((a, b) => new Date(b.RequestDate) - new Date(a.RequestDate));
+            console.log(response)
+            setPackageList(response.data.packages)
+            setMassorNames(response.data.massors)
+            const sortedData = response.data.response.sort((a, b) => new Date(b.RequestDate) - new Date(a.RequestDate));
             setData(sortedData);
-                setData(response.data)
+                setData(response.data.response)
                 setShowData(true)
                 setIsLoading(false)
         }catch(error){
-
+            notify('خطا','error')
         }
 
     }
@@ -171,7 +204,7 @@ const RequestFollowUp = () => {
     setRegisterLoading(true)
    
     try{
-      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
+      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     },{
       headers:{
@@ -206,7 +239,7 @@ const RequestFollowUp = () => {
    try{
     
     setIsLoading(true)
-    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
+    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -214,13 +247,13 @@ const RequestFollowUp = () => {
           CertainHour:JSON.stringify(selectedHours),
           CustomerType:finalFormData.CustomerType,
           ServiceType:finalFormData.ServiceType,
-          SelectedService:finalFormData.SelectedService,
           AccoStatus:finalFormData.AccoStatus,
           CateringDetails:finalFormData.CateringDetails,
-          MassorNames:finalFormData.MassorNames,
           Desc:finalFormData.Desc,
           FinalPrice:finalPrice,
-          User:userName
+          User:userName,
+          MassorNames: JSON.stringify(massorNamesSelected),
+          SelectedPackage: selectedPackage ,
     },{
       headers:{
         Authorization: `Bearer ${token}`
@@ -265,7 +298,7 @@ const RequestFollowUp = () => {
     }
     try{
       
-      const response = await axios.post('http://localhost:3001/api/manualNewLead',{
+      const response = await axios.post('https://gmhotel.ir/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
         LeadSource:leadSource,
@@ -377,9 +410,7 @@ const RequestFollowUp = () => {
                 </select>)
                    
                   )}
-                  {/* {column.id === 'Source' && <select>
-                    <option value="">omid</option>
-                    </select>} */}
+               
                 </TableCell>
               ))}
             </TableRow>
@@ -456,14 +487,7 @@ const RequestFollowUp = () => {
            </select>
            <label>قیمت نهایی</label>
                   <input placeholder='قیمت نهایی' type='number' value={finalPrice} onChange={(e)=>setFinalPrice(e.target.value)}/>
-           <label>نوع خدمات</label>
-           <select required name='ServiceType' onChange={handleFinalReserveDetailsForm} value={finalFormData.ServiceType}>
-            <option value="none" selected>نوع خدمات</option>
-            <option>حمام</option>
-            <option>ماساژ</option>
-            <option>قرق با خدمات</option>
-            <option>قرق بدون خدمات</option>
-           </select>
+           
            <label>روش ارائه</label>
            <select required name='SelectedService' onChange={handleFinalReserveDetailsForm} value={finalFormData.SelectedService}>
             <option value="none">روش ارائه</option>
@@ -480,11 +504,56 @@ const RequestFollowUp = () => {
             </select>
             <label>نوع پذیرایی</label>
             <textarea  name='CateringDetails' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.CateringDetails} />
-            <label>نام خدمات دهنده</label>
-            <input name="MassorNames" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.MassorNames} />
+            
             <label>توضیحات دیگر</label>
             <textarea name='Desc' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.Desc} />
             </div>
+            <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
+              
+    
+              
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", rowGap: "5px"}}>
+  {massorNamesSelected.map((selectedName, index) => (
+    <React.Fragment key={index}>
+      <select 
+        value={selectedName}
+        onChange={(e) => handleMassorChange(index, e)}
+        style={{ marginRight: '10px' }}>
+        {massorNames.map(massor => (
+          <option key={massor.id} value={massor.FullName}>{massor.FullName}</option>
+        ))}
+      </select>
+      <div 
+        onClick={() => handleRemoveMassor(index)}
+        style={{backgroundColor: "#FF2A00", padding: "0.5rem", borderRadius: "15px", cursor: "pointer"}}>
+        حذف خدمات دهنده
+      </div>
+    </React.Fragment>
+  ))}
+  <div onClick={handleAddMassor} style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}}>
+    اضافه کردن خدمات دهنده
+  </div>
+</div>
+
+
+         
+         
+           
+           <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer" }} onClick={togglePackageSelector}>
+           {showPackageSelector ? "حذف پکیج" : "انتخاب پکبج"}
+       </div >
+       {showPackageSelector ? (
+           <select 
+               name='SelectedPackage' 
+               onChange={handlePackageChange} 
+               value={selectedPackage}
+           >
+               {packageList.map(pkg => (
+                   <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
+               ))}
+           </select>
+                 ):null}
+                 </div>
             <button type='submit'>ذخیره</button>   
         </form>
       </div>
@@ -560,6 +629,7 @@ const RequestFollowUp = () => {
                                   
                                   
                                   </div>
+   
           <button className={styles.buttonClass} type='submit'>ثبت</button>
         </form>
       </div>

@@ -3,7 +3,7 @@ import NewLeads from "../Models/NewLeads.js";
 export const regNewHamamReserve = async(req,res)=>{
 
     try{
-
+console.log(req.body)
            
                 const responseI = await HamamReserveDetail.create({
                     UniqueId:req.body.RequestKey,
@@ -20,7 +20,9 @@ export const regNewHamamReserve = async(req,res)=>{
                     Desc:req.body.Desc,
                     FinalPrice:req.body.FinalPrice,
                     CurrentStatus :"Fixed",
-                    User:req.body.User
+                    User:req.body.User,
+                    SelectedMassorNames : req.body.MassorNames,
+                    SelectedPackage : req.body.SelectedPackage
                 })
                 const response = await NewLeads.update({
                     Status : "Reserve Finalized"
@@ -29,7 +31,7 @@ export const regNewHamamReserve = async(req,res)=>{
                         UniqueId : req.body.RequestKey
                     }
                 })
-                res.json(response ,responseI)
+                res.json({response ,responseI})
     
     }catch(error){
         console.log(error)

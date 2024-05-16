@@ -33,7 +33,7 @@ function ReportComponent() {
   const m = moment();
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/getCallsReport')
+    axios.get('https://gmhotel.ir/api/getCallsReport')
       .then(response => {
         setData(response.data);
         setIsLoading(false);
@@ -43,7 +43,7 @@ function ReportComponent() {
         setError(error.message);
         setIsLoading(false);
       });
-      axios.get('http://localhost:3001/api/getAllCallsReport')
+      axios.get('https://gmhotel.ir/api/getAllCallsReport')
       .then(response => {
         setDataAll(response.data);
         setIsLoading(false);

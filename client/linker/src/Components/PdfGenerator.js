@@ -7,21 +7,12 @@ export default function PdfGenerator() {
     const [reserveData, setReserveData] = useState("false")
     const { param } = useParams();
     const [totalPrice, setTotalPrice] = useState(0);
-    const [showPdf, setShowPdf] = useState(false)
-    // const generatePDF = async() => {
-    //   const input = document.getElementById('componentToPDF'); // Replace with the ID of your component
-    //   await document.fonts.ready;
-    //   html2canvas(input, { scale: 1 }).then((canvas) => {
-    //     const imgData = canvas.toDataURL('image/png');
-    //     const pdf = new jsPDF('portrait','mm','a4');
-    //     pdf.addImage(imgData, 'JPEG', 5, 5);
-    //     pdf.save('component.pdf'); // Specify the desired file name
-    //   });
-    // }
+    const [showPdf, setShowPdf] = useState(false);
+    
     useEffect(() => {
       const getDateForPdf = async()=>{
         try{
-        const response = await axios.post("http://localhost:3001/api/findReserveForPdf", {
+        const response = await axios.post("https://gmhotel.ir/api/findReserveForPdf", {
           ReserveKey : param
         })
         if(response.data.length === 0){
