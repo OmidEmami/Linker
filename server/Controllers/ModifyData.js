@@ -55,7 +55,8 @@ export const regData = async(req,res)=>{
                 FirstFollow : "ثبت از طریق رزرو لطفا پیگیری شود",
                 Source : "Phone",
                 Status : "Pending",
-                User: req.body.RegUser
+                User: req.body.RegUser,
+                RequestDate : req.body.lastcalldate
             })
             const patternCodeToGuestGenerateLink = "sarcxme665chieb";
                 const sms = await farazSendPattern( patternCodeToGuestGenerateLink,
