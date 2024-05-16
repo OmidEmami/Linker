@@ -3,6 +3,7 @@ import IncomingCallsCrm from "../Models/IncomingCallsCrm.js";
 import RestaurantEntry from "../Models/RestaurantEntry.js";
 import HamamEntry from "../Models/HamamEntry.js";
 import { farazSendPattern } from "@aspianet/faraz-sms";
+import NewLeads from "../Models/NewLeads.js";
 export const regData = async(req,res)=>{
    console.log(req.body.RegUser)
     try{
@@ -46,6 +47,15 @@ export const regData = async(req,res)=>{
                 
             const response = await HamamEntry.create({
                 Phone : req.body.phone
+            })
+            const responseNd = await NewLeads.create({
+                FullName : req.body.guestName,
+                Phone : req.body.phone, 
+                UniqueId : req.body.callId,
+                FirstFollow : "ثبت از طریق رزرو لطفا پیگیری شود",
+                Source : "Phone",
+                Status : "Pending",
+                User: req.body.RegUser
             })
             const patternCodeToGuestGenerateLink = "sarcxme665chieb";
                 const sms = await farazSendPattern( patternCodeToGuestGenerateLink,
