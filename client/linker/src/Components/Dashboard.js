@@ -183,7 +183,9 @@ export default function Dashboard() {
     {isLoading && <LoadingComp />}
     <Modal
   isOpen={showPopUp}
-  onRequestClose={() => setShowPopUp(false)}
+  onRequestClose={() => {setShowPopUp(false)
+    setShowSendButton(false)
+  }}
   style={customStyles}
   contentLabel="Example Modal"
 >
@@ -201,8 +203,8 @@ export default function Dashboard() {
 }}>
           <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}> <b>نام مهمان : </b>{guestName}</p>
           <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>شماره تماس : </b>{guestPhone}</p>
-          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ ورود: </b>{allDates.length > 0 ? moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD') : ''}</p>
-          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ خروج: </b>{allDates.length > 1 ? moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD') : ''}</p>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ ورود: </b>{allDates.length > 0 ? allDates[0].format(): ''}</p>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ خروج: </b>{allDates.length > 1 ? allDates[allDates.length - 1].format() : ''}</p>
           <p style={{ paddingBottom: '8px' }}><b>تعداد شب : </b>{allDates.length > 1 ? allDates.length - 1 : 0}</p>
         </div>
         <h3 style={{ textAlign: 'center', color: '#444' }}>جزئیات اتاق</h3>
