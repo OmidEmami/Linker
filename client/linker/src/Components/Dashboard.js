@@ -10,9 +10,10 @@ import { notify } from "./toast";
 import LoadingComp from "./LoadingComp"
 // import jwt_decode from "jwt-decode";
 import { useSelector } from "react-redux";
+import Modal from 'react-modal'
 export default function Dashboard() {
   const realToken = useSelector((state) => state.tokenReducer.token);
-  
+  const [showPopUp, setShowPopUp] = useState(false)
   const [payPercent, setPayPercent] = useState('')
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
@@ -25,7 +26,17 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState('');
   const [showSendButton, setShowSendButton] = useState(false)
-  
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width:"60%"
+    },
+  }; 
   moment.locale('en');
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
@@ -94,6 +105,16 @@ export default function Dashboard() {
   };
   const generateLink = async(e)=>{
     setShowSendButton(true)
+    e.preventDefault();
+
+    
+    setShowPopUp(true)
+ 
+        
+  }
+  const sendfinalzedLink = async()=>{
+    setShowSendButton(true)
+    setShowPopUp(false)
     var percentNew;
     var timeValueAsli;
     
@@ -107,14 +128,13 @@ export default function Dashboard() {
     }else{
       timeValueAsli = timeValue
     }
-    e.preventDefault();
+    
 
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
     const checkOutDateServer = moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
    
     const accoCount = allDates.length - 1
     setIsLoading(true)
-    
     try{
       const response = await axios.post("https://gmhotel.ir/api/sendGuestLink",{
         Name : guestName,
@@ -151,7 +171,6 @@ export default function Dashboard() {
       notify( "خطا", "error")
       setShowSendButton(false)
     }
-        
   }
   
     const handleExtraServiceChange = (index,e) => {
@@ -162,6 +181,79 @@ export default function Dashboard() {
   return (
     <>
     {isLoading && <LoadingComp />}
+    <Modal
+  isOpen={showPopUp}
+  onRequestClose={() => setShowPopUp(false)}
+  style={customStyles}
+  contentLabel="Example Modal"
+>
+  {showPopUp &&
+    <>
+      <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '10px' }}>
+        <h2 style={{ textAlign: 'center', color: '#333' }}>جزئیات رزرو</h2>
+        <div style={{
+  marginBottom: '20px',
+  border: '1px solid #ccc',
+  padding: '10px',
+  borderRadius: '5px',
+  backgroundColor: 'rgba(255, 162, 0, 0.3)', // Adjust alpha to 0.95 for less transparency
+  direction: "rtl"
+}}>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}> <b>نام مهمان : </b>{guestName}</p>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>شماره تماس : </b>{guestPhone}</p>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ ورود: </b>{allDates.length > 0 ? moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD') : ''}</p>
+          <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ خروج: </b>{allDates.length > 1 ? moment.from(allDates[allDates.length - 1].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD') : ''}</p>
+          <p style={{ paddingBottom: '8px' }}><b>تعداد شب : </b>{allDates.length > 1 ? allDates.length - 1 : 0}</p>
+        </div>
+        <h3 style={{ textAlign: 'center', color: '#444' }}>جزئیات اتاق</h3>
+        <table style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          direction:"rtl"
+        }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'right' }}>نام اتاق</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'right' }}>قیمت / هرشب</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'right' }}>قیمت سرویس اضافه</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inputFields.map((room, index) => (
+              <tr key={index} style={{ backgroundColor: index % 2 ? '#f9f9f9' : '#fff' }}>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.roomname}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.price}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.extraService}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button onClick={sendfinalzedLink} style={{
+        marginTop: '20px',
+        backgroundColor: '#FF6800',
+        color: 'white',
+        padding: '10px 20px',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer'
+      }}>تایید و ارسال لینک</button>
+      <button onClick={() => {setShowPopUp(false)
+        setShowSendButton(false)
+      }} style={{
+        marginTop: '20px',
+        backgroundColor: '#FF6800',
+        color: 'white',
+        padding: '10px 20px',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        marginLeft:"20px"
+      }}>ویرایش</button>
+    </>}
+</Modal>
+
+
     <div style={{display:"flex", flexDirection:"column", direction:"rtl", alignItems:"center", padding:"10px"}}>
       <form onSubmit={(e)=>generateLink(e)} >
       <h3>ارسال لینک اقامت</h3>
