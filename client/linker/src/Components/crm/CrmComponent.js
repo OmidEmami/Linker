@@ -157,7 +157,7 @@ const CrmComponent =()=>{
                               // Attempt to reconnect with a delay
                               setTimeout(() => {
                                 connect(); // Reconnect
-                              }, 1000); // Reconnect after 5 seconds
+                              }, 3000); // Reconnect after 5 seconds
                             };
                           };
                         

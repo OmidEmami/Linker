@@ -158,7 +158,7 @@ const CrmComponentReception =()=>{
                               // Attempt to reconnect with a delay
                               setTimeout(() => {
                                 connect(); // Reconnect
-                              }, 5000); // Reconnect after 5 seconds
+                              }, 3000); // Reconnect after 5 seconds
                             };
                           };
                         

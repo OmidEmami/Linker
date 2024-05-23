@@ -1,4 +1,4 @@
-// ReserveModal.js
+
 
 import React, { useState,useEffect } from 'react';
 import Modal from 'react-modal';
@@ -19,7 +19,7 @@ import { notify } from "../../Components/toast";
 import './Calendar.css';
 import LoadingComp from '../LoadingComp';
 const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave,packageList,massorNames }) => {
-
+    const [packagesWithMassors, setPackagesWithMassors] = useState([]);
     const realToken = useSelector((state) => state.tokenReducer.token);
     const [massorNamesSelected, setMassorNamesSelected] = useState([]);
     const digits=["0","1","2","3","4","5","6","7","8","9"]
@@ -29,31 +29,68 @@ const ReserveModal = ({ isOpen, onClose, reserveDetails, onSave,packageList,mass
     const [isLoading, setIsLoading] = useState(false);
     const [showPackageSelector, setShowPackageSelector] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState({});
-    const handlePackageChange = (e) => {
-      setSelectedPackage(e.target.value);
-  };
+    const addNewPackage = (e) => {
+      e.preventDefault();
+      const newPackage = {
+        packageDetails: packageList.length > 0 ? packageList[0] : {}, 
+        massors: []
+      };
+      setPackagesWithMassors([...packagesWithMassors, newPackage]);
+    };
+    const addMassorToPackage = (e, packageIndex) => {
+      e.preventDefault();
+      const newPackagesWithMassors = [...packagesWithMassors];
+      const newMassor = {
+        name: massorNames.length > 0 ? massorNames[0].FullName : '',
+        numeralValue: 0 // Default numeral value
+      };
+      newPackagesWithMassors[packageIndex].massors.push(newMassor);
+      setPackagesWithMassors(newPackagesWithMassors);
+    };
+    const removeMassorFromPackage = (e,packageIndex, massorIndex) => {
+      e.preventDefault();
+      const newPackagesWithMassors = [...packagesWithMassors];
+      newPackagesWithMassors[packageIndex].massors.splice(massorIndex, 1);
+      setPackagesWithMassors(newPackagesWithMassors);
+    };
+            
+    const handlePackageChange = (e, packageIndex) => {
+      const newPackageDetails = packageList.find(pkg => pkg.PackageName === e.target.value);
+      const updatedPackages = packagesWithMassors.map((pkg, idx) => {
+        if (idx === packageIndex) {
+          return { ...pkg, packageDetails: newPackageDetails || {} };
+        }
+        return pkg;
+      });
+      setPackagesWithMassors(updatedPackages);
+    };
+    
   
-    const handleAddMassor = () => {
-      const defaultValue = packageList.length > 0 ? packageList[0].FullName : '';
-      setMassorNamesSelected([...massorNamesSelected, defaultValue]); 
-  };
-  
-  const handleRemoveMassor = (index) => {
-    setMassorNamesSelected(prevMassors => prevMassors.filter((_, i) => i !== index));
+
+const removePackage = (e,packageIndex) => {
+  e.preventDefault();
+  const newPackagesWithMassors = packagesWithMassors.filter((_, index) => index !== packageIndex);
+  setPackagesWithMassors(newPackagesWithMassors);
 };
-  const togglePackageSelector = () => {
-    setShowPackageSelector(!showPackageSelector);
-    const defaultValue = packageList.length > 0 ? packageList[0].PackageName : '';
-    console.log(defaultValue);
-    console.log(packageList)
-      setSelectedPackage(defaultValue); 
+
+
+const handleMassorChange = (e, packageIndex, massorIndex, key) => {
+  const updatedPackages = packagesWithMassors.map((pkg, idx) => {
+    if (idx === packageIndex) {
+      const updatedMassors = pkg.massors.map((massor, mIdx) => {
+        if (mIdx === massorIndex) {
+          return { ...massor, [key]: e.target.value };
+        }
+        return massor;
+      });
+      return { ...pkg, massors: updatedMassors };
+    }
+    return pkg;
+  });
+  setPackagesWithMassors(updatedPackages);
 };
-const handleMassorChange = (index, event) => {
-  const value = event.target.value || (massorNames.length > 0 ? massorNames[0].FullName : ''); 
-  const newMassors = [...massorNamesSelected];
-  newMassors[index] = value;
-  setMassorNamesSelected(newMassors);
-};
+
+
 
   const [localReserveDetails, setLocalReserveDetails] = useState(reserveDetails);
   const customStyles = {
@@ -73,9 +110,9 @@ const handleMassorChange = (index, event) => {
   };
   useEffect(() => {
     if (packageList.length > 0) {
-        setSelectedPackage(packageList[0].PackageName); // Set default to the first package's name
+        setSelectedPackage(packageList[0].PackageName); 
     }
-}, [packageList]); // Dependency array to ensure this runs only when packageList changes
+}, [packageList]); 
 useEffect(() => {
   fetchDataRaw();
 }, [reserveDetails]);
@@ -83,14 +120,23 @@ const fetchDataRaw = async()=>{
   if(reserveDetails !== ''){
     setLocalReserveDetails(reserveDetails);
     setSelectedPackage(reserveDetails.SelectedPackage);
-   console.log(reserveDetails.SelectedMassorNames)
     if(reserveDetails.SelectedMassorNames !== '' && reserveDetails.SelectedMassorNames !== {} && reserveDetails.SelectedMassorNames !== null){
-      console.log("test")
     const parsedArray = await JSON.parse(reserveDetails.SelectedMassorNames);
     setMassorNamesSelected(parsedArray)
   }
     }
 }
+useEffect(() => {
+  
+  if (reserveDetails  && reserveDetails.SelectedPackage) {
+   
+
+      const initialPackages = JSON.parse(reserveDetails.SelectedPackage)
+
+      setPackagesWithMassors(initialPackages);
+      
+  }
+}, [reserveDetails]);
   const handleChange = (e) => {
     
     const { name, value } = e.target;
@@ -98,6 +144,7 @@ const fetchDataRaw = async()=>{
   };
 
   const handleSubmit = async(e) => {
+    
     e.preventDefault();
    
    
@@ -112,13 +159,19 @@ const fetchDataRaw = async()=>{
         .map(hour => hour < 10 ? `0${hour}` : `${hour}`);
       try{
         setIsLoading(true)
+        const packageNames = packagesWithMassors.map(pkg => pkg.packageDetails.PackageName);
+
+   
+        const massorDetails = packagesWithMassors.flatMap(pkg => 
+          pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
+          );
         const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
           Date:localReserveDetails.Date,
-          SelectedPackage: selectedPackage,
-          SelectedMassors : JSON.stringify(massorNamesSelected),
+          SelectedPackage: JSON.stringify(packagesWithMassors),
+          SelectedMassors : JSON.stringify(packagesWithMassors),
           Hours:JSON.stringify(selectedHours),
           CustomerType:localReserveDetails.CustomerType,
           ServiceType:localReserveDetails.ServiceType,
@@ -152,6 +205,12 @@ const fetchDataRaw = async()=>{
   }else{
     const selectedHours = localReserveDetails.Hours;
     try{
+      const packageNames = packagesWithMassors.map(pkg => pkg.packageDetails.PackageName);
+
+   
+      const massorDetails = packagesWithMassors.flatMap(pkg => 
+        pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
+        );
       setIsLoading(true)
       const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:localReserveDetails.UniqueId,
@@ -165,8 +224,8 @@ const fetchDataRaw = async()=>{
         AccoStatus:localReserveDetails.AccoStatus,
         CateringDetails:localReserveDetails.CateringDetails,
         Desc:localReserveDetails.Desc,
-        SelectedPackage: selectedPackage,
-        SelectedMassors : JSON.stringify(massorNamesSelected),
+        SelectedPackage: JSON.stringify(packagesWithMassors),
+        SelectedMassors : JSON.stringify(packagesWithMassors),
         FinalPrice:localReserveDetails.FinalPrice,
         CurrentStatus:localReserveDetails.CurrentStatus,
         SatisfactionText:localReserveDetails.SatisfactionText,
@@ -382,65 +441,66 @@ const fetchDataRaw = async()=>{
             
             </div>
            
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
-              
-    {massorNamesSelected !== {} && massorNamesSelected !== '' && massorNamesSelected !== null  ? massorNamesSelected.map((selectedMassor, index) => (
-       <>   
-       <div style={{display:"flex", flexDirection:"column",alignItems:"center", justifyContent:"center", rowGap:"5px" }}>
-            <select 
-                value={selectedMassor}
-                onChange={(e) => handleMassorChange(index, e)}
-                style={{ marginRight: '10px' }}>
-                {massorNames.map(massor => (
-                
-                    <option key={massor.id} value={massor.FullName}>{massor.FullName}</option>
-                ))}
-            </select>
-            <div  onClick={() => handleRemoveMassor(index)} style={{backgroundColor:"#FF2A00" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}}>
-                حذف خدمات دهنده
-            </div>
-            </div>
-       </>
-    )):massorNames.map((selectedMassor, index) => (
-      <>   
-      <div style={{display:"flex", flexDirection:"column",alignItems:"center", justifyContent:"center", rowGap:"5px" }}>
-           <select 
-               value={selectedMassor.FullName}
-               onChange={(e) => handleMassorChange(index, e)}
-               style={{ marginRight: '10px' }}>
-               {massorNames.map(massor => (
-               
-                   <option key={massor.id} value={massor.FullName}>{massor.FullName}</option>
-               ))}
-           </select>
-           <div  onClick={() => handleRemoveMassor(index)} style={{backgroundColor:"#FF2A00" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}}>
-               حذف خدمات دهنده
-           </div>
-           </div>
-      </>
-   ))}
-    <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}} onClick={handleAddMassor}>اضافه کردن خدمات دهنده</div>
-    <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer" }} onClick={togglePackageSelector}>
-    {showPackageSelector ? "حذف پکیج" : "انتخاب پکبج"}
-</div >
-{showPackageSelector || selectedPackage ? (
-    <select 
-        name='SelectedPackage' 
-        onChange={handlePackageChange} 
-        value={selectedPackage}
-    >
-        {packageList.map(pkg => (
-            <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
+ 
+            {
+  packagesWithMassors.map((packageWithMassors, packageIndex) => (
+    <React.Fragment key={packageIndex}>
+      <div style={{display:"flex", flexDirection:"row" , columnGap:"10px", alignItems:"center",justifyContent:"center"
+      }}>
+      <select
+        value={packageWithMassors.packageDetails.PackageName}
+        onChange={(e) => handlePackageChange(e, packageIndex)}
+      >
+        {packageList.map((pkg) => (
+          <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
         ))}
+      </select>
+      {packageWithMassors.massors.map((massor, massorIndex) => (
+  <div style={{display:"flex", flexDirection:"column", rowGap:"5px", alignItems:"center", justifyContent:"center"}} key={massorIndex}>
+    <select
+      value={massor.name}
+      onChange={(e) => handleMassorChange(e, packageIndex, massorIndex, 'name')}
+    >
+      {massorNames.map((m) => (
+        <option key={m.id} value={m.FullName}>{m.FullName}</option>
+      ))}
     </select>
-          ):null}
-          </div>
+    <div style={{display:"flex",columnGap:"3px", flexDirection:"row",alignItems:"center", justifyContent:"center", border:"1px solid #FF6800", borderRadius:"10px", padding:"5px"}}>
+    <label><b>زمان</b></label>
+    <input
+      type="text"
+      placeholder='مدت زمان ارائه خدمات'
+      value={massor.numeralValue}
+      onChange={(e) => handleMassorChange(e, packageIndex, massorIndex, 'numeralValue')}
+      style={{ marginLeft: '10px' }}
+    />
+    </div>
+    <button onClick={(e) => removeMassorFromPackage(e, packageIndex, massorIndex)}>حذف خدمات دهنده</button>
+  </div>
+))}
 
+      <button onClick={(e) => addMassorToPackage(e, packageIndex)}>اضافه کردن خدمات دهنده</button>
+      <button 
+        style={{ backgroundColor: "#FF6347", padding: "0.5rem", borderRadius: "15px", cursor: "pointer", margin: "10px" }}
+        onClick={(e) => removePackage(e, packageIndex)}
+      >
+        حذف پکیج
+      </button>
+      <hr />
+      </div>
+    </React.Fragment>
+  ))
+}
+<button onClick={(e) => addNewPackage(e)}>اضافه کردن پکیج</button>
 
         <div className='Button-container'>
             <button type='submit'>ذخیره</button>
             <button onClick={removeSpecificReserve}>حذف رزرو</button>
             </div>
+           
+
+
+
 
           </form>
           

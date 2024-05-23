@@ -39,42 +39,14 @@ const columns = [
 const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
-  const [showPackageSelector, setShowPackageSelector] = useState(false);
+  const [packagesWithMassors, setPackagesWithMassors] = useState([]);
+
   const [massorNamesSelected, setMassorNamesSelected] = useState([]);
   const [massorNames, setMassorNames] = useState([]);
   const [packageList, setPackageList] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState({});
-  const handlePackageChange = (e) => {
-        setSelectedPackage(e.target.value);
-    };
-    const handleAddMassor = () => {
-      const defaultValue = massorNames.length > 0 ? massorNames[0].FullName : '';
-      setMassorNamesSelected(prev => [...prev, defaultValue]);
-  };
-  
-  const handleRemoveMassor = (index) => {
-      setMassorNamesSelected(prev => prev.filter((_, i) => i !== index));
-  };
-  
-  const handleMassorChange = (index, event) => {
-      const newMassors = [...massorNamesSelected];
-      newMassors[index] = event.target.value;
-      setMassorNamesSelected(newMassors);
-  };
-  
-    const togglePackageSelector = () => {
-      setShowPackageSelector(!showPackageSelector);
-      const defaultValue = packageList.length > 0 ? packageList[0].PackageName : '';
-      
-        setSelectedPackage(defaultValue); 
-  };
-
   const [userName, setUserName] = useState('')
   const [token, setToken] = useState('');
-  
-  
-
-  
   const hamamTypes = [
     {name : 'menHamam', value:"حمام مردانه"},
     {name : 'womenHamam', value:"حمام زنانه"},
@@ -253,7 +225,7 @@ const RequestFollowUp = () => {
           FinalPrice:finalPrice,
           User:userName,
           MassorNames: JSON.stringify(massorNamesSelected),
-          SelectedPackage: selectedPackage ,
+          SelectedPackage: JSON.stringify(packagesWithMassors) ,
     },{
       headers:{
         Authorization: `Bearer ${token}`
@@ -312,10 +284,9 @@ const RequestFollowUp = () => {
       })
       if(response.data === "ok"){
         
-        // window.location.reload();
+        
         notify("سر نخ جدید با موفقیت وارد شد","success")
         setShowNewLeadModal(false)
-        // handleReloadPage();
          window.location.reload();
       }else{
         notify('خطا','error')
@@ -336,6 +307,60 @@ const RequestFollowUp = () => {
       setHamamType(updatedItems)
     }
   }
+  const handlePackageChange = (e, packageIndex) => {
+    const newPackageDetails = packageList.find(pkg => pkg.PackageName === e.target.value);
+    const updatedPackages = packagesWithMassors.map((pkg, idx) => {
+      if (idx === packageIndex) {
+        return { ...pkg, packageDetails: newPackageDetails || {} };
+      }
+      return pkg;
+    });
+    setPackagesWithMassors(updatedPackages);
+  };
+  const handleMassorChange = (e, packageIndex, massorIndex, key) => {
+    const updatedPackages = packagesWithMassors.map((pkg, idx) => {
+      if (idx === packageIndex) {
+        const updatedMassors = pkg.massors.map((massor, mIdx) => {
+          if (mIdx === massorIndex) {
+            return { ...massor, [key]: e.target.value };
+          }
+          return massor;
+        });
+        return { ...pkg, massors: updatedMassors };
+      }
+      return pkg;
+    });
+    setPackagesWithMassors(updatedPackages);
+  };
+  const removeMassorFromPackage = (e,packageIndex, massorIndex) => {
+    e.preventDefault();
+    const newPackagesWithMassors = [...packagesWithMassors];
+    newPackagesWithMassors[packageIndex].massors.splice(massorIndex, 1);
+    setPackagesWithMassors(newPackagesWithMassors);
+  };
+  const addMassorToPackage = (e, packageIndex) => {
+    e.preventDefault();
+    const newPackagesWithMassors = [...packagesWithMassors];
+    const newMassor = {
+      name: massorNames.length > 0 ? massorNames[0].FullName : '',
+      numeralValue: 0 // Default numeral value
+    };
+    newPackagesWithMassors[packageIndex].massors.push(newMassor);
+    setPackagesWithMassors(newPackagesWithMassors);
+  };
+  const removePackage = (e,packageIndex) => {
+    e.preventDefault();
+    const newPackagesWithMassors = packagesWithMassors.filter((_, index) => index !== packageIndex);
+    setPackagesWithMassors(newPackagesWithMassors);
+  };
+  const addNewPackage = (e) => {
+    e.preventDefault();
+    const newPackage = {
+      packageDetails: packageList.length > 0 ? packageList[0] : {}, 
+      massors: []
+    };
+    setPackagesWithMassors([...packagesWithMassors, newPackage]);
+  };
   return (
    <>
    {registerLoading && <LoadingComp/>}
@@ -508,52 +533,56 @@ const RequestFollowUp = () => {
             <label>توضیحات دیگر</label>
             <textarea name='Desc' onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.Desc} />
             </div>
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", columnGap:"5px"}}>
-              
-    
-              
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", rowGap: "5px"}}>
-  {massorNamesSelected.map((selectedName, index) => (
-    <React.Fragment key={index}>
-      <select 
-        value={selectedName}
-        onChange={(e) => handleMassorChange(index, e)}
-        style={{ marginRight: '10px' }}>
-        {massorNames.map(massor => (
-          <option key={massor.id} value={massor.FullName}>{massor.FullName}</option>
+            {
+  packagesWithMassors.map((packageWithMassors, packageIndex) => (
+    <React.Fragment key={packageIndex}>
+      <div style={{display:"flex", flexDirection:"row" , columnGap:"10px", alignItems:"center",justifyContent:"center"
+      }}>
+      <select
+        value={packageWithMassors.packageDetails.PackageName}
+        onChange={(e) => handlePackageChange(e, packageIndex)}
+      >
+        {packageList.map((pkg) => (
+          <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
         ))}
       </select>
-      <div 
-        onClick={() => handleRemoveMassor(index)}
-        style={{backgroundColor: "#FF2A00", padding: "0.5rem", borderRadius: "15px", cursor: "pointer"}}>
-        حذف خدمات دهنده
+      {packageWithMassors.massors.map((massor, massorIndex) => (
+  <div style={{display:"flex", flexDirection:"column", rowGap:"5px", alignItems:"center", justifyContent:"center"}} key={massorIndex}>
+    <select
+      value={massor.name}
+      onChange={(e) => handleMassorChange(e, packageIndex, massorIndex, 'name')}
+    >
+      {massorNames.map((m) => (
+        <option key={m.id} value={m.FullName}>{m.FullName}</option>
+      ))}
+    </select>
+    <div style={{display:"flex",columnGap:"3px", flexDirection:"row",alignItems:"center", justifyContent:"center", border:"1px solid #FF6800", borderRadius:"10px", padding:"5px"}}>
+    <label><b>زمان</b></label>
+    <input
+      type="text"
+      placeholder='مدت زمان ارائه خدمات'
+      value={massor.numeralValue}
+      onChange={(e) => handleMassorChange(e, packageIndex, massorIndex, 'numeralValue')}
+      style={{ marginLeft: '10px' }}
+    />
+    </div>
+    <button onClick={(e) => removeMassorFromPackage(e, packageIndex, massorIndex)}>حذف خدمات دهنده</button>
+  </div>
+))}
+
+      <button onClick={(e) => addMassorToPackage(e, packageIndex)}>اضافه کردن خدمات دهنده</button>
+      <button 
+        style={{ backgroundColor: "#FF6347", padding: "0.5rem", borderRadius: "15px", cursor: "pointer", margin: "10px" }}
+        onClick={(e) => removePackage(e, packageIndex)}
+      >
+        حذف پکیج
+      </button>
+      <hr />
       </div>
     </React.Fragment>
-  ))}
-  <div onClick={handleAddMassor} style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer"}}>
-    اضافه کردن خدمات دهنده
-  </div>
-</div>
-
-
-         
-         
-           
-           <div style={{backgroundColor:"#00FFFF" , padding:"0.5rem" , borderRadius:"15px", cursor:"pointer" }} onClick={togglePackageSelector}>
-           {showPackageSelector ? "حذف پکیج" : "انتخاب پکبج"}
-       </div >
-       {showPackageSelector ? (
-           <select 
-               name='SelectedPackage' 
-               onChange={handlePackageChange} 
-               value={selectedPackage}
-           >
-               {packageList.map(pkg => (
-                   <option key={pkg.id} value={pkg.PackageName}>{pkg.PackageName}</option>
-               ))}
-           </select>
-                 ):null}
-                 </div>
+  ))
+}
+<button onClick={(e) => addNewPackage(e)}>اضافه کردن پکیج</button>
             <button type='submit'>ذخیره</button>   
         </form>
       </div>
