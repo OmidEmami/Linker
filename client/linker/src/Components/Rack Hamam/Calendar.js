@@ -146,8 +146,20 @@ useEffect(() => {
   const downloadHamamDetails = async () => {
     try {
         setIsLoading(true);
-        const response = await axios.get("http://localhost:3001/api/uploadhamamdetails");
-        notify("Data successfully uploaded to Google Sheets", 'success');
+        const response = await axios.get("https://gmhotel.ir/api/downloadhamamdetails", {
+            responseType: 'blob', 
+            headers: {
+                Authorization: `Bearer ${realToken.realToken}`
+            }
+        });
+        const blob = response.data; 
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', 'hamam-details.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
         setIsLoading(false);
     } catch (error) {
         setIsLoading(false);
@@ -155,31 +167,6 @@ useEffect(() => {
         console.log(error);
     }
 };
-
-//   const downloadHamamDetails = async () => {
-//     try {
-//         setIsLoading(true);
-//         const response = await axios.get("http://localhost:3001/api/downloadhamamdetails", {
-//             responseType: 'blob', 
-//             headers: {
-//                 Authorization: `Bearer ${realToken.realToken}`
-//             }
-//         });
-//         const blob = response.data; 
-//         const downloadUrl = window.URL.createObjectURL(blob);
-//         const link = document.createElement('a');
-//         link.href = downloadUrl;
-//         link.setAttribute('download', 'hamam-details.csv');
-//         document.body.appendChild(link);
-//         link.click();
-//         link.remove();
-//         setIsLoading(false);
-//     } catch (error) {
-//         setIsLoading(false);
-//         notify("خطا", 'error');
-//         console.log(error);
-//     }
-// };
 
 
   return (
