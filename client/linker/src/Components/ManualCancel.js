@@ -15,7 +15,7 @@ const ManualCancel =()=> {
         e.preventDefault();
         setIsLoading(true)
         try{
-            const response = await axios.post("https://gmhotel.ir/api/manualcancel",{
+            const response = await axios.post("http://localhost:3001/api/manualcancel",{
                 reserveId : reserveId,
                 User : realToken.userName
             },{

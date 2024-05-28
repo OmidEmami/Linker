@@ -5,14 +5,15 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
-
+import dotenv from "dotenv";
+dotenv.config();
 const writeFile = promisify(fs.writeFile);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, './apiToken.json'),
+    keyFile: path.join(__dirname, process.env.GOOGLE_APPLICATION_CREDENTIALS),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 

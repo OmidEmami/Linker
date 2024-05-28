@@ -8,7 +8,7 @@ const MissedCalls = () => {
 
         async function getMissedCalls(){
             try{
-                const response = await axios.get("https://gmhotel.ir/api/getmissedcalls");
+                const response = await axios.get("http://localhost:3001/api/getmissedcalls");
                 setMissedCalls(response.data)
                 
             }catch(error){
