@@ -14,7 +14,7 @@ function LogOutSystem() {
         const logoutsystem = async() => {
             try{
               setIsloading(true)
-              await axios.delete('http://localhost:3001/api/logout');
+              await axios.delete('https://gmhotel.ir/api/logout');
               notify("با موفقیت از سیستم خارج شدید", "success")
               history.push("/");
               setIsloading(false)
