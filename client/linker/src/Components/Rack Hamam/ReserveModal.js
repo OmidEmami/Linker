@@ -165,9 +165,7 @@ useEffect(() => {
         const massorDetails = packagesWithMassors.flatMap(pkg => 
           pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
           );
-
-        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
-
+        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
