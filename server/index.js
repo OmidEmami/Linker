@@ -26,8 +26,9 @@ const server = http.createServer(app);
 // Apply middleware
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '500mb' })); // Adjust the limit as necessary
+app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+
 app.use(router);
 
 // Initialize WebSocketServer and attach to the server

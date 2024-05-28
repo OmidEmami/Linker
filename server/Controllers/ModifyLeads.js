@@ -2,7 +2,9 @@ import NewLeads from "../Models/NewLeads.js";
 import moment from 'jalali-moment'
 export const modifyLeads = async(req,res)=>{
     const data = req.body.data
+    console.lof(req.body)
     try{
+        
         
         for(let i = 0 ; i < data.length ; i++){
             const response = await NewLeads.update({
@@ -23,6 +25,7 @@ export const modifyLeads = async(req,res)=>{
     
           res.json("Omid")
     }catch(error){
+        console.log(error)
         res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
     }
 }

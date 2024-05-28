@@ -183,7 +183,7 @@ const RequestFollowUp = () => {
         Authorization: `Bearer ${token}`
       }
     })
-    
+    console.log(response)
    if(response.data === "Omid"){
     setRegisterLoading(false)
     notify( "اطلاعات با موفقیت ثبت شد", "success")
