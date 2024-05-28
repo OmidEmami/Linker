@@ -1,4 +1,7 @@
-import DetailedCalls from "../Models/DetailedCalls.js"
+import DetailedCalls from "../Models/DetailedCalls.js";
+import NewLeads from "../Models/NewLeads.js";
+import moment from 'jalali-moment'
+
 export const setmanualcalllead = async(req,res)=>{
     try{
         const response = await DetailedCalls.create({
@@ -16,6 +19,16 @@ export const setmanualcalllead = async(req,res)=>{
             ActionEghamatZarfiat : req.body.ActionEghamatZarfiat,
             OtherAccoTypes : req.body.OtherAccoTypes,
             OtherguestRequestType : req.body.OtherguestRequestType
+        })
+        const responseNd = await NewLeads.create({
+            FullName : req.body.FullName,
+            Phone : req.body.Phone, 
+            UniqueId : req.body.CallId,
+            FirstFollow : "ثبت از طریق رزرو لطفا پیگیری شود",
+            Source : "Phone",
+            Status : "Pending",
+            User: req.body.RegUser,
+            RequestDate : moment().locale('fa').format('YYYY-MM-DD')
         })
            res.json(response)
     }catch(error){

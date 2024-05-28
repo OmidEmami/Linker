@@ -348,7 +348,7 @@ const saveNewManualLead = async (e) => {
             <label>منبع سر نخ</label>
              
              <select required onChange={(e)=>setLeadSource(e.target.value)} value={leadSource}>
-                   {['منبع سر نخ را انتخاب کنید','Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی'].map(option => (
+                   {['منبع سر نخ را انتخاب کنید','Instagram','تماس با هتل','مهمان مقیم','پیامک بعد از رزرو قطعی','مهمان قبلی','آژانس','اینترنت','سایر'].map(option => (
                      <option key={option} value={option}>
                        {option}
                      </option>
