@@ -165,11 +165,9 @@ useEffect(() => {
         const massorDetails = packagesWithMassors.flatMap(pkg => 
           pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
           );
-<<<<<<< HEAD
+
         const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
-=======
-        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
->>>>>>> 5ed0569 (hamam package manager modified)
+
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,

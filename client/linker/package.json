@@ -16,6 +16,7 @@
     "axios": "^1.4.0",
     "data-fns": "^1.1.0",
     "date-fns": "^2.30.0",
+    "dayjs": "^1.11.11",
     "html2canvas": "^1.4.1",
     "install": "^0.13.0",
     "jalali-moment": "^3.3.11",
