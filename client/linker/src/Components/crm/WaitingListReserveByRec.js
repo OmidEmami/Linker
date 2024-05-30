@@ -442,15 +442,13 @@ const openRegDataModal = (row)=>{
    <select
      id="selectBoxEghamat"
      value={AccoRequestType}
-     onChange={(e)=>setAccoRequestType(e.target.value)}
-     
-     >
+     onChange={(e)=>setAccoRequestType(e.target.value)}>
       <option value="null">انتخاب کنید</option>
-     <option value="بررسی قیمت">بررسی قیمت</option>
-     <option value="بررسی ظرفیت">بررسی ظرفیت</option>
-     <option value="سایر">سایر</option>
-     <option value="پیگیری رزرو">پیگیری رزرو</option>
-     <option value="کنسل">کنسل</option>
+      <option value="بررسی قیمت">بررسی قیمت</option>
+      <option value="بررسی ظرفیت">بررسی ظرفیت</option>
+      <option value="سایر">سایر</option>
+      <option value="پیگیری رزرو">پیگیری رزرو</option>
+      <option value="کنسل">کنسل</option>
    </select></div></>}
    {AccoRequestType === "بررسی قیمت" &&  guestRequestType === "اقامت" &&
    <>

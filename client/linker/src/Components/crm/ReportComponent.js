@@ -7,7 +7,7 @@ import DatePicker, { DateObject,getAllDatesInRange }from "react-multi-date-picke
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
-
+import { notify } from '../toast';
 function ReportComponent() {
   const [values, setValues] = useState('');
   const digits=["0","1","2","3","4","5","6","7","8","9"];
@@ -189,9 +189,23 @@ function ReportComponent() {
   }
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
+    const importReservesToSheets = async() => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get("https://gmhotel.ir/api/getreservesdetails");
+        notify("Data successfully uploaded to Google Sheets", 'success');
+        setIsLoading(false);
+    } catch (error) {
+        setIsLoading(false);
+        notify("Error uploading data to Google Sheets", 'error');
+        console.log(error);
+    }
+    }
   return (
-    <div>
+    <div style={{display:"flex", flexDirection:"column"}}>
+      <div style={{backgroundColor:"#D2AF6F", height:"80px", marginBottom:"1rem", display:"flex", flexDirection:"row", direction:"rtl", alignItems:"center", justifyContent:"center"}}>
+        <div style={{direction:"rtl", border:"1px solid black", borderRadius:"15px", padding:"15px", backgroundColor:"#0080FF",cursor:"pointer", color:"white"}} onClick={importReservesToSheets}>دریافت خروجی در Google Sheets</div>
+      </div>
       <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"flex-start", columnGap:"10px"}}>
       <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", border:"1px black solid", borderRadius:"25px",padding:"25px"}}>
       <Button onClick={checkPriceAndCapCalls} style={{backgroundColor:"blue",color:"white"}}>محاسبه آمار سرنخ های امروز</Button>
