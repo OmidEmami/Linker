@@ -201,8 +201,10 @@ function ReportComponent() {
         console.log(error);
     }
     }
+
   return (
     <div style={{display:"flex", flexDirection:"column"}}>
+     
       <div style={{backgroundColor:"#D2AF6F", height:"80px", marginBottom:"1rem", display:"flex", flexDirection:"row", direction:"rtl", alignItems:"center", justifyContent:"center"}}>
         <div style={{direction:"rtl", border:"1px solid black", borderRadius:"15px", padding:"15px", backgroundColor:"#0080FF",cursor:"pointer", color:"white"}} onClick={importReservesToSheets}>دریافت خروجی در Google Sheets</div>
       </div>

@@ -5,6 +5,41 @@ import moment from 'jalali-moment' ;
 import request from "request"
 import schedule from "node-schedule"
 import { farazSendPattern } from "@aspianet/faraz-sms";
+import DetailedCalls from "../Models/DetailedCalls.js";
+function removeLeadingZero(numberString) {
+  // Check if the first character is '0' and remove it
+  if (numberString.startsWith('0')) {
+      return numberString.substring(1);
+  }
+  return numberString;
+}
+export const testiano = async(req,res) =>{
+  
+  const responseDetailsCalls = await DetailedCalls.findOne({
+    where :{
+      Phone : modifiedNumber
+    },
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
+  console.log(responseDetailsCalls)
+  if(responseDetailsCalls !== null){
+
+  
+  await DetailedCalls.update({
+    
+      ActionEghamatZarfiat : "رزرو انجام شد"
+  },{
+    where:{
+      Phone : responseDetailsCalls.Phone,
+      id : responseDetailsCalls.id
+    }
+  }
+  )
+}
+res.json("ok")
+}
 export const toPaySt = async(req,res)=>{
   try{
     const response = await axios.post('https://api.zarinpal.com/pg/v4/payment/request.json', {
@@ -39,6 +74,7 @@ export const toPaySt = async(req,res)=>{
     }
 }
 export const toPaynd = async(req,res)=>{
+ 
   try {
       
     const findPay = await Payments.findOne({
@@ -115,7 +151,30 @@ export const toPaynd = async(req,res)=>{
           const patternCodeToOperator = "y606cvhv1bx07g9";
         await farazSendPattern( patternCodeToOperator, "+983000505", "09387829919", { reserve: findPay.ReserveId});
         await farazSendPattern( patternCodeToOperator, "+983000505", "09012222347", { reserve: findPay.ReserveId});
+        const modifiedNumber = removeLeadingZero(findReserveRequests[0].Phone);
+        const responseDetailsCalls = await DetailedCalls.findOne({
+          where :{
+            Phone : modifiedNumber
+          },
+          order: [
+            ['createdAt', 'DESC']
+          ]
+        })
+        if(responseDetailsCalls !== null){
+
+        
+        await DetailedCalls.update({
+          
+            ActionEghamatZarfiat : "رزرو انجام شد"
+        },{
+          where:{
+            Phone : responseDetailsCalls.Phone,
+            id : responseDetailsCalls.id
+          }
+        }
+        )
       }
+    }
         else{
           res.status(404).json({ error: 'An error occurred while making the request.' });
         }

@@ -3,7 +3,7 @@ const router = express.Router();
 import { registerNewUser } from "../Controllers/RegisterUser.js";
 import { loginUser } from "../Controllers/LoginUser.js";
 import { stLinkGenerator, toPay } from "../Controllers/GenerateLink.js";
-import { toPaySt, toPaynd, getpayments, getReserves, manualcancel } from "../Controllers/CheckPayments.js";
+import { toPaySt, toPaynd, getpayments, getReserves, manualcancel, testiano } from "../Controllers/CheckPayments.js";
 import { farazSMS } from '@aspianet/faraz-sms';
 import { refreshToken } from "../Controllers/RefreshToken.js";
 import { changeaccesstype, getUsersToManage } from "../Controllers/ManageUsers.js";
@@ -26,7 +26,6 @@ import { setmanualcalllead } from "../Controllers/ManualCallLeadEntry.js";
 import { addNewMassor, addNewPackage, getAllMassors, getAllPackages, modifyPackages, removeMassor, removePackage } from "../Controllers/ControllerDynamicItems.js";
 import { uploadHamamDetailsToSheet } from "../Controllers/UploadHamamDetails.js";
 import { getReservesDetails } from "../Controllers/UploadCallsDetails.js";
-
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
@@ -76,4 +75,5 @@ router.post('/api/removehamampackage', removePackage)
 router.post('/api/addnewpackage', addNewPackage);
 router.post('/api/modifypackages', modifyPackages)
 router.get('/api/getreservesdetails', getReservesDetails)
+router.post('/api/testiano', testiano)
 export default router;
