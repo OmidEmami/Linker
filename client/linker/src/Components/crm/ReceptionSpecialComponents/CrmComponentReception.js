@@ -69,7 +69,7 @@ const CrmComponentReception =()=>{
               const refreshToken = async () => {
                 try {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://localhost:3001/api/token');
                     
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -91,7 +91,7 @@ const CrmComponentReception =()=>{
                 const currentDate = new Date();
                 if (expire * 1000 < currentDate.getTime()) {
                   
-                    const response = await axios.get('https://gmhotel.ir/api/token');
+                    const response = await axios.get('http://localhost:3001/api/token');
                     config.headers.Authorization = `Bearer ${response.data.accessToken}`;
                     setToken(response.data.accessToken);
                     const decoded = jwt_decode(response.data.accessToken);
@@ -108,7 +108,7 @@ const CrmComponentReception =()=>{
                   const fetchData=async()=>{
                     setIsLoading(true)
                       try{
-                          const response = await axios.get("https://gmhotel.ir/api/getpayments",{
+                          const response = await axios.get("http://localhost:3001/api/getpayments",{
                             headers:{
                               Authorization: `Bearer ${realToken.realToken}`
                             }
@@ -189,7 +189,7 @@ const CrmComponentReception =()=>{
                               }
                           
                               setIsLoading(true);
-                              const response = await axios.post("https://gmhotel.ir/api/regDataReception", {
+                              const response = await axios.post("http://localhost:3001/api/regDataReception", {
                                 callId: CallId,
                                 guestName: guestName,
                                 phone: guestPhone,

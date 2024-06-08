@@ -17,6 +17,7 @@ import MeCaLinkerDashboard from "./Send Menu & Catalog links/MeCaLinkerDashboard
 import { useDispatch } from "react-redux";
 import { addToken } from './action';
 import Calendar from "./Rack Hamam/Calendar";
+import { RiLogoutBoxLine } from "react-icons/ri";
 
  const MainDashboard = () =>{
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ import Calendar from "./Rack Hamam/Calendar";
         
         try {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
            
             setToken(response.data.accessToken);
             
@@ -67,7 +68,7 @@ import Calendar from "./Rack Hamam/Calendar";
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('https://gmhotel.ir/api/token');
+            const response = await axios.get('http://localhost:3001/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -84,9 +85,14 @@ import Calendar from "./Rack Hamam/Calendar";
         Promise.reject(error); 
         return
     });
-    const [item, setItem] = useState(false);
+    const [item, setItem] = useState(null);
     const showItem = (e) => {
-        setItem(e)
+        if(Number(e) === 8){
+            showHamamManagement();
+        }else{
+            setItem(Number(e));
+        }
+        
     }
     const showHamamManagement = () =>{
         
@@ -108,15 +114,54 @@ import Calendar from "./Rack Hamam/Calendar";
                     backgroundColor:"#D2AF6F",
                     display : "flex",
                     flexDirection:"row",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     alignItems: "center"    
 
         }}>
             <img style={{margin:"3px"}} width="5%" src={Logo} alt="logo ghasr" />
-           
+            <ul style={{display: "flex", flexDirection: "row", listStyle: "none", direction: "rtl"}}>
+    <li>
+        <div className={styles.customDropdown}>
+    <select onChange={(e) => showItem(e.target.value)} defaultValue="">
+    <option value="" disabled hidden>اقامت</option> 
+    <option value="1">ارسال لینک اقامت</option>
+    <option value="2">پرداخت ها</option>
+    <option value="3">لینک های ارسالی</option>
+    <option value="4">کنسل کردن دستی رزرو</option>
+</select>
+</div>
+    </li>
+    <li>
+        <div className={styles.customDropdown}>
+    <select onChange={(e) => showItem(e.target.value)} defaultValue="">
+    <option value="" disabled hidden>حمام</option> 
+    <option value="8">بررسی درخواست های حمام</option>
+    <option value="9">تقویم رزروهای حمام</option>
+</select>
+</div>
+    </li>
+<li style={{
+    backgroundColor: "#fff",
+    padding: "0.3rem 0.9rem",
+    borderRadius: "15px",
+    border: "2px solid rgb(255, 136, 0)",
+    display: "flex",          
+    alignItems: "center",      
+    justifyContent: "center",   
+    textAlign: "center", 
+    cursor: "pointer"
+}} value={19} onClick={showCRMPhone}>
+    CRM
+</li>    
+    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={7} onClick={(e) => showItem(e.target.value)}>ارسال کاتالوگ</li>
+    {accessType === "admin" && <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={5} onClick={(e) => showItem(e.target.value)}>مدیریت کاربران</li>}
+    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={6} onClick={(e) => showItem(e.target.value)}>خروج از سیستم</li>
+</ul>
+<RiLogoutBoxLine />
             </div>
-            <div style={{marginRight:"50px"}}><h3 style={{direction:"rtl"}}>کاربر: {name}</h3></div>
             
+            <div style={{marginRight:"50px"}}><h3 style={{direction:"rtl"}}>کاربر: {name}</h3></div>
+                                                                                                                                                  
         <div className={stylesNd.ViewContainer}>
         <div  className={stylesNd.RightContainer}>
             <ul className={styles.list}>
@@ -158,7 +203,7 @@ import Calendar from "./Rack Hamam/Calendar";
           {item === 9 ?
           <div className={stylesNd.MainContent}><Calendar /></div>
           : null}
-          {item === false && <div className={stylesNd.MainContent}>
+          {item === null && <div className={stylesNd.MainContent}>
             <h3 style={{direction:"rtl"}}>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}
         </div>
         </>

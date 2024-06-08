@@ -166,7 +166,7 @@ useEffect(() => {
           pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
           );
 
-        const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+        const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
 
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
@@ -214,7 +214,7 @@ useEffect(() => {
         pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
         );
       setIsLoading(true)
-      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
+      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
         UniqueId:localReserveDetails.UniqueId,
         FullName:localReserveDetails.FullName,
         Phone:localReserveDetails.Phone,
@@ -278,7 +278,7 @@ useEffect(() => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
+        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,

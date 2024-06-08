@@ -10,6 +10,45 @@
     width: 30%;
 
 }
+.customDropdown {
+    position: relative;
+    display: inline-block;
+    
+}
+
+.customDropdown select {
+    padding: 10px 15px; /* Adjust padding if necessary to center the text */
+    border: 2px solid rgb(255, 136, 0);
+    background-color: transparent; /* Use transparent for no color */
+    color: #000000;
+    font-size: 16px;
+    cursor: pointer;
+    -webkit-appearance: none;  /* Removes default Chrome and Safari style */
+    -moz-appearance: none;     /* Removes default Firefox style */
+    appearance: none;          /* Removes default style in modern browsers */
+    height: 100%; /* Optional, adjust based on your design needs */
+    text-align-last: center; /* Centers the text for dropdown */
+    direction: rtl; /* Since you're using RTL */
+    padding: 10px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.customDropdown::after {
+    
+    font-size: 12px;
+    color: #000000;
+    position: absolute;
+    /* right: 10px; */
+    top: calc(50% - 6px);
+    pointer-events: none;
+}
+
+.customDropdown select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(81, 204, 238, 0); /* Adjust visibility of shadow on focus */
+}
+
 .list{
     list-style: none;
     margin:30px 0 0 30px;

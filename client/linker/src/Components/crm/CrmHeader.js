@@ -49,7 +49,7 @@ function CrmHeader() {
   const refreshToken = async () => {
     try {
       
-        const response = await axios.get('https://gmhotel.ir/api/token');
+        const response = await axios.get('http://localhost:3001/api/token');
         
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -71,7 +71,7 @@ function CrmHeader() {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
       
-        const response = await axios.get('https://gmhotel.ir/api/token');
+        const response = await axios.get('http://localhost:3001/api/token');
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -96,7 +96,7 @@ function CrmHeader() {
     const callid = Math.floor(Math.random() * 90000) + 10000;
     try{
       setIsLoading(true)
-      const response = await axios.post('https://gmhotel.ir/api/setmanualcalllead',{
+      const response = await axios.post('http://localhost:3001/api/setmanualcalllead',{
             Phone : guestPhone,
             LastCall : m.locale('fa').format('YYYY/MM/DD HH:mm:ss'),
             FullName : guestName,
@@ -304,10 +304,9 @@ notify('خطا','error')
 
       <div className={styles.logoContainer}><img width="70vw" alt='logoblue' src={Logo} /></div>
       <div className={styles.menuCrmContainer}>
-      <h3 onClick={startPopUpCrm}>ثبت دستی سرنخ</h3>
+      
       <h3 onClick={() => window.open("/waitinglist", "_blank", "noopener,noreferrer")}>لیست انتظار تماس</h3>
-      <h3>ارسال لینک اقامت</h3>
-      <h3>ارسال کاتالوگ</h3>
+     
       <h3 onClick={() => window.open("/report", "_blank", "noopener,noreferrer")}>مشاهده گزارشات</h3>
       </div>
     </div>

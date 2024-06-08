@@ -211,6 +211,7 @@ export const toPaynd = async(req,res)=>{
   } catch (error) {
 
     res.status(404)
+    console.log(error)
     // res.status(404).json({ error: 'An error occurred while making the request.' }).end();
     return;
   }
