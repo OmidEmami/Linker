@@ -1,61 +1,73 @@
 import { google } from 'googleapis';
-import { Parser } from 'json2csv';
 import HamamReserveDetail from '../Models/HamamReserveDetail.js';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
 import { fileURLToPath } from 'url';
-
-const writeFile = promisify(fs.writeFile);
+import dotenv from "dotenv";
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, './apiToken.json'),
+    keyFile: path.join(__dirname, process.env.GOOGLE_APPLICATION_CREDENTIALS), // Ensure this path correctly points to your credentials file
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
 const sheets = google.sheets({ version: 'v4', auth });
 
 export const uploadHamamDetailsToSheet = async (req, res) => {
-    const rawData = await HamamReserveDetail.findAll();
-    const data = rawData.map(entry => {
-        const { Hours, createdAt, updatedAt, ...restData } = entry.get({ plain: true });
-        return {
-            ...restData,
-            Hours: Hours ? JSON.parse(Hours).join(' ') : ''
+    try {
+        const rawData = await HamamReserveDetail.findAll();
+        // Adding headers as the first row in the formattedData array
+        const headers = [
+            "UniqueId", "FullName", "Phone", "Date", "Hours", "CustomerType",
+            "ServiceType", "SelectedService", "AccoStatus", "CateringDetails",
+            "MassorNames", "SelectedMassorNames", "SelectedPackage", "Desc",
+            "FinalPrice", "User", "CurrentStatus", "SatisfactionText", "Satisfaction"
+        ];
+        const formattedData = rawData.map(item => [
+            item.UniqueId,
+            item.FullName,
+            item.Phone,
+            item.Date,
+            item.Hours,
+            item.CustomerType,
+            item.ServiceType,
+            item.SelectedService,
+            item.AccoStatus,
+            item.CateringDetails,
+            item.MassorNames,
+            item.SelectedMassorNames,
+            item.SelectedPackage,
+            item.Desc,
+            item.FinalPrice,
+            item.User,
+            item.CurrentStatus,
+            item.SatisfactionText,
+            item.Satisfaction
+        ]);
+
+        // Prepend the headers to the data array
+        formattedData.unshift(headers);
+
+        const spreadsheetId = '18kIT0eJjYYJ5GnbaNohPiFAcOWVaPCCEqQODdzuLJo4'; // Make sure this is your correct spreadsheet ID
+        const range = 'Sheet1!A1'; // Adjust the range if needed
+
+        const request = {
+            spreadsheetId,
+            range,
+            valueInputOption: 'USER_ENTERED',
+            resource: {
+                values: formattedData,
+            },
         };
-    });
 
-    // Ensure headers are included by setting the headers option
-    const json2csvParser = new Parser({ header: true });
-    const csv = json2csvParser.parse(data);
-
-    const tempFilePath = path.join(__dirname, 'temp-hamam-details.csv');
-    await writeFile(tempFilePath, csv);
-
-    const csvContent = fs.readFileSync(tempFilePath, 'utf8');
-    const csvRows = csvContent.split('\n').map(row => row.split(','));
-
-    const spreadsheetId = '18kIT0eJjYYJ5GnbaNohPiFAcOWVaPCCEqQODdzuLJo4';
-    const range = 'Sheet1!A1';
-
-    // Clear the sheet before uploading new data
-    await sheets.spreadsheets.values.clear({
-        spreadsheetId,
-        range,
-    });
-
-    // Update the sheet with new data, including headers
-    await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range,
-        valueInputOption: 'RAW',
-        requestBody: {
-            values: csvRows,
-        },
-    });
-
-    res.send('Data uploaded to Google Sheets successfully!');
+        const response = await sheets.spreadsheets.values.update(request);
+        res.send({ message: 'Data uploaded and formatted in Google Sheets successfully!', response: response.data });
+    } catch (err) {
+        console.error('The API returned an error: ' + err);
+        res.status(500).send({ error: 'Failed to upload data to Google Sheets', details: err.message });
+    }
 };
+
