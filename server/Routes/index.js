@@ -24,7 +24,8 @@ import { downloadHamamDetails } from "../Controllers/downloadHamamDetails.js";
 import { getAllCallsReport,getCallsReport, receptionGetRawLeads, receptionModifyLead, receptionPutRawLeads, regDataReceptionLeadSocket } from "../Controllers/ReceptionLeadsEntry.js";
 import { setmanualcalllead } from "../Controllers/ManualCallLeadEntry.js";
 import { addNewMassor, addNewPackage, getAllMassors, getAllPackages, modifyPackages, removeMassor, removePackage } from "../Controllers/ControllerDynamicItems.js";
-
+import { uploadHamamDetailsToSheet } from "../Controllers/UploadHamamDetails.js";
+import { getReservesDetails } from "../Controllers/UploadCallsDetails.js";
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)

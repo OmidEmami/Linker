@@ -14,6 +14,9 @@ const HamamReserveDetail = db.define('HamamReserveDetail',{
     Phone:{
         type:DataTypes.TEXT
     },
+    Email:{
+        type: DataTypes.TEXT
+    },
     Date:{
         type:DataTypes.TEXT
     },

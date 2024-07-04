@@ -62,7 +62,7 @@ function MassorModal({ isOpen, onClose }) {
     const fetchData = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get("http://localhost:3001/api/getallmassornames");
+            const response = await axios.get("https://gmhotel.ir/api/getallmassornames");
             console.log(response.data);
             setAllPackages(response.data);
             const initialPackageNames = {};
@@ -89,7 +89,7 @@ function MassorModal({ isOpen, onClose }) {
     const addNewPackage = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.post('http://localhost:3001/api/regnewmassor', {
+            const response = await axios.post('https://gmhotel.ir/api/regnewmassor', {
                 FullName: newPackageName,
                 
             });
@@ -108,7 +108,7 @@ function MassorModal({ isOpen, onClose }) {
     const removePackage = async(pack)=>{
         try{
             setIsLoading(true)
-            const response = await axios.post('http://localhost:3001/api/removemassor',{
+            const response = await axios.post('https://gmhotel.ir/api/removemassor',{
                 fullName : editPackageNames[pack.id],
             })
             fetchData();

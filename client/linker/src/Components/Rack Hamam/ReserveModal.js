@@ -178,7 +178,7 @@ useEffect(() => {
           SelectedService:localReserveDetails.SelectedService,
           AccoStatus:localReserveDetails.AccoStatus,
           CateringDetails:localReserveDetails.CateringDetails,
-          
+          Email: localReserveDetails.Email,
           Desc:localReserveDetails.Desc,
           CurrentStatus:localReserveDetails.CurrentStatus,
           SatisfactionText:localReserveDetails.SatisfactionText,
@@ -212,7 +212,7 @@ useEffect(() => {
         pkg.massors.map(massor => `${massor.name} - ${massor.numeralValue}`)
         );
       setIsLoading(true)
-      const response = await axios.post("http://localhost:3001/api/modifyFixedReserves",{
+      const response = await axios.post("https://gmhotel.ir/api/modifyFixedReserves",{
         UniqueId:localReserveDetails.UniqueId,
         FullName:localReserveDetails.FullName,
         Phone:localReserveDetails.Phone,
@@ -224,6 +224,7 @@ useEffect(() => {
         AccoStatus:localReserveDetails.AccoStatus,
         CateringDetails:localReserveDetails.CateringDetails,
         Desc:localReserveDetails.Desc,
+        Email: localReserveDetails.Email,
         SelectedPackage: JSON.stringify(packagesWithMassors),
         SelectedMassors : JSON.stringify(packagesWithMassors),
         FinalPrice:localReserveDetails.FinalPrice,
@@ -276,7 +277,7 @@ useEffect(() => {
       }
       const removeReserve = async() =>{
         setIsLoading(true)
-        const removeResponse = await axios.post("http://localhost:3001/api/removeHamamReserve",{
+        const removeResponse = await axios.post("https://gmhotel.ir/api/removeHamamReserve",{
           UniqueId:localReserveDetails.UniqueId,
           FullName:localReserveDetails.FullName,
           Phone:localReserveDetails.Phone,
@@ -331,6 +332,12 @@ useEffect(() => {
             <label>شماره تماس
               <ReserveDetailsInput name='Phone' type='number' value={localReserveDetails.Phone} onChange={handleChange} />
             </label>
+            <label>آدرس ایمیل
+              <ReserveDetailsInput name='Email' type='text' value={localReserveDetails.Email} onChange={handleChange} />
+            </label>
+            
+            </div>
+            <div className='formdetails-first-one'>
             <label>تعیین وضعیت
               <select name='CurrentStatus' onChange={handleChange} value={localReserveDetails.CurrentStatus}>
                   {['Fixed','CheckedOut'].map(option => (
@@ -354,9 +361,6 @@ useEffect(() => {
                  <textarea style={{margin:"10px"}} name='SatisfactionText' placeholder='توضیحات رضایت' value={localReserveDetails.SatisfactionText} onChange={handleChange} />
                  </div>
                 }
-            
-            </div>
-            <div className='formdetails-first-one'>
               <label>قیمت نهایی
                 <ReserveDetailsInput name='FinalPrice' type='number' value={localReserveDetails.FinalPrice} onChange={handleChange} />
               </label>

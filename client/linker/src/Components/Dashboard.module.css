@@ -13,7 +13,7 @@
 .customDropdown {
     position: relative;
     display: inline-block;
-    
+    cursor:pointer;
 }
 
 .customDropdown select {

@@ -39,7 +39,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
         
         try {
             setIsLoading(true)
-            const response = await axios.get('http://localhost:3001/api/token');
+            const response = await axios.get('https://gmhotel.ir/api/token');
            
             setToken(response.data.accessToken);
             
@@ -68,7 +68,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
             setIsLoading(true)
-            const response = await axios.get('http://localhost:3001/api/token');
+            const response = await axios.get('https://gmhotel.ir/api/token');
             config.headers.Authorization = `Bearer ${response.data.accessToken}`;
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
@@ -115,11 +115,17 @@ import { RiLogoutBoxLine } from "react-icons/ri";
                     display : "flex",
                     flexDirection:"row",
                     justifyContent: "space-between",
-                    alignItems: "center"    
+                    alignItems: "center",
+                   
 
         }}>
-            <img style={{margin:"3px"}} width="5%" src={Logo} alt="logo ghasr" />
-            <ul style={{display: "flex", flexDirection: "row", listStyle: "none", direction: "rtl"}}>
+            <img style={{marginLeft:"2rem",marginTop:"1rem",marginBottom:"1rem"}} width="5%" src={Logo} alt="logo ghasr" />
+            
+
+            <div style={{marginRight:"50px"}}>
+                <h3 style={{direction:"rtl",padding:"0"}}>کاربر: {name}</h3>
+                </div>
+            <ul style={{display: "flex", flexDirection: "row", listStyle: "none", direction: "rtl", columnGap:"10px"}}>
     <li>
         <div className={styles.customDropdown}>
     <select onChange={(e) => showItem(e.target.value)} defaultValue="">
@@ -153,32 +159,17 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 }} value={19} onClick={showCRMPhone}>
     CRM
 </li>    
-    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={7} onClick={(e) => showItem(e.target.value)}>ارسال کاتالوگ</li>
-    {accessType === "admin" && <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={5} onClick={(e) => showItem(e.target.value)}>مدیریت کاربران</li>}
-    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)"}} value={6} onClick={(e) => showItem(e.target.value)}>خروج از سیستم</li>
+    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)", cursor:"pointer"}} value={7} onClick={(e) => showItem(e.target.value)}>ارسال کاتالوگ</li>
+    {accessType === "admin" && <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)", cursor:"pointer"}} value={5} onClick={(e) => showItem(e.target.value)}>مدیریت کاربران</li>}
+    <li style={{backgroundColor:"#fff", padding:"0.3rem 0.9rem", borderRadius:"15px",border:"2px solid rgb(255, 136, 0)", cursor:"pointer"}} value={6} onClick={(e) => showItem(e.target.value)}>خروج از سیستم</li>
 </ul>
-<RiLogoutBoxLine />
+
             </div>
             
-            <div style={{marginRight:"50px"}}><h3 style={{direction:"rtl"}}>کاربر: {name}</h3></div>
+           
                                                                                                                                                   
         <div className={stylesNd.ViewContainer}>
-        <div  className={stylesNd.RightContainer}>
-            <ul className={styles.list}>
-                <li value={1} onClick={(e)=>showItem(e.target.value)}>ارسال لینک اقامت</li>
-                <li value={2} onClick={(e)=>showItem(e.target.value)}>پرداخت ها </li>
-                <li value={3} onClick={(e)=>showItem(e.target.value)}>لینک های ارسالی</li>
-                <li value={19} onClick={showCRMPhone}>CRM(beta)</li>
-                <li value={4} onClick={(e)=>showItem(e.target.value)}>کنسل کردن دستی رزرو</li>
-                <li value={7} onClick={(e)=>showItem(e.target.value)}>ارسال کاتالوگ ، منو و حمام</li>
-                <li value={8} onClick={showHamamManagement}>بررسی درخواست های حمام</li>
-                <li value={9} onClick={(e)=>showItem(e.target.value)}>تقویم رزرو های حمام</li>
-                {accessType === "admin" &&<li value={5} onClick={(e)=>showItem(e.target.value)}>مدیریت کاربران</li>}
-                <li value={6} onClick={(e)=>showItem(e.target.value)}>خروج از سیستم</li>
-                
-            </ul>
-
-        </div>
+        
         {item === 1 ?
          <div className={stylesNd.MainContent}><Dashboard /></div>
           : null}
@@ -204,7 +195,11 @@ import { RiLogoutBoxLine } from "react-icons/ri";
           <div className={stylesNd.MainContent}><Calendar /></div>
           : null}
           {item === null && <div className={stylesNd.MainContent}>
-            <h3 style={{direction:"rtl"}}>لطفا از منو سمت راست آیتم مورد نظر را انتخاب کنید</h3></div>}
+            <h3 style={{direction:"rtl"}}>خوش آمدید</h3>
+            <h3 style={{direction:"rtl"}}>لطفا از منو بالا آیتم مورد نظر را انتخاب کنید</h3>
+            <h3 style={{direction:"rtl"}}>جهت بروزرسانی گوگل شیت حمام به منوی حمام سپس تقویم حمام مراجعه کنید</h3>
+            <h3 style={{direction:"rtl"}}>جهت بروزرسانی گوگل شیت تماس ها با دسترسی ادمین به منو Crm و سپس مشاهده گزارشات مراجعه کنید</h3>
+            </div>}
         </div>
         </>
     )

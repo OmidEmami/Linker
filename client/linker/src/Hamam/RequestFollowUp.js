@@ -40,7 +40,7 @@ const rowsPerPageOptions = [5, 10, 25];
 
 const RequestFollowUp = () => {
   const [packagesWithMassors, setPackagesWithMassors] = useState([]);
-
+  const [email, setEmail] = useState('')
   const [massorNamesSelected, setMassorNamesSelected] = useState([]);
   const [massorNames, setMassorNames] = useState([]);
   const [packageList, setPackageList] = useState([]);
@@ -123,11 +123,11 @@ const RequestFollowUp = () => {
       
         try{
           
-          const responseToken = await axios.get('http://localhost:3001/api/token');
+          const responseToken = await axios.get('https://gmhotel.ir/api/token');
           setToken(responseToken.data.accessToken)
           const decoded = jwt_decode(responseToken.data.accessToken);
           setUserName(decoded.name)
-            const response = await axios.get("http://localhost:3001/api/getNewLeads",{
+            const response = await axios.get("https://gmhotel.ir/api/getNewLeads",{
               headers:{
                 Authorization: `Bearer ${responseToken.data.accessToken}`
               }
@@ -176,7 +176,7 @@ const RequestFollowUp = () => {
     setRegisterLoading(true)
    
     try{
-      const response = await axios.post("http://localhost:3001/api/regFollowLead",{
+      const response = await axios.post("https://gmhotel.ir/api/regFollowLead",{
         data : data 
     },{
       headers:{
@@ -211,7 +211,8 @@ const RequestFollowUp = () => {
    try{
     
     setIsLoading(true)
-    const response = await axios.post("http://localhost:3001/api/HamamReserveDetail",{
+    const response = await axios.post("https://gmhotel.ir/api/HamamReserveDetail",{
+          Email:email,
           RequestKey:finalFormData.RequestKey,
           FullName:finalFormData.FullName,
           Phone:finalFormData.Phone,
@@ -270,7 +271,7 @@ const RequestFollowUp = () => {
     }
     try{
       
-      const response = await axios.post('http://localhost:3001/api/manualNewLead',{
+      const response = await axios.post('https://gmhotel.ir/api/manualNewLead',{
         Name:newNameLead,
         Phone:newPhoneLead,
         LeadSource:leadSource,
@@ -474,7 +475,10 @@ const RequestFollowUp = () => {
           <input required name="FullName" onChange={handleFinalReserveDetailsForm} type='text' value={finalFormData.FullName} />
           <label>شماره تماس</label>
           <input required type='number' name='Phone'  onChange={handleFinalReserveDetailsForm} value={finalFormData.Phone} />
-          <label>شماره درخواست</label>
+          
+          <label>ایمیل</label>
+           <input placeholder='Email Address' type='text' name='Email' value={email} onChange={(e)=>setEmail(e.target.value)} />
+           <label>شماره درخواست</label>
           <input required type='text' name='RequestKey' onChange={handleFinalReserveDetailsForm} value={finalFormData.RequestKey} />
           </div>
           <div className={styles.partTwoFinalForm}>
@@ -609,8 +613,8 @@ const RequestFollowUp = () => {
          <div>
           <label>تاریخ های پیشنهادی</label>
           <DatePicker 
-                       required 
-           digits={digits}
+            required 
+            digits={digits}
             value={values}
             onChange={value=>{setValues(value)
             }}
@@ -622,7 +626,9 @@ const RequestFollowUp = () => {
              placeholder='تاریخ پیشنهادی دریافت خدمات'
            ></DatePicker>
            </div>
+          
            </div>
+           
            <div style={{display:"flex", flexDirection:"row",justifyContent:'center', alignItems:'center',columnGap:"2vw" }}>
            <div style={{display:"flex", flexDirection:"column",justifyContent:'center', alignItems:'center',rowGap:"2vw" }}>
            <label>منبع سر نخ</label>

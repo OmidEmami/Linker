@@ -2,7 +2,6 @@ import HamamReserveDetail from "../Models/HamamReserveDetail.js";
 export const modifyFixedReserves = async(req,res)=>{
    
     try{
-        console.log(req.body)
         const response = await HamamReserveDetail.update({
             FullName:req.body.FullName,
             Phone:req.body.Phone,
@@ -13,7 +12,7 @@ export const modifyFixedReserves = async(req,res)=>{
             SelectedService:req.body.SelectedService,
             AccoStatus:req.body.AccoStatus,
             CateringDetails:req.body.CateringDetails,
-           
+            Email:req.body.Email,
             Desc:req.body.Desc,
             FinalPrice:req.body.FinalPrice,
             CurrentStatus:req.body.CurrentStatus,

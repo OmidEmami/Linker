@@ -3,9 +3,10 @@ import NewLeads from "../Models/NewLeads.js";
 export const regNewHamamReserve = async(req,res)=>{
 
     try{
-console.log(req.body)
+
            
                 const responseI = await HamamReserveDetail.create({
+                    Email:req.body.Email,
                     UniqueId:req.body.RequestKey,
                     FullName:req.body.FullName,
                     Phone:req.body.Phone,

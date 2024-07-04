@@ -60,7 +60,7 @@ const Calendar = () => {
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-        const response = await axios.post("http://localhost:3001/api/getFixedReserves", {
+        const response = await axios.post("https://gmhotel.ir/api/getFixedReserves", {
             date: currentDate.locale('fa').format('YYYY-MM')
         }, {
             headers: {
