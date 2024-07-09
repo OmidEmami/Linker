@@ -306,7 +306,8 @@ notify('خطا','error')
       <div className={styles.menuCrmContainer}>
       
       <h3 onClick={() => window.open("/waitinglist", "_blank", "noopener,noreferrer")}>لیست انتظار تماس</h3>
-     
+      <h3 onClick={startPopUpCrm}>ثبت دستی سرنخ</h3>
+
       <h3 onClick={() => window.open("/report", "_blank", "noopener,noreferrer")}>مشاهده گزارشات</h3>
       </div>
     </div>
