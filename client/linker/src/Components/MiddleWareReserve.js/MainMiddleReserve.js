@@ -5,13 +5,19 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'jalali-moment';
 import axios from 'axios';
-import { notify } from "./toast";
+import { notify } from "../toast";
 // import { useHistory} from "react-router-dom";
-import LoadingComp from "./LoadingComp"
+import LoadingComp from "../LoadingComp"
 // import jwt_decode from "jwt-decode";
 import { useSelector } from "react-redux";
 import Modal from 'react-modal'
-export default function Dashboard() {
+export default function MainMiddleReserve() {
+    const reserveOrigin = 
+    [
+        {name : "غیر مستقیم بدون لینک", value:"noDirect"},
+        {name : "مستقیم بدون لینک", value:"direct"}
+    ]
+    const [selectedReserveOrigin, setSelectedReserveOrigin] = useState()
   const realToken = useSelector((state) => state.tokenReducer.token);
   const [showPopUp, setShowPopUp] = useState(false)
   const [payPercent, setPayPercent] = useState('')
@@ -21,7 +27,7 @@ export default function Dashboard() {
   const [values, setValues] = useState([]);
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [allDates, setAllDates] = useState([]);
-  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'',extraService:"0"}]);
+  const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'',extraService:"0", offRate:'0'}]);
   
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState('');
@@ -90,6 +96,12 @@ export default function Dashboard() {
     setInputFields(values);
     
   };
+  const handleOffRateChange = (index, event) => {
+    const values = [...inputFields];
+    values[index].offRate = event.target.value;
+    setInputFields(values);
+    
+  };
  
 
   const handleAddInput = () => {
@@ -136,7 +148,7 @@ export default function Dashboard() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("http://localhost:3001/api/sendGuestLink",{
+      const response = await axios.post("http://localhost:3001/api/sendGuestLinkMiddleWare",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -145,7 +157,8 @@ export default function Dashboard() {
         AccoCount : accoCount,
         TimeValue : timeValueAsli,
         User : realToken.userName,
-        Percent : percentNew
+        Percent : percentNew,
+        ReserveOrigin : selectedReserveOrigin
       },{
           headers:{
           Authorization: `Bearer ${realToken.realToken}`
@@ -201,6 +214,7 @@ export default function Dashboard() {
   backgroundColor: 'rgba(255, 162, 0, 0.3)', // Adjust alpha to 0.95 for less transparency
   direction: "rtl"
 }}>
+
           <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}> <b>نام مهمان : </b>{guestName}</p>
           <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>شماره تماس : </b>{guestPhone}</p>
           <p style={{ borderBottom: '1px solid #ddd', paddingBottom: '8px', marginBottom: '8px' }}><b>تاریخ ورود: </b>{allDates.length > 0 ? allDates[0].format(): ''}</p>
@@ -224,7 +238,7 @@ export default function Dashboard() {
             {inputFields.map((room, index) => (
               <tr key={index} style={{ backgroundColor: index % 2 ? '#f9f9f9' : '#fff' }}>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.roomname}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.price}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{(room.price) - ((room.price * room.offRate)/100)}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{room.extraService}</td>
               </tr>
             ))}
@@ -258,7 +272,17 @@ export default function Dashboard() {
 
     <div style={{display:"flex", flexDirection:"column", direction:"rtl", alignItems:"center", padding:"10px"}}>
       <form onSubmit={(e)=>generateLink(e)} >
-      <h3>ارسال لینک اقامت</h3>
+      <h3>ساخت رزرو واسطه</h3>
+      <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
+
+      <label>مبدا رزرو</label>
+          <select required  value={selectedReserveOrigin} onChange={(e) => setSelectedReserveOrigin(e.target.value)}>
+                                        <option  enabled>مبدا رزرو</option>
+                                        {reserveOrigin.map((index,value)=>(
+                                            <option key={value} value={index.value}>{index.name}</option>
+                                        ))}
+                                    </select>
+                                    </div>
         <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
           
         <label>نام مهمان</label>
@@ -292,7 +316,7 @@ export default function Dashboard() {
            ></DatePicker>
         </div>
         {inputFields.map((inputField, index) => (
-        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px",columnGap:"10px"}} key={index}>
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px",columnGap:"10px", alignItems:"end"}} key={index}>
           <select required  value={inputField.value} onChange={(e) => handleInputChange(index, e)}>
                                         <option  enabled >نوع اتاق</option>
                                         <option value="2">یک تخته</option>
@@ -308,16 +332,37 @@ export default function Dashboard() {
                                         <option value="20">دلنشین</option>
                                         <option value="10026">کانکت</option>
                                     </select>
-          
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>قیمت هر شب به ریال</label>
           <input placeholder='قیمت هر شب به ریال' required type='number' value={inputField.price} onChange={(e) => handlePriceChange(index, e)} />
-          {inputField.roomname === "صفویه" &&  <input type='number'  value={inputField.extraService}
-           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
-          {inputField.roomname === "قاجار" &&  <input type='number' value={inputField.extraService}
-           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
-          {inputField.roomname === "قیصریه" &&  <input type='number' value={inputField.extraService}
-           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
-          {inputField.roomname === "زندیه" &&  <input type='number' value={inputField.extraService} 
-          onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />}
+          </div>
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>درصد تخفیف</label>
+          <input placeholder='درصد تخفیف' required type='text' value={inputField.offRate} onChange={(e) => handleOffRateChange(index, e)} />
+
+          </div>
+          {inputField.roomname === "صفویه" &&            
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>قیمت سرویس اضافه</label>
+          <input type='number'  value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />
+           </div>
+           }
+          {inputField.roomname === "قاجار" &&  <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>قیمت سرویس اضافه</label>
+          <input type='number'  value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />
+           </div>}
+          {inputField.roomname === "قیصریه" &&  <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>قیمت سرویس اضافه</label>
+          <input type='number'  value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />
+           </div>}
+          {inputField.roomname === "زندیه" &&  <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+            <label>قیمت سرویس اضافه</label>
+          <input type='number'  value={inputField.extraService}
+           onChange={(e)=> handleExtraServiceChange(index, e)} placeholder='قیمت سرویس اضافه' />
+           </div>}
 
           <label>اتاق {index + 1}</label>
           
@@ -337,6 +382,7 @@ export default function Dashboard() {
                        </select>
                        <input placeholder='درصد پرداخت' type='number' value={payPercent} onChange={(e)=> setPayPercent(e.target.value)}  />
        </div>
+       
       <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
       <button onClick={handleAddInput}>اضافه کردن اتاق</button>
       <button disabled={showSendButton} type='submit'>ارسال لینک</button></div>

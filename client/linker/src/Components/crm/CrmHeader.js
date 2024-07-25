@@ -49,7 +49,7 @@ function CrmHeader() {
   const refreshToken = async () => {
     try {
       
-        const response = await axios.get('https://gmhotel.ir/api/token');
+        const response = await axios.get('http://localhost:3001/api/token');
         
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -71,7 +71,7 @@ function CrmHeader() {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
       
-        const response = await axios.get('https://gmhotel.ir/api/token');
+        const response = await axios.get('http://localhost:3001/api/token');
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -96,7 +96,7 @@ function CrmHeader() {
     const callid = Math.floor(Math.random() * 90000) + 10000;
     try{
       setIsLoading(true)
-      const response = await axios.post('https://gmhotel.ir/api/setmanualcalllead',{
+      const response = await axios.post('http://localhost:3001/api/setmanualcalllead',{
             Phone : guestPhone,
             LastCall : m.locale('fa').format('YYYY/MM/DD HH:mm:ss'),
             FullName : guestName,

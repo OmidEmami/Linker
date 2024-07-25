@@ -1,23 +1,21 @@
 import React,{useEffect,useState} from 'react';
-import ReservesTableComponent from './ReservesTableComponent';
+import MiddleReserveTableComponent from './MiddleReserveTableComponent';
 import axios from "axios"
+
 import LoadingComp from './LoadingComp';
 import { notify } from './toast';
 import { useSelector } from "react-redux";
-
-
-
-const ReservesTable = () => {
-  const realToken = useSelector((state) => state.tokenReducer.token);
-    const [data,setData] = useState([]);
-    
+const MiddleReserveTable = () => {
+  
+const realToken = useSelector((state) => state.tokenReducer.token);
     const [isLoading, setIsLoading] = useState(false)
+    const [data,setData] = useState([]);
+  
       useEffect(() => {
-       
         const fetchData=async()=>{
+          setIsLoading(true)
             try{
-              setIsLoading(true)
-                const response = await axios.get("http://localhost:3001/api/getReserves",{
+                const response = await axios.get("http://localhost:3001/api/getMiddleReserves",{
                   headers:{
                     Authorization: `Bearer ${realToken.realToken}`
                   }
@@ -25,24 +23,24 @@ const ReservesTable = () => {
                 setData(response.data)
                 setIsLoading(false)
             }catch(error){
-              
               notify('خطا در اتصال به شبکه', 'error')
               setIsLoading(false)
             }
             
             }
             if(realToken.realToken !== ''){
-            fetchData();
+              fetchData();
             }
+                
+              
               }, [realToken.realToken]);
-             
   return (
-    <div >
+    <div>
       {isLoading && <LoadingComp />}
-    <h3 style={{direction:"rtl"}}>لینک های ارسال شده</h3>
-      {data.length > 0 ? <ReservesTableComponent data={data} /> : <p>Loading...</p>}
+     <h3 style={{direction:"rtl"}}>تمامی پرداخت های انجام شده</h3>
+      {data.length > 0 ? <MiddleReserveTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );
 };
 
-export default ReservesTable;
+export default MiddleReserveTable;

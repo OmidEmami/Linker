@@ -1,4 +1,5 @@
 import express from "express";
+import multer from 'multer';
 const router = express.Router();
 import { registerNewUser } from "../Controllers/RegisterUser.js";
 import { loginUser } from "../Controllers/LoginUser.js";
@@ -26,6 +27,12 @@ import { setmanualcalllead } from "../Controllers/ManualCallLeadEntry.js";
 import { addNewMassor, addNewPackage, getAllMassors, getAllPackages, modifyPackages, removeMassor, removePackage } from "../Controllers/ControllerDynamicItems.js";
 import { uploadHamamDetailsToSheet } from "../Controllers/UploadHamamDetails.js";
 import { getReservesDetails } from "../Controllers/UploadCallsDetails.js";
+import { sendGuestLinkMiddleWare } from "../Controllers/GenerateMiddleReserve.js";
+import { fileUploader } from "../Controllers/MiddleReserveFileUpload.js";
+
+
+const upload = multer({ storage: multer.memoryStorage() })
+
 farazSMS.init("US2xh4FqhIak1kXefKNXaGMTjMkSGytYbTq6xdgB2og=");
 router.post("/api/newuser", registerNewUser)
 router.post("/api/loginUser", loginUser)
@@ -53,7 +60,6 @@ router.post("/api/modifyFixedReserves",verifyToken,modifyFixedReserves)
 router.post("/api/sendyalda", sendyalda)
 router.post("/api/manualNewLead",verifyToken,manualNewLead )
 router.post("/api/removeHamamReserve",removeHamamReserve)
-
 router.get('/api/:phone-:type',(req,res)=>SendBack(req.params.phone,req.params.type,res))
 router.post('/api/regData', regData)
 router.get('/api/getmissedcalls', getMissedCalls);
@@ -75,5 +81,7 @@ router.post('/api/removehamampackage', removePackage)
 router.post('/api/addnewpackage', addNewPackage);
 router.post('/api/modifypackages', modifyPackages)
 router.get('/api/getreservesdetails', getReservesDetails)
-router.post('/api/testiano', testiano)
+router.post('/api/testiano', testiano);
+router.post('/api/sendGuestLinkMiddleWare',verifyToken,sendGuestLinkMiddleWare)
+router.post('/api/uploadfilemiddlereserve', upload.single('file') , fileUploader )
 export default router;

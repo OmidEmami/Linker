@@ -5,7 +5,7 @@ import cors from "cors";
 import router from "./Routes/index.js";
 import http from "http";
 import { WebSocketServer } from 'ws';
-
+import mongoose from 'mongoose';
 // Initialize dotenv to use environment variables
 dotenv.config();
 
@@ -57,7 +57,15 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+const DB_URL = "mongodb://127.0.0.1:27017/linkefileholder";
+async function main(){
+  await mongoose.connect(DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+    console.log("connected to mongodb");
+    const db = mongoose.connection;
+  
+    
 
+}
 server.listen(PORT, '0.0.0.0', () => console.log(`Server running at port ${PORT}`));
 
 // Exposing transmitData for external use
@@ -78,3 +86,4 @@ export const transmitData = async (params) => {
     
   });
 };
+main();
