@@ -29,6 +29,7 @@ import { uploadHamamDetailsToSheet } from "../Controllers/UploadHamamDetails.js"
 import { getReservesDetails } from "../Controllers/UploadCallsDetails.js";
 import { sendGuestLinkMiddleWare } from "../Controllers/GenerateMiddleReserve.js";
 import { fileUploader } from "../Controllers/MiddleReserveFileUpload.js";
+import { confirmreceitreserve, ConfMiddleReserve, Downloadreceit, GetMiddleReservePaymentData, GetMiddleReserves } from "../Controllers/ConfMiddleReserve.js";
 
 
 const upload = multer({ storage: multer.memoryStorage() })
@@ -84,4 +85,9 @@ router.get('/api/getreservesdetails', getReservesDetails)
 router.post('/api/testiano', testiano);
 router.post('/api/sendGuestLinkMiddleWare',verifyToken,sendGuestLinkMiddleWare)
 router.post('/api/uploadfilemiddlereserve', upload.single('file') , fileUploader )
+router.post('/api/getMiddleReserveData', ConfMiddleReserve )
+router.post('/api/getMiddleReservePaymentData', GetMiddleReservePaymentData)
+router.post('/api/downloadreceit',Downloadreceit);
+router.get('/api/getMiddleReserves', GetMiddleReserves)
+router.post('/api/confirmreceitreserve', confirmreceitreserve)
 export default router;

@@ -3,9 +3,21 @@ import { useTable, useSortBy, usePagination } from 'react-table';
 import { parseISO, isDate, isValid } from 'date-fns';
 import moment from 'jalali-moment'
 import Modal from 'react-modal';
+import axios from 'axios';
+import { notify } from '../toast';
+import { useSelector } from "react-redux";
+import LoadingComp from '../LoadingComp';
+
+
 const MiddleReserveTableComponent = ({ data }) => {
   const [showPopUp, setShowPopUp] = useState(false)
-  const [popupData, setPopUpData] = useState('')
+  const realToken = useSelector((state) => state.tokenReducer.token);
+  const [isLoading, setIsLoading] = useState(false)
+  const [popupData, setPopUpData] = useState('');
+  const [receitInfo, setReceitInfo] = useState('');
+  const [showBankReserve, setShowBankReserve] = useState(false);
+  const [paidAmount, setPaidAmount] = useState('');
+  const [transactionCode, setTransactionCode] = useState('')
     moment.locale('fa');
     const customStyles = {
       content: {
@@ -15,7 +27,7 @@ const MiddleReserveTableComponent = ({ data }) => {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        width:"60%"
+        width:"80%"
       },
     };      
     const columns = React.useMemo(
@@ -121,8 +133,113 @@ const setDataForPopUp = (row) =>{
   setPopUpData(row.original)
   setShowPopUp(true)
 }
+const getReceits = async(id) =>{
+  try{
+    setIsLoading(true)
+    const paymentResponse = await axios.post("http://localhost:3001/api/getMiddleReservePaymentData",{
+      reserveId : id
+    })
+   setReceitInfo(paymentResponse.data)
+   setIsLoading(false)
+
+  }catch(error){
+    setIsLoading(false)
+
+  }
+    }
+    const downloadReceit = async (id) => {
+      setIsLoading(true)
+
+      try {
+          const response = await axios.post("http://localhost:3001/api/downloadreceit", {
+              
+              id: id
+          }, {
+              responseType: 'blob'
+          });
+  
+          const contentDisposition = response.headers['content-disposition'];
+          let filename = "download"; 
+          if (contentDisposition) {
+              const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+              if (filenameMatch.length > 1) {
+                  filename = filenameMatch[1];
+              }
+          }
+  
+          // Handle case where no valid filename could be parsed
+          if (!filename.includes('.')) {
+              const contentType = response.headers['content-type'];
+              let extension = '';
+              switch (contentType) {
+                  case 'application/pdf':
+                      extension = '.pdf';
+                      break;
+                  case 'image/jpeg':
+                      extension = '.jpg';
+                      break;
+                  case 'image/png':
+                      extension = '.png';
+                      break;
+                  default:
+                      extension = ''; // Leave as blank or set a default extension
+              }
+              filename += extension;
+          }
+  
+          // Create and trigger a download link
+          const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
+          const fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', filename);
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          document.body.removeChild(fileLink);
+          setIsLoading(false)
+
+      } catch (error) {
+        setIsLoading(false)
+
+          console.error("Failed to download receipt:", error);
+          notify("Error downloading the receipt.");
+      }
+  }
+  const confirmAcc = async(reserveId, id)=>{
+    setPaidAmount('');
+    setTransactionCode('')
+      setShowBankReserve({status : true , id : id})
+  }
+  const confirmReserve = async(reserveId, id)=>{
+    setPaidAmount('');
+    setTransactionCode('')
+      setShowBankReserve({status : true , id : id})
+  }
+  const confirmReceitReserve = async(reserveId, id)=>{
+      try{
+        setIsLoading(true)
+        const response = await axios.post('http://localhost:3001/api/confirmreceitreserve',{
+          reserveId : reserveId,
+          id : id,
+          transactionCode : transactionCode,
+          paidAmount : paidAmount
+        })
+        if(response){
+          notify('رسید تایید شد', 'success')
+          setIsLoading(false)
+        }else{
+          notify('خطا','error')
+          setIsLoading(false)
+
+        }
+      }catch(error){
+        notify('خطا','error')
+        setIsLoading(false)
+
+      }
+  }
   return (
     <div style={{ textAlign: 'center' }}>
+      {isLoading && <LoadingComp />}
       <Modal
         isOpen={showPopUp}
         //onAfterOpen={afterOpenModal}
@@ -140,6 +257,8 @@ const setDataForPopUp = (row) =>{
         <tr style={{ borderBottom: '1px solid black' }}>
           <th style={{ border: '1px solid black', padding: '8px' }}>درصد پرداخت</th>
           <th style={{ border: '1px solid black', padding: '8px' }}>قیمت سرویس اضافه</th>
+          <th style={{ border: '1px solid black', padding: '8px' }}>نوع رزرو</th>
+          <th style={{ border: '1px solid black', padding: '8px' }}>درصد تخفیف</th>
           <th style={{ border: '1px solid black', padding: '8px' }}>ثبت کننده</th>
         </tr>
       </thead>
@@ -148,11 +267,69 @@ const setDataForPopUp = (row) =>{
           <tr key={popupData.id} style={{ borderBottom: '1px solid black' }}>
             <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.Percent}</td>
             <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.ExtraService === null ? <p>ندارد</p> : popupData.ExtraService}</td>
+            <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.ReserveOrigin}</td>
+            <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.OffRate}</td>
             <td style={{ border: '1px solid black', padding: '8px' }}>{popupData.LoggedUser}</td>
           </tr>
         
       </tbody>
     </table>
+    <div>
+      <span>مشاهده رسید های بارگذاری شده</span>
+      <button onClick={()=>getReceits(popupData.ReserveId)}>مشاهده رسید ها</button>
+      {receitInfo !== '' && receitInfo.length > 0 ? <div>
+        <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+  
+        <div>
+          <table style={tableStyle}>
+            <thead>
+              <tr>
+                <th style={cellStyle}>ردیف</th>
+                <th style={cellStyle}>رسید پرداخت</th>
+                <th style={cellStyle}>شماره رزرو</th>
+                <th style={cellStyle}>وضعیت</th>
+                <th style={cellStyle}>نمایش</th>
+                {showBankReserve &&
+                <>
+                <th style={cellStyle}>شماره پیگیری</th>
+                <th style={cellStyle}>مبلغ</th>
+                <th style={cellStyle}>تایید</th>
+                </> 
+                }
+              </tr>
+            </thead>
+            <tbody>
+              
+              {receitInfo !== "No files found for the specified ReserveId" && receitInfo.map((item,index) => (
+                <>
+                <tr key={item.id}>
+                  <td style={cellStyle}>{index +1}</td>
+                  <td onClick={()=>downloadReceit(item.id)}  style={{...cellStyle, cursor:"pointer"}}>دانلود</td>
+                  <td style={cellStyle}>{item.reserveId}</td>
+                  <td style={cellStyle}>{item.isConfirmed === "false" ? <span>در صف بررسی</span> : <span>تایید شده</span>}</td>
+                  <td style={cellStyle}>{realToken.user === 'admin' || realToken.user === 'acc' ? <button style={{cursor:"pointer"}} onClick={()=>confirmReserve(item.reserveId, item.id)}>تایید رزرواسیون</button>:<button style={{cursor:"pointer"}} onClick={()=>confirmAcc(item.reserveId, item.id)}>تایید حسابداری</button> }</td>
+              {showBankReserve && showBankReserve.id === item.id &&
+              <>
+              <td style={cellStyle}><input value={transactionCode} onChange={(e)=>setTransactionCode(e.target.value)} placeholder='شماره پیگیری' /></td>
+              <td style={cellStyle}><input value={paidAmount} onChange={(e)=>setPaidAmount(e.target.value)} placeholder='مبلغ' /></td>
+              <td style={cellStyle}><button onClick={()=>confirmReceitReserve(item.reserveId, item.id)}>ثبت</button></td>
+              </>
+              }
+                </tr>
+                
+
+                </>
+              ))}
+            </tbody>
+            
+          </table>
+        
+          
+        </div>
+      
+  </div>
+      </div> : <div>رسیدی یافت نشد</div>}
+    </div>
       </div>
    
       </Modal>
@@ -232,7 +409,22 @@ const setDataForPopUp = (row) =>{
     </div>
   );
 };
+const tableStyle = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  margin: '10px 0',
+  fontSize: '1em',
+  fontFamily: 'Arial, sans-serif',
+  minWidth: '400px',
+  boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
+};
 
+const cellStyle = {
+  border: '1px solid #dddddd',
+  textAlign: 'left',
+  padding: '8px',
+  backgroundColor: '#f2f2f2',
+};
 export default MiddleReserveTableComponent;
 
 

@@ -55,7 +55,8 @@ try{
             LoggedUser : req.body.User,
             Percent : req.body.Percent,
             ExtraService : extraService,
-            OffRate : req.body.Room[i].offRate
+            OffRate : req.body.Room[i].offRate,
+            ReserveOrigin : req.body.ReserveOrigin,
                 })
            
                   }catch(error){
@@ -87,7 +88,6 @@ try{
                 }
               }
               res.json(tarianaResponse)
-            //   res.json("ok")  
             
             }catch(error){
               res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});

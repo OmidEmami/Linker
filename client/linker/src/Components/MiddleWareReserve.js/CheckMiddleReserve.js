@@ -1,8 +1,9 @@
 import React from 'react'
+import MiddleReserveTable from './MiddleReserveTable'
 
 function CheckMiddleReserve() {
   return (
-    <div>CheckMiddleReserve</div>
+    <div><MiddleReserveTable /></div>
   )
 }
 

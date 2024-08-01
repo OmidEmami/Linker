@@ -2,8 +2,8 @@ import React,{useEffect,useState} from 'react';
 import MiddleReserveTableComponent from './MiddleReserveTableComponent';
 import axios from "axios"
 
-import LoadingComp from './LoadingComp';
-import { notify } from './toast';
+import LoadingComp from '../LoadingComp';
+import { notify } from '../toast';
 import { useSelector } from "react-redux";
 const MiddleReserveTable = () => {
   
@@ -24,6 +24,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
                 setIsLoading(false)
             }catch(error){
               notify('خطا در اتصال به شبکه', 'error')
+              console.log(error)
               setIsLoading(false)
             }
             
