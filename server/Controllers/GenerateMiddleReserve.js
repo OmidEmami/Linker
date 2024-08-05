@@ -13,7 +13,7 @@ export const sendGuestLinkMiddleWare = async(req,res)=>{
               
 
 try{
-               const responseTariana = await axios.post('http://192.168.1.2:84/HotelReservationWebService.asmx/NewBooking',{
+               const responseTariana = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx/NewBooking',{
                     PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
                     First_Name:req.body.Name,
                     Last_Name:req.body.Name,
@@ -57,15 +57,19 @@ try{
             ExtraService : extraService,
             OffRate : req.body.Room[i].offRate,
             ReserveOrigin : req.body.ReserveOrigin,
+            AccountDetail :  JSON.stringify(req.body.HesabAccount),
                 })
            
                   }catch(error){
+                    console.log(error)
                     res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
                   }
                   }else{
                     
                   }
                 }catch(error){
+
+                  console.log(error)
                     res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
                
                     return;
@@ -82,16 +86,25 @@ try{
                       Conf1User : false,
                       Conf2User : false
                   })
-                }catch(error){
-                  res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
 
+                }catch(error){
+                  console.log(error)
+
+                  res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
+                }
+                try{
+                  const patternCodeToGuestGenerateLink = "5susk413jjcbt4s";
+                    await farazSendPattern( patternCodeToGuestGenerateLink, "+983000505", req.body.Phone, { link : "https://gmhotel.ir/mrcheck/"+ReserveId});
+                }catch(error){
+                  console.log(error)
                 }
               }
               res.json(tarianaResponse)
             
             }catch(error){
-              res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
+              console.log(error)
 
+              res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
             }
             
            

@@ -15,7 +15,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
         const fetchData=async()=>{
           setIsLoading(true)
             try{
-                const response = await axios.get("http://localhost:3001/api/getpayments",{
+                const response = await axios.get("https://gmhotel.ir/api/getpayments",{
                   headers:{
                     Authorization: `Bearer ${realToken.realToken}`
                   }

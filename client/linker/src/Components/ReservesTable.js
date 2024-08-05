@@ -17,7 +17,7 @@ const ReservesTable = () => {
         const fetchData=async()=>{
             try{
               setIsLoading(true)
-                const response = await axios.get("http://localhost:3001/api/getReserves",{
+                const response = await axios.get("https://gmhotel.ir/api/getReserves",{
                   headers:{
                     Authorization: `Bearer ${realToken.realToken}`
                   }

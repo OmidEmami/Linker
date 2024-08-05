@@ -136,7 +136,7 @@ const setDataForPopUp = (row) =>{
 const getReceits = async(id) =>{
   try{
     setIsLoading(true)
-    const paymentResponse = await axios.post("http://localhost:3001/api/getMiddleReservePaymentData",{
+    const paymentResponse = await axios.post("https://gmhotel.ir/api/getMiddleReservePaymentData",{
       reserveId : id
     })
    setReceitInfo(paymentResponse.data)
@@ -151,7 +151,7 @@ const getReceits = async(id) =>{
       setIsLoading(true)
 
       try {
-          const response = await axios.post("http://localhost:3001/api/downloadreceit", {
+          const response = await axios.post("https://gmhotel.ir/api/downloadreceit", {
               
               id: id
           }, {
@@ -217,7 +217,7 @@ const getReceits = async(id) =>{
   const confirmReceitReserve = async(reserveId, id)=>{
       try{
         setIsLoading(true)
-        const response = await axios.post('http://localhost:3001/api/confirmreceitreserve',{
+        const response = await axios.post('https://gmhotel.ir/api/confirmreceitreserve',{
           reserveId : reserveId,
           id : id,
           transactionCode : transactionCode,

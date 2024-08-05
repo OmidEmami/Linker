@@ -17,6 +17,12 @@ export default function MainMiddleReserve() {
         {name : "غیر مستقیم بدون لینک", value:"noDirect"},
         {name : "مستقیم بدون لینک", value:"direct"}
     ]
+const [selectedAccountBank, setSelectedAccountBank] = useState('')
+    const accounts = {
+      saman : {card : '6219861066950030', account : '08032039555831', sheba : 'IR070560080302003955583001', owner: 'مصطفی ترک زهرانی'},
+      mellat : {card : '6104338699497257',account : '', sheba : 'IR890120000000009081911002', owner: 'سمانه آسمان رفعت'},
+      melli : {card: '6037997575661690',account : '', sheba : 'IR950170000000354577746007',owner:'مصطفی ترک زهرانی'}
+    }
     const [selectedReserveOrigin, setSelectedReserveOrigin] = useState()
   const realToken = useSelector((state) => state.tokenReducer.token);
   const [showPopUp, setShowPopUp] = useState(false)
@@ -148,7 +154,7 @@ export default function MainMiddleReserve() {
     const accoCount = allDates.length - 1
     setIsLoading(true)
     try{
-      const response = await axios.post("http://localhost:3001/api/sendGuestLinkMiddleWare",{
+      const response = await axios.post("https://gmhotel.ir/api/sendGuestLinkMiddleWare",{
         Name : guestName,
         Phone: guestPhone,
         CheckIn : checkIndateServer,
@@ -158,7 +164,8 @@ export default function MainMiddleReserve() {
         TimeValue : timeValueAsli,
         User : realToken.userName,
         Percent : percentNew,
-        ReserveOrigin : selectedReserveOrigin
+        ReserveOrigin : selectedReserveOrigin,
+        HesabAccount : selectedAccountBank
       },{
           headers:{
           Authorization: `Bearer ${realToken.realToken}`
@@ -191,6 +198,11 @@ export default function MainMiddleReserve() {
       values[index].extraService = e.target.value;
       setInputFields(values);
     }
+    const handleAccountChange = (e) => {
+      const selectedKey = e.target.value;
+      const selectedAccount = accounts[selectedKey];
+      setSelectedAccountBank(selectedAccount);
+    };
   return (
     <>
     {isLoading && <LoadingComp />}
@@ -282,6 +294,24 @@ export default function MainMiddleReserve() {
                                             <option key={value} value={index.value}>{index.name}</option>
                                         ))}
                                     </select>
+                                    {selectedReserveOrigin === 'direct' && (
+        <>
+          <label>انتخاب شماره حساب</label>
+          <select required value={selectedAccountBank ? selectedAccountBank.card : ''} onChange={handleAccountChange}>
+            <option value="" disabled>
+              انتخاب کنید
+            </option>
+            {Object.keys(accounts).map((key) => {
+              const account = accounts[key];
+              return (
+                <option key={key} value={key}>
+                  {`${account.card} - ${account.owner}`}
+                </option>
+              );
+            })}
+          </select>
+        </>
+      )}
                                     </div>
         <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", padding:"10px"}}>
           

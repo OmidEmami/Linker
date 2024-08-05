@@ -1,7 +1,7 @@
 import ReservesMiddleWare from "../Models/ReservesMiddleWare.js";
 import FileHolder from "../Models/FileHolder.js";
 import PaymentConf from "../Models/PaymentConf.js";
-
+import axios from "axios"
 export const ConfMiddleReserve = async(req,res) =>{
     const reserveId = req.body.reserveId;
     
@@ -33,7 +33,9 @@ export const GetMiddleReservePaymentData = async (req,res) =>{
             id: fileHolder._id,
             reserveId: fileHolder.ReserveId,
             isConfirmed: fileHolder.isConfirmed,
-            file:fileHolder.file
+            file:fileHolder.file,
+            paidAmount : fileHolder.paidAmount,
+            transactionCode : fileHolder.transactionCode
           }));
       
           res.json(fileMetadata);
@@ -112,6 +114,28 @@ const updateData = {
           }
       
           console.log('Record updated successfully:', updatedRecord);
+
+          const findReserveTar = await ReservesMiddleWare.findOne({
+            where:{
+                ReserveId : reserveId
+            }
+          })
+          const response = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx', 
+            `<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                <postingPaymnets xmlns="http://tempuri.org/">
+                <bookingNumber>${findReserveTar.Tariana}</bookingNumber>
+                <postingCode>012012012</postingCode>
+                <price>${req.body.paidAmount}</price>
+              </postingPaymnets>
+                </soap:Body>
+            </soap:Envelope>`, {
+            headers: {
+                'Content-Type': 'text/xml; charset=utf-8',
+                'SOAPAction': 'http://tempuri.org/postingPaymnets'
+            }
+          })
           res.json(updatedRecord);
         
           

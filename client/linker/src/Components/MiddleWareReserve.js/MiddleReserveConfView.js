@@ -33,24 +33,38 @@ export default function MiddleReserveConfView() {
   const { param } = useParams();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [paidAmount , setPaidAmount] = useState(0);
   moment.locale('fa');
 
   useEffect(() => {
     const reserveDetails = async () => {
       setIsLoading(true);
       try {
-        const paymentResponse = await axios.post("http://localhost:3001/api/getMiddleReservePaymentData",{
+        const paymentResponse = await axios.post("https://gmhotel.ir/api/getMiddleReservePaymentData",{
           reserveId : param
         })
-        setPaymentData(paymentResponse.data)
+
+          setPaymentData(paymentResponse.data)
         
-        const response = await axios.post('http://localhost:3001/api/getMiddleReserveData', {
+        if(paymentResponse.data === "No files found for the specified ReserveId"){
+          setPaidAmount('0')
+        }else{
+
+        
+        let PaidAmountMoney = 0;
+        for(let i = 0 ; i < paymentResponse.data.length ; i++){
+          const paidReceit = parseInt(paymentResponse.data[i].paidAmount)
+          PaidAmountMoney += paidReceit
+        }
+        setPaidAmount(PaidAmountMoney)
+      }
+        const response = await axios.post('https://gmhotel.ir/api/getMiddleReserveData', {
           reserveId: param
         });
         setData(response.data);
         const mainData = response.data.responseReservesMiddleware;
-        
+
         
         let calculatedTotalPrice = 0;
         
@@ -97,7 +111,7 @@ export default function MiddleReserveConfView() {
     console.log('File details:', selectedFile);
 
     // Here you can send formData to your server using an API call
-    axios.post('http://localhost:3001/api/uploadfilemiddlereserve', formData)
+    axios.post('https://gmhotel.ir/api/uploadfilemiddlereserve', formData)
       .then(response => console.log(response))
       .catch(error => console.error(error));
 
@@ -105,7 +119,7 @@ export default function MiddleReserveConfView() {
   };
   const downloadReceit = async (id) => {
     try {
-        const response = await axios.post("http://localhost:3001/api/downloadreceit", {
+        const response = await axios.post("https://gmhotel.ir/api/downloadreceit", {
             reserveId: data.responseReservesMiddleware[0].ReserveId,
             id: id
         }, {
@@ -242,8 +256,48 @@ export default function MiddleReserveConfView() {
             </tbody>
             
           </table>
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
           <span>جمع کل : {totalPrice} ریال</span>
+         
+          <>
+            <span>مبلغ پرداخت شده : {paidAmount} ریال</span>
+            <span>مانده بدهی : {totalPrice - paidAmount} ریال</span>
+          </>
           
+          <span>اطلاعات حساب</span>
+          <table style={tableStyle}>
+              <thead>
+                <tr>
+                  <th style={cellStyle}>شماره کارت</th>
+                  <th style={cellStyle}>شماره حساب</th>
+                  <th style={cellStyle}>شماره شبا</th>
+                  <th style={cellStyle}>نام صاحب حساب</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {(() => {
+                    const accountDetails = JSON.parse(data.responseReservesMiddleware[0].AccountDetail);
+                    if (accountDetails && typeof accountDetails === 'object' && !Array.isArray(accountDetails)) {
+                      return (
+                        <tr>
+                          <td style={cellStyle}>{accountDetails.card}</td>
+                          <td style={cellStyle}>{accountDetails.account}</td>
+                          <td style={cellStyle}>{accountDetails.sheba}</td>
+                          <td style={cellStyle}>{accountDetails.owner}</td>
+                        </tr>
+                      );
+                    } else {
+                      return (
+                        <tr>
+                          <td colSpan="4" style={cellStyle}>Invalid account details</td>
+                        </tr>
+                      );
+                    }
+                  })()}
+                </tbody>
+          </table>
+      {console.log(JSON.parse(data.responseReservesMiddleware[0].AccountDetail))}
+      </div>
         </div>
       ) : (
         <p>No data available</p>
