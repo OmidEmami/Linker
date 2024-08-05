@@ -1,11 +1,11 @@
 import React,{useEffect,useState} from 'react';
-import PaymentTableComponent from './PaymentTableComponent';
+import MiddleReserveTableComponent from './MiddleReserveTableComponent';
 import axios from "axios"
 
-import LoadingComp from './LoadingComp';
-import { notify } from './toast';
+import LoadingComp from '../LoadingComp';
+import { notify } from '../toast';
 import { useSelector } from "react-redux";
-const PaymentTable = () => {
+const MiddleReserveTable = () => {
   
 const realToken = useSelector((state) => state.tokenReducer.token);
     const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +15,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
         const fetchData=async()=>{
           setIsLoading(true)
             try{
-                const response = await axios.get("https://gmhotel.ir/api/getpayments",{
+                const response = await axios.get("https://gmhotel.ir/api/getMiddleReserves",{
                   headers:{
                     Authorization: `Bearer ${realToken.realToken}`
                   }
@@ -24,6 +24,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
                 setIsLoading(false)
             }catch(error){
               notify('خطا در اتصال به شبکه', 'error')
+              console.log(error)
               setIsLoading(false)
             }
             
@@ -38,9 +39,9 @@ const realToken = useSelector((state) => state.tokenReducer.token);
     <div>
       {isLoading && <LoadingComp />}
      <h3 style={{direction:"rtl"}}>تمامی پرداخت های انجام شده</h3>
-      {data.length > 0 ? <PaymentTableComponent data={data} /> : <p>Loading...</p>}
+      {data.length > 0 ? <MiddleReserveTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );
 };
 
-export default PaymentTable;
+export default MiddleReserveTable;

@@ -53,7 +53,6 @@ export default function GuestView() {
                 // setTotalPrice((prevSum) => prevSum 
                 // + (((parseInt(response.data[i].Price) + parseInt(ExtraService)) * parseInt(response.data[i].AccoCount) * (parseInt(response.data[i].Percent))) / 100) )
             }
-            console.log(nimTotal)
             setTotalPrice((nimTotal * (parseInt(response.data[0].Percent))) / 100)
             setIsLoading(false)
           }

@@ -18,6 +18,8 @@ import { useDispatch } from "react-redux";
 import { addToken } from './action';
 import Calendar from "./Rack Hamam/Calendar";
 import { RiLogoutBoxLine } from "react-icons/ri";
+import MainMiddleReserve from "./MiddleWareReserve.js/MainMiddleReserve";
+import CheckMiddleReserve from "./MiddleWareReserve.js/CheckMiddleReserve";
 
  const MainDashboard = () =>{
     const dispatch = useDispatch();
@@ -128,9 +130,11 @@ import { RiLogoutBoxLine } from "react-icons/ri";
             <ul style={{display: "flex", flexDirection: "row", listStyle: "none", direction: "rtl", columnGap:"10px"}}>
     <li>
         <div className={styles.customDropdown}>
-    <select onChange={(e) => showItem(e.target.value)} defaultValue="">
+    <select style={{width:"100%"}} onChange={(e) => showItem(e.target.value)} defaultValue="">
     <option value="" disabled hidden>اقامت</option> 
     <option value="1">ارسال لینک اقامت</option>
+    <option value="19">ساخت رزرو واسطه</option>
+    <option value="38">مشاهده رزرو های واسطه</option>
     <option value="2">پرداخت ها</option>
     <option value="3">لینک های ارسالی</option>
     <option value="4">کنسل کردن دستی رزرو</option>
@@ -193,6 +197,12 @@ import { RiLogoutBoxLine } from "react-icons/ri";
           : null}
           {item === 9 ?
           <div className={stylesNd.MainContent}><Calendar /></div>
+          : null}
+          {item === 19 ?
+          <div className={stylesNd.MainContent}><MainMiddleReserve /></div>
+          : null}
+          {item === 38 ?
+          <div className={stylesNd.MainContent}><CheckMiddleReserve /></div>
           : null}
           {item === null && <div className={stylesNd.MainContent}>
             <h3 style={{direction:"rtl"}}>خوش آمدید</h3>

@@ -21,6 +21,7 @@ import ReceptionLeadEntry from "./Components/crm/ReceptionSpecialComponents/Rece
 import ReportComponent from "./Components/crm/ReportComponent.js";
 import LeadContext from "./context/LeadContext.js";
 import WaitingListReserveByRec from './Components/crm/WaitingListReserveByRec.js';
+import MiddleReserveConfView from './Components/MiddleWareReserve.js/MiddleReserveConfView.js';
 
 
 function App() {
@@ -88,6 +89,9 @@ function App() {
       </Route>
       <Route exact path="/signup" >
     <SignUp />
+      </Route>
+      <Route exact path = "/mrcheck/:param">
+        <MiddleReserveConfView />
       </Route>
       </Switch>
       </BrowserRouter>
