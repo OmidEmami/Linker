@@ -112,6 +112,7 @@ export default function MiddleReserveConfView() {
       setIsLoading(true);
       await axios.post('https://gmhotel.ir/api/uploadfilemiddlereserve', formData);
       notify('رسید با موفقیت بارگذاری شد', 'success')
+      setIsLoading(false);
       setRerender(!rerender); 
     } catch (error) {
       console.error(error);

@@ -34,7 +34,7 @@ import { confirmreceitAcc, confirmreceitreserve, ConfMiddleReserve, Downloadrece
 // Initialize Multer with memory storage and file size limit
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 } // 50 MB
+    limits: { fileSize: 500 * 1024 * 1024 } // 50 MB
 });
 
 // Add detailed logging middleware
