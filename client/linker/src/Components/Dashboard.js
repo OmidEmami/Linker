@@ -25,7 +25,7 @@ export default function Dashboard() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [timeValue, setTimeValue] = useState('');
-  const [showSendButton, setShowSendButton] = useState(false)
+  const [showSendButton, setShowSendButton] = useState(false);
   const customStyles = {
     content: {
       top: '50%',

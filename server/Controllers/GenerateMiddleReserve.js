@@ -15,9 +15,9 @@ export const sendGuestLinkMiddleWare = async(req,res)=>{
 try{
                const responseTariana = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx/NewBooking',{
                     PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
-                    First_Name:req.body.Name,
+                    First_Name:req.body.Name + " " + req.body.MiddleAgencyName,
                     Last_Name:req.body.Name,
-                    Email_Address:"net@net.com",
+                    Email_Address:"net@net.com" + " " + req.body.MiddleAgencyName,
                     Phone_Number:req.body.Phone,
                     Arrival_Date_Eng:req.body.CheckIn,
                     Departure_Date_Eng :req.body.CheckOut,
@@ -39,26 +39,27 @@ try{
                         extraService = null
                       }
                     
-                    const response = await ReservesMiddleWare.create({
-            FullName : req.body.Name,
-            Phone: req.body.Phone,
-            CheckIn : req.body.CheckIn,
-            CheckOut : req.body.CheckOut,
-            RoomType : req.body.Room[i].value,
-            RoomName : req.body.Room[i].roomname,
-            Status : "pending",
-            Price : req.body.Room[i].price,
-            ReserveId : ReserveId,
-            AccoCount : req.body.AccoCount,
-            Tariana : responseTariana.data.d.slice(26,32),
-            RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
-            LoggedUser : req.body.User,
-            Percent : req.body.Percent,
-            ExtraService : extraService,
-            OffRate : req.body.Room[i].offRate,
-            ReserveOrigin : req.body.ReserveOrigin,
-            AccountDetail :  JSON.stringify(req.body.HesabAccount),
-                })
+                      const response = await ReservesMiddleWare.create({
+                        FullName : req.body.Name,
+                        Phone: req.body.Phone,
+                        CheckIn : req.body.CheckIn,
+                        CheckOut : req.body.CheckOut,
+                        RoomType : req.body.Room[i].value,
+                        RoomName : req.body.Room[i].roomname,
+                        Status : req.body.ReserveOrigin === "noDirect" ? "Paid" : "pending", 
+                        Price : req.body.Room[i].price,
+                        ReserveId : ReserveId,
+                        AccoCount : req.body.AccoCount,
+                        Tariana : responseTariana.data.d.slice(26,32),
+                        RequestDate : moment().locale('fa').format('YYYY-MM-DD'),
+                        LoggedUser : req.body.User,
+                        Percent : req.body.Percent,
+                        ExtraService : extraService,
+                        OffRate : req.body.Room[i].offRate,
+                        ReserveOrigin : req.body.ReserveOrigin,
+                        AccountDetail :  JSON.stringify(req.body.HesabAccount),
+                        MiddleAgencyName : req.body.MiddleAgencyName
+                    });
            
                   }catch(error){
                     console.log(error)
@@ -106,9 +107,29 @@ try{
 
               res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
             }
-            
-           
-            
-            
-             
+              
+}
+
+export const Cancelsignlemiddle = async(req,res)=>{
+  try{
+    const responseTarianaFinal = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx/CancelBooking',{
+      PrimaryKey: "0S9T2QDG8C2dG7BxrLAFdwldpMuHE0Pat4KWiHVq0SU=",
+      BookingNumber : req.body.Tariana
+      
+    })
+    const responseFinalCancel = await ReservesMiddleWare.update({
+      Status : "cancel"
+    },{
+      where:{
+          Tariana : req.body.Tariana,
+          
+      }
+  }
+  )
+    res.json("ok")
+  }catch(error){
+    console.log(error)
+    res.status(404).json({ error: 'An error occurred while making the request.' , error2 : error});
+
+  }
 }

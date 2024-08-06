@@ -12,12 +12,13 @@ import LoadingComp from '../LoadingComp';
 const MiddleReserveTableComponent = ({ data }) => {
   const [showPopUp, setShowPopUp] = useState(false)
   const realToken = useSelector((state) => state.tokenReducer.token);
+  
   const [isLoading, setIsLoading] = useState(false)
   const [popupData, setPopUpData] = useState('');
   const [receitInfo, setReceitInfo] = useState('');
   const [showBankReserve, setShowBankReserve] = useState(false);
   const [paidAmount, setPaidAmount] = useState('');
-  const [transactionCode, setTransactionCode] = useState('')
+  const [transactionCode, setTransactionCode] = useState('');
     moment.locale('fa');
     const customStyles = {
       content: {
@@ -221,7 +222,8 @@ const getReceits = async(id) =>{
           reserveId : reserveId,
           id : id,
           transactionCode : transactionCode,
-          paidAmount : paidAmount
+          paidAmount : paidAmount,
+          userName : realToken.userName
         })
         if(response){
           notify('رسید تایید شد', 'success')
@@ -236,6 +238,43 @@ const getReceits = async(id) =>{
         setIsLoading(false)
 
       }
+  }
+  const confirmReceitAcc = async(reserveId, id)=>{
+    try{
+      setIsLoading(true)
+      const response = await axios.post('https://gmhotel.ir/api/confirmreceitAcc',{
+        reserveId : reserveId,
+        id : id,
+        transactionCode : transactionCode,
+        paidAmount : paidAmount,
+        userName : realToken.userName
+      })
+      if(response){
+        notify('رسید تایید شد', 'success')
+        setIsLoading(false)
+      }else{
+        notify('خطا','error')
+        setIsLoading(false)
+
+      }
+    }catch(error){
+      notify('خطا','error')
+      setIsLoading(false)
+
+    }
+}
+  const cancelSingleRoom = async(popupData)=>{
+    try{
+      setIsLoading(true)
+      const response = await axios.post('https://gmhotel.ir/api/cancelsignlemiddle',{
+        Tariana : popupData.Tariana
+      })
+      notify('رزرو کنسل شد','success')
+      setIsLoading(false)
+    }catch(error){
+      notify('خطا','error')
+      setIsLoading(false)
+    }
   }
   return (
     <div style={{ textAlign: 'center' }}>
@@ -274,6 +313,8 @@ const getReceits = async(id) =>{
         
       </tbody>
     </table>
+
+    {popupData.ReserveOrigin === 'direct' &&
     <div>
       <span>مشاهده رسید های بارگذاری شده</span>
       <button onClick={()=>getReceits(popupData.ReserveId)}>مشاهده رسید ها</button>
@@ -307,12 +348,19 @@ const getReceits = async(id) =>{
                   <td onClick={()=>downloadReceit(item.id)}  style={{...cellStyle, cursor:"pointer"}}>دانلود</td>
                   <td style={cellStyle}>{item.reserveId}</td>
                   <td style={cellStyle}>{item.isConfirmed === "false" ? <span>در صف بررسی</span> : <span>تایید شده</span>}</td>
-                  <td style={cellStyle}>{realToken.user === 'admin' || realToken.user === 'acc' ? <button style={{cursor:"pointer"}} onClick={()=>confirmReserve(item.reserveId, item.id)}>تایید رزرواسیون</button>:<button style={{cursor:"pointer"}} onClick={()=>confirmAcc(item.reserveId, item.id)}>تایید حسابداری</button> }</td>
-              {showBankReserve && showBankReserve.id === item.id &&
+                  <td style={cellStyle}>{realToken.user === 'admin' || realToken.user === 'reception' || realToken.user === 'editor' ? <button style={{cursor:"pointer"}} onClick={()=>confirmReserve(item.reserveId, item.id)}>تایید رزرواسیون</button>:<button style={{cursor:"pointer"}} onClick={()=>confirmAcc(item.reserveId, item.id)}>تایید حسابداری</button> }</td>
+              {showBankReserve && showBankReserve.id === item.id && (realToken.user === 'admin' || realToken.user === 'reception' || realToken.user === 'editor') &&
               <>
               <td style={cellStyle}><input value={transactionCode} onChange={(e)=>setTransactionCode(e.target.value)} placeholder='شماره پیگیری' /></td>
               <td style={cellStyle}><input value={paidAmount} onChange={(e)=>setPaidAmount(e.target.value)} placeholder='مبلغ' /></td>
-              <td style={cellStyle}><button onClick={()=>confirmReceitReserve(item.reserveId, item.id)}>ثبت</button></td>
+              <td style={cellStyle}><button onClick={()=>confirmReceitReserve(item.reserveId, item.id)}>ثبت رزرواسیون</button></td>
+              </>
+              }
+                   {showBankReserve && showBankReserve.id === item.id && (realToken.user === 'acc') &&
+              <>
+              <td style={cellStyle}><input value={transactionCode} onChange={(e)=>setTransactionCode(e.target.value)} placeholder='شماره پیگیری' /></td>
+              <td style={cellStyle}><input value={paidAmount} onChange={(e)=>setPaidAmount(e.target.value)} placeholder='مبلغ' /></td>
+              <td style={cellStyle}><button onClick={()=>confirmReceitAcc(item.reserveId, item.id)}>ثبت حسابداری</button></td>
               </>
               }
                 </tr>
@@ -329,7 +377,8 @@ const getReceits = async(id) =>{
       
   </div>
       </div> : <div>رسیدی یافت نشد</div>}
-    </div>
+    </div>}
+    <button onClick={()=>cancelSingleRoom(popupData)}>کنسل کردن این اتاق</button>
       </div>
    
       </Modal>

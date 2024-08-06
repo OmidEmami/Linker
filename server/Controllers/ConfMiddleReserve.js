@@ -2,23 +2,30 @@ import ReservesMiddleWare from "../Models/ReservesMiddleWare.js";
 import FileHolder from "../Models/FileHolder.js";
 import PaymentConf from "../Models/PaymentConf.js";
 import axios from "axios"
+import { Op } from "sequelize";
 export const ConfMiddleReserve = async(req,res) =>{
     const reserveId = req.body.reserveId;
     
     try{
         const responseReservesMiddleware = await ReservesMiddleWare.findAll({
             where:{
-                ReserveId : reserveId
+                ReserveId : reserveId,
+                Status: {
+                    [Op.or]: ['Paid', 'pending']
+                },
+                ReserveOrigin : "direct"
             }
         })
+        console.log(responseReservesMiddleware)
         const responsePaymentConf = await PaymentConf.findAll({
             where:{
-                ReserveId : reserveId
+                ReserveId : reserveId,
+                
             }
         })
         res.json({responseReservesMiddleware,responsePaymentConf})
     }catch(error){
-        
+        res.status(500).send('Internal server error');
     }
 }
 export const GetMiddleReservePaymentData = async (req,res) =>{
@@ -94,52 +101,150 @@ export const GetMiddleReserves = async (req,res) =>{
 export const confirmreceitreserve = async (req,res) => {
     const reserveId = req.body.reserveId;
     const id = req.body.id
-const updateData = {
-  isConfirmed: 'true',
-  paidAmount: req.body.paidAmount,
-  transactionCode : req.body.transactionCode
-};
-    try{
-        const updatedRecord = await FileHolder.findOneAndUpdate(
-            { ReserveId: reserveId,
-                _id : id
-             },
-            updateData,
-            { new: true } // This option returns the modified document rather than the original
-          );
-      
-          if (!updatedRecord) {
-            console.log('Record not found');
-            res.status(500).send('Internal server error');
-          }
-      
-          console.log('Record updated successfully:', updatedRecord);
 
-          const findReserveTar = await ReservesMiddleWare.findOne({
+    try{
+          const updatePayment = await PaymentConf.update({
+            Conf1: 'true',
+            Conf1User : req.body.userName
+          }
+        ,{
             where:{
                 ReserveId : reserveId
             }
-          })
-          const response = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx', 
-            `<?xml version="1.0" encoding="utf-8"?>
-            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-                <soap:Body>
-                <postingPaymnets xmlns="http://tempuri.org/">
-                <bookingNumber>${findReserveTar.Tariana}</bookingNumber>
-                <postingCode>012012012</postingCode>
-                <price>${req.body.paidAmount}</price>
-              </postingPaymnets>
-                </soap:Body>
-            </soap:Envelope>`, {
-            headers: {
-                'Content-Type': 'text/xml; charset=utf-8',
-                'SOAPAction': 'http://tempuri.org/postingPaymnets'
-            }
-          })
-          res.json(updatedRecord);
-        
+        })
           
-        
+          const checkNdConfirm = await PaymentConf.findOne({
+           where:{
+            ReserveId : reserveId
+           } 
+          })
+          if(checkNdConfirm && checkNdConfirm.Conf2 === 'true'){
+            const updateData = {
+                isConfirmed: 'true',
+                paidAmount: req.body.paidAmount,
+                transactionCode : req.body.transactionCode
+              };
+            const updatedRecord = await FileHolder.findOneAndUpdate(
+                { ReserveId: reserveId,
+                    _id : id
+                 },
+                updateData,
+                { new: true } 
+              );
+          
+              if (!updatedRecord) {
+                console.log('Record not found');
+                res.status(500).send('Internal server error');
+              }
+              const findReserveTar = await ReservesMiddleWare.findOne({
+                where:{
+                    ReserveId : reserveId
+                }
+              })
+              const response = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx', 
+                `<?xml version="1.0" encoding="utf-8"?>
+                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                    <postingPaymnets xmlns="http://tempuri.org/">
+                    <bookingNumber>${findReserveTar.Tariana}</bookingNumber>
+                    <postingCode>012012012</postingCode>
+                    <price>${req.body.paidAmount}</price>
+                  </postingPaymnets>
+                    </soap:Body>
+                </soap:Envelope>`, {
+                headers: {
+                    'Content-Type': 'text/xml; charset=utf-8',
+                    'SOAPAction': 'http://tempuri.org/postingPaymnets'
+                }
+              })
+       
+            }
+        res.json("ok")
+    }catch(error){
+        console.error('Error updating record:', error);
+        res.status(500).send('Internal server error');
+    }
+}
+export const confirmreceitAcc = async (req,res) => {
+    const reserveId = req.body.reserveId;
+    const id = req.body.id
+
+    try{
+          const updatePayment = await PaymentConf.update({
+            Conf2: 'true',
+            Conf2User : req.body.userName
+          }
+        ,{
+            where:{
+                ReserveId : reserveId
+            }
+        })
+          
+          const checkNdConfirm = await PaymentConf.findOne({
+           where:{
+            ReserveId : reserveId
+           } 
+          })
+          if(checkNdConfirm && checkNdConfirm.Conf1 === 'true'){
+            const updateData = {
+                isConfirmed: 'true',
+                paidAmount: req.body.paidAmount,
+                transactionCode : req.body.transactionCode
+              };
+            const updatedRecord = await FileHolder.findOneAndUpdate(
+                { ReserveId: reserveId,
+                    _id : id
+                 },
+                updateData,
+                { new: true } 
+              );
+          
+              if (!updatedRecord) {
+                console.log('Record not found');
+                res.status(500).send('Internal server error');
+              }
+              const findReserveTar = await ReservesMiddleWare.findOne({
+                where:{
+                    ReserveId : reserveId
+                }
+              })
+              const response = await axios.post('http://37.255.231.141:84/HotelReservationWebService.asmx', 
+                `<?xml version="1.0" encoding="utf-8"?>
+                <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                    <postingPaymnets xmlns="http://tempuri.org/">
+                    <bookingNumber>${findReserveTar.Tariana}</bookingNumber>
+                    <postingCode>012012012</postingCode>
+                    <price>${req.body.paidAmount}</price>
+                  </postingPaymnets>
+                    </soap:Body>
+                </soap:Envelope>`, {
+                headers: {
+                    'Content-Type': 'text/xml; charset=utf-8',
+                    'SOAPAction': 'http://tempuri.org/postingPaymnets'
+                }
+              })
+          }else if(checkNdConfirm && checkNdConfirm.Conf1 === 'false'){
+            const updateData = {
+                isConfirmed: 'false',
+                paidAmount: req.body.paidAmount,
+                transactionCode : req.body.transactionCode
+              };
+            const updatedRecord = await FileHolder.findOneAndUpdate(
+                { ReserveId: reserveId,
+                    _id : id
+                 },
+                updateData,
+                { new: true } 
+              );
+          
+              if (!updatedRecord) {
+                console.log('Record not found');
+                res.status(500).send('Internal server error');
+              }
+          }
+          
+        res.json("ok")
     }catch(error){
         console.error('Error updating record:', error);
         res.status(500).send('Internal server error');

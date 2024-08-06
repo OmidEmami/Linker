@@ -27,9 +27,9 @@ import { setmanualcalllead } from "../Controllers/ManualCallLeadEntry.js";
 import { addNewMassor, addNewPackage, getAllMassors, getAllPackages, modifyPackages, removeMassor, removePackage } from "../Controllers/ControllerDynamicItems.js";
 import { uploadHamamDetailsToSheet } from "../Controllers/UploadHamamDetails.js";
 import { getReservesDetails } from "../Controllers/UploadCallsDetails.js";
-import { sendGuestLinkMiddleWare } from "../Controllers/GenerateMiddleReserve.js";
+import { Cancelsignlemiddle, sendGuestLinkMiddleWare } from "../Controllers/GenerateMiddleReserve.js";
 import { fileUploader } from "../Controllers/MiddleReserveFileUpload.js";
-import { confirmreceitreserve, ConfMiddleReserve, Downloadreceit, GetMiddleReservePaymentData, GetMiddleReserves } from "../Controllers/ConfMiddleReserve.js";
+import { confirmreceitAcc, confirmreceitreserve, ConfMiddleReserve, Downloadreceit, GetMiddleReservePaymentData, GetMiddleReserves } from "../Controllers/ConfMiddleReserve.js";
 
 // Initialize Multer with memory storage and file size limit
 const upload = multer({
@@ -101,5 +101,6 @@ router.post('/api/getMiddleReservePaymentData', GetMiddleReservePaymentData);
 router.post('/api/downloadreceit', Downloadreceit);
 router.get('/api/getMiddleReserves', GetMiddleReserves);
 router.post('/api/confirmreceitreserve', confirmreceitreserve);
-
+router.post('/api/cancelsignlemiddle', Cancelsignlemiddle)
+router.post('/api/confirmreceitAcc', confirmreceitAcc)
 export default router;

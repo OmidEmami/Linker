@@ -58,6 +58,9 @@ const ReservesMiddleWare = db.define('ReservesMiddleWare',{
     },
     AccountDetail:{
         type : DataTypes.TEXT
+    },
+    MiddleAgencyName:{
+        type : DataTypes.TEXT
     }
     
     

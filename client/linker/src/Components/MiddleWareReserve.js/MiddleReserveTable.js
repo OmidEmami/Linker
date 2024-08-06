@@ -38,7 +38,7 @@ const realToken = useSelector((state) => state.tokenReducer.token);
   return (
     <div>
       {isLoading && <LoadingComp />}
-     <h3 style={{direction:"rtl"}}>تمامی پرداخت های انجام شده</h3>
+     <h3 style={{direction:"rtl"}}>مشاهده همه رزرو های واسطه</h3>
       {data.length > 0 ? <MiddleReserveTableComponent data={data} /> : <p>Loading...</p>}
     </div>
   );

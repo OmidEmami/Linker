@@ -34,9 +34,8 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
   const digits=["0","1","2","3","4","5","6","7","8","9"];
   const [allDates, setAllDates] = useState([]);
   const [inputFields, setInputFields] = useState([{ value: '',price:'',roomname:'',extraService:"0", offRate:'0'}]);
-  
+  const [middleAgencyName, setMiddleAgencyName] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-  const [timeValue, setTimeValue] = useState('');
   const [showSendButton, setShowSendButton] = useState(false)
   const customStyles = {
     content: {
@@ -48,7 +47,8 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
       transform: 'translate(-50%, -50%)',
       width:"60%"
     },
-  }; 
+  };
+  const middleAgencyData = ['snapp', 'lamaso', 'eghamat24', 'flightio', 'flyToDay', 'jabama']
   moment.locale('en');
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
@@ -134,18 +134,14 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
     setShowSendButton(true)
     setShowPopUp(false)
     var percentNew;
-    var timeValueAsli;
+    
     
     if(payPercent === ''){
       percentNew = "100"
     }else{
       percentNew = payPercent
     }
-    if(timeValue === ''){
-      timeValueAsli = "1"
-    }else{
-      timeValueAsli = timeValue
-    }
+    
     
 
     const checkIndateServer = moment.from(allDates[0].format(), 'fa', 'DD/MM/YYYY').format('YYYY-MM-DD')
@@ -161,11 +157,11 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
         CheckOut : checkOutDateServer,
         Room : inputFields,
         AccoCount : accoCount,
-        TimeValue : timeValueAsli,
         User : realToken.userName,
         Percent : percentNew,
         ReserveOrigin : selectedReserveOrigin,
-        HesabAccount : selectedAccountBank
+        HesabAccount : selectedAccountBank,
+        MiddleAgencyName : middleAgencyName
       },{
           headers:{
           Authorization: `Bearer ${realToken.realToken}`
@@ -294,6 +290,21 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
                                             <option key={value} value={index.value}>{index.name}</option>
                                         ))}
                                     </select>
+                                    {selectedReserveOrigin === 'noDirect' && (
+                                      <>
+                                      <label>
+                                        انتخاب نام واسط
+                                      </label>
+                                      <select required value={middleAgencyName} onChange={(e)=>setMiddleAgencyName(e.target.value)}>
+                                      <option value="" disabled>
+                                            انتخاب کنید
+                                          </option> 
+                                          {middleAgencyData.map(item=>(
+                                            <option value={item}>{item}</option>
+                                          ))}
+                                      </select>
+                                      </>
+                                    )}
                                     {selectedReserveOrigin === 'direct' && (
         <>
           <label>انتخاب شماره حساب</label>
@@ -402,14 +413,7 @@ const [selectedAccountBank, setSelectedAccountBank] = useState('')
         </div>
       ))}
        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between" , padding:"10px"}}>
-        <label>اعتبار رزرو</label>
-       
-          <select required  value={timeValue} onChange={(e) => setTimeValue(e.target.value)}>
-                                        <option  enabled >اعتبار رزرو</option>
-                                        <option value="1">1 ساعت</option>
-                                        <option value="2">12 ساعت</option>
-                                        <option value="3">24 ساعت</option>
-                       </select>
+        
                        <input placeholder='درصد پرداخت' type='number' value={payPercent} onChange={(e)=> setPayPercent(e.target.value)}  />
        </div>
        

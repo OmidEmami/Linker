@@ -21,155 +21,154 @@ export default function MiddleReserveConfView() {
       width: "80%"
     },
   };
+
   const [selectedFile, setSelectedFile] = useState(null);
-  const [paymentData, setPaymentData] = useState('')
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+  const [paymentData, setPaymentData] = useState('');
   const [initialPopup, setInitialPopup] = useState(false);
   const { param } = useParams();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [paidAmount , setPaidAmount] = useState(0);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const [rerender, setRerender] = useState(false); // State variable to trigger rerender
+
   moment.locale('fa');
 
   useEffect(() => {
     const reserveDetails = async () => {
       setIsLoading(true);
       try {
-        const paymentResponse = await axios.post("https://gmhotel.ir/api/getMiddleReservePaymentData",{
-          reserveId : param
-        })
+        const paymentResponse = await axios.post("https://gmhotel.ir/api/getMiddleReservePaymentData", {
+          reserveId: param
+        });
 
-          setPaymentData(paymentResponse.data)
-        
-        if(paymentResponse.data === "No files found for the specified ReserveId"){
-          setPaidAmount('0')
-        }else{
+        setPaymentData(paymentResponse.data);
 
-        
-        let PaidAmountMoney = 0;
-        for(let i = 0 ; i < paymentResponse.data.length ; i++){
-          const paidReceit = parseInt(paymentResponse.data[i].paidAmount)
-          PaidAmountMoney += paidReceit
+        if (paymentResponse.data === "No files found for the specified ReserveId") {
+          setPaidAmount('0');
+        } else {
+          let PaidAmountMoney = 0;
+          for (let i = 0; i < paymentResponse.data.length; i++) {
+            const paidReceit = parseInt(paymentResponse.data[i].paidAmount);
+            PaidAmountMoney += paidReceit;
+          }
+          setPaidAmount(PaidAmountMoney);
         }
-        setPaidAmount(PaidAmountMoney)
-      }
+
         const response = await axios.post('https://gmhotel.ir/api/getMiddleReserveData', {
           reserveId: param
         });
         setData(response.data);
         const mainData = response.data.responseReservesMiddleware;
 
-        
         let calculatedTotalPrice = 0;
-        
+
         for (let i = 0; i < mainData.length; i++) {
           const price = parseInt(mainData[i].Price, 10);
-  const extraService = parseInt(mainData[i].ExtraService || '0', 10);
-  const accoCount = parseInt(mainData[i].AccoCount, 10);
-  const offRate = parseInt(mainData[i].OffRate, 10);
-        
+          const extraService = parseInt(mainData[i].ExtraService || '0', 10);
+          const accoCount = parseInt(mainData[i].AccoCount, 10);
+          const offRate = parseInt(mainData[i].OffRate, 10);
+
           const totalPrice = (price + extraService) * accoCount;
           const discount = price * accoCount * (offRate / 100);
-        
-          calculatedTotalPrice += totalPrice - discount;
-        
-        }
-        
-        setTotalPrice(calculatedTotalPrice)
 
+          calculatedTotalPrice += totalPrice - discount;
+        }
+
+        setTotalPrice(calculatedTotalPrice);
       } catch (error) {
         notify("Error fetching data");
-        console.log(error)
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
     };
-  
+
     reserveDetails();
-  }, [param]);
+  }, [param, rerender]); // Add `rerender` to dependency array
 
   if (isLoading) {
     return <LoadingComp />;
   }
-  const handleFileUpload = () => {
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleFileUpload = async () => {
     if (!selectedFile) {
-      alert('Please select a file first!');
+      notify("فایل معتبر نیست!" ,'error')
       return;
     }
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('reserveId', data.responseReservesMiddleware[0].ReserveId)
+    formData.append('reserveId', data.responseReservesMiddleware[0].ReserveId);
 
-    // Example: Log file details and simulate upload
-    console.log('File details:', selectedFile);
-
-    // Here you can send formData to your server using an API call
-    axios.post('https://gmhotel.ir/api/uploadfilemiddlereserve', formData)
-      .then(response => console.log(response))
-      .catch(error => console.error(error));
-
-    alert('File uploaded successfully!');
+    try {
+      setIsLoading(true);
+      await axios.post('https://gmhotel.ir/api/uploadfilemiddlereserve', formData);
+      notify('رسید با موفقیت بارگذاری شد', 'success')
+      setRerender(!rerender); 
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const downloadReceit = async (id) => {
     try {
-        const response = await axios.post("https://gmhotel.ir/api/downloadreceit", {
-            reserveId: data.responseReservesMiddleware[0].ReserveId,
-            id: id
-        }, {
-            responseType: 'blob'
-        });
+      const response = await axios.post("https://gmhotel.ir/api/downloadreceit", {
+        reserveId: data.responseReservesMiddleware[0].ReserveId,
+        id: id
+      }, {
+        responseType: 'blob'
+      });
 
-        const contentDisposition = response.headers['content-disposition'];
-        let filename = "download"; 
-        if (contentDisposition) {
-            const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-            if (filenameMatch.length > 1) {
-                filename = filenameMatch[1];
-            }
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = "download";
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (filenameMatch.length > 1) {
+          filename = filenameMatch[1];
         }
+      }
 
-        // Handle case where no valid filename could be parsed
-        if (!filename.includes('.')) {
-            const contentType = response.headers['content-type'];
-            let extension = '';
-            switch (contentType) {
-                case 'application/pdf':
-                    extension = '.pdf';
-                    break;
-                case 'image/jpeg':
-                    extension = '.jpg';
-                    break;
-                case 'image/png':
-                    extension = '.png';
-                    break;
-                default:
-                    extension = ''; // Leave as blank or set a default extension
-            }
-            filename += extension;
+      if (!filename.includes('.')) {
+        const contentType = response.headers['content-type'];
+        let extension = '';
+        switch (contentType) {
+          case 'application/pdf':
+            extension = '.pdf';
+            break;
+          case 'image/jpeg':
+            extension = '.jpg';
+            break;
+          case 'image/png':
+            extension = '.png';
+            break;
+          default:
+            extension = '';
         }
+        filename += extension;
+      }
 
-        // Create and trigger a download link
-        const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
-        const fileLink = document.createElement('a');
-        fileLink.href = fileURL;
-        fileLink.setAttribute('download', filename);
-        document.body.appendChild(fileLink);
-        fileLink.click();
-        document.body.removeChild(fileLink);
+      const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
+      const fileLink = document.createElement('a');
+      fileLink.href = fileURL;
+      fileLink.setAttribute('download', filename);
+      document.body.appendChild(fileLink);
+      fileLink.click();
+      document.body.removeChild(fileLink);
     } catch (error) {
-        console.error("Failed to download receipt:", error);
-        notify("Error downloading the receipt.");
+      console.error("Failed to download receipt:", error);
+      notify("Error downloading the receipt.");
     }
-}
-
-
+  };
 
   return (
     <>
@@ -180,8 +179,8 @@ export default function MiddleReserveConfView() {
           <span>کاربر گرامی، در این بخش می توانید اطلاعات رزرو را مشاهده کنید، جهت ویرایش اطلاعات رزرو لطفا با رزرواسیون تماس بگیرید</span>
           <span style={{ color: "red" }}>لطفا فیش واریزی را در قسمت مشخص شده بارگذاری نمایید</span>
         </div>
-        </div>
-        <div className={styles.tableContainer}>
+      </div>
+      <div className={styles.tableContainer}>
         {data && data.responseReservesMiddleware && data.responseReservesMiddleware.length > 0 ? (
           <div style={{ marginBottom: '20px' }}>
             <table style={tableStyle}>
@@ -199,12 +198,12 @@ export default function MiddleReserveConfView() {
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].FullName}</td>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].RequestDate}</td>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].Phone}</td>
-                  <td style={cellStyle}>{data.responseReservesMiddleware[0].CheckIn}</td>
-                  <td style={cellStyle}>{data.responseReservesMiddleware[0].CheckOut}</td>
+                  <td style={cellStyle}>{moment.from(data.responseReservesMiddleware[0].CheckIn, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
+                  <td style={cellStyle}>{moment.from(data.responseReservesMiddleware[0].CheckOut, 'en', 'YYYY-MM-DD').format('jYYYY/jMM/jDD')}</td>
                 </tr>
-                </tbody>
-                </table>
-                <table style={tableStyle}>
+              </tbody>
+            </table>
+            <table style={tableStyle}>
               <thead>
                 <tr>
                   <th style={cellStyle}>شماره رزرو</th>
@@ -212,69 +211,62 @@ export default function MiddleReserveConfView() {
                   <th style={cellStyle}>اپراتور</th>
                   <th style={cellStyle}>درصد پرداخت</th>
                 </tr>
-                </thead>
-                <tbody>
+              </thead>
+              <tbody>
                 <tr>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].ReserveId}</td>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].Status}</td>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].LoggedUser}</td>
                   <td style={cellStyle}>{data.responseReservesMiddleware[0].Percent}</td>
                 </tr>
-                </tbody>
+              </tbody>
             </table>
           </div>
         ) : (
           <p>No data available</p>
         )}
-     <span style={{fontWeight:"bold"}}>مشخصات اتاق ها</span>
-      {data && data.responseReservesMiddleware && data.responseReservesMiddleware.length > 0 ? (
-        <div>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={cellStyle}>نوع اتاق</th>
-                <th style={cellStyle}>قیمت</th>
-                <th style={cellStyle}>تعداد شب</th>
-                <th style={cellStyle}>قیمت سرویس اضافه</th>
-                <th style={cellStyle}>درصد تخفیف</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.responseReservesMiddleware.map(item => (
-                <>
-                <tr key={item.id}>
-                  <td style={cellStyle}>{item.RoomName}</td>
-                  <td style={cellStyle}>{item.Price}</td>
-                  <td style={cellStyle}>{item.AccoCount}</td>
-                  <td style={cellStyle}>{item.ExtraService}</td>
-                  <td style={cellStyle}>{item.OffRate}</td>
-                </tr>
-                
-
-                </>
-              ))}
-            </tbody>
-            
-          </table>
-          <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
-          <span>جمع کل : {totalPrice} ریال</span>
-         
-          <>
-            <span>مبلغ پرداخت شده : {paidAmount} ریال</span>
-            <span>مانده بدهی : {totalPrice - paidAmount} ریال</span>
-          </>
-          
-          <span>اطلاعات حساب</span>
-          <table style={tableStyle}>
+        <span style={{ fontWeight: "bold" }}>مشخصات اتاق ها</span>
+        {data && data.responseReservesMiddleware && data.responseReservesMiddleware.length > 0 ? (
+          <div>
+            <table style={tableStyle}>
               <thead>
                 <tr>
-                  <th style={cellStyle}>شماره کارت</th>
-                  <th style={cellStyle}>شماره حساب</th>
-                  <th style={cellStyle}>شماره شبا</th>
-                  <th style={cellStyle}>نام صاحب حساب</th>
+                  <th style={cellStyle}>نوع اتاق</th>
+                  <th style={cellStyle}>قیمت</th>
+                  <th style={cellStyle}>تعداد شب</th>
+                  <th style={cellStyle}>قیمت سرویس اضافه</th>
+                  <th style={cellStyle}>درصد تخفیف</th>
                 </tr>
               </thead>
               <tbody>
+                {data.responseReservesMiddleware.map(item => (
+                  <tr key={item.id}>
+                    <td style={cellStyle}>{item.RoomName}</td>
+                    <td style={cellStyle}>{item.Price}</td>
+                    <td style={cellStyle}>{item.AccoCount}</td>
+                    <td style={cellStyle}>{item.ExtraService}</td>
+                    <td style={cellStyle}>{item.OffRate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+              <span>جمع کل : {totalPrice} ریال</span>
+              <>
+                <span>مبلغ پرداخت شده : {paidAmount} ریال</span>
+                <span>مانده بدهی : {totalPrice - paidAmount} ریال</span>
+              </>
+              <span>اطلاعات حساب</span>
+              <table style={tableStyle}>
+                <thead>
+                  <tr>
+                    <th style={cellStyle}>شماره کارت</th>
+                    <th style={cellStyle}>شماره حساب</th>
+                    <th style={cellStyle}>شماره شبا</th>
+                    <th style={cellStyle}>نام صاحب حساب</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {(() => {
                     const accountDetails = JSON.parse(data.responseReservesMiddleware[0].AccountDetail);
                     if (accountDetails && typeof accountDetails === 'object' && !Array.isArray(accountDetails)) {
@@ -295,76 +287,63 @@ export default function MiddleReserveConfView() {
                     }
                   })()}
                 </tbody>
-          </table>
-      {console.log(JSON.parse(data.responseReservesMiddleware[0].AccountDetail))}
+              </table>
+              {console.log(JSON.parse(data.responseReservesMiddleware[0].AccountDetail))}
+            </div>
+          </div>
+        ) : (
+          <p>No data available</p>
+        )}
       </div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <span>بارگذاری رسید های پرداخت</span>
+        <div className={stylesNd.fileInputContainer}>
+          <input
+            type="file"
+            accept=".png, .jpg, .jpeg, .pdf"
+            onChange={handleFileChange}
+            id="file-input"
+            className={stylesNd.fileInput}
+          />
+          <label htmlFor="file-input" className={stylesNd.customFileInput}>
+            {selectedFile ? selectedFile.name : 'انتخاب رسید پرداخت'}
+          </label>
         </div>
-      ) : (
-        <p>No data available</p>
-      )}
+        {selectedFile && (
+          <div>
+            <button style={{ margin: "1rem" }} onClick={handleFileUpload}>بارگذاری</button>
+          </div>
+        )}
       </div>
-<div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
-  <span>بارگذاری رسید های پرداخت</span>
-  <div className={stylesNd.fileInputContainer}>
-        <input
-          type="file"
-          accept=".png, .jpg, .jpeg, .pdf"
-          onChange={handleFileChange}
-          id="file-input"
-          className={stylesNd.fileInput}
-        />
-        <label htmlFor="file-input" className={stylesNd.customFileInput}>
-          {selectedFile ? selectedFile.name : 'انتخاب رسید پرداخت'}
-        </label>
-      
-      
-      </div>
-      {selectedFile && (
-        <div>
-          <button style={{margin : "1rem"}} onClick={handleFileUpload}>بارگذاری</button>
-        </div>
-      )}
-  </div>    
-  <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
-  {paymentData && paymentData.length > 0 ? (
-        <div>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={cellStyle}>ردیف</th>
-                <th style={cellStyle}>رسید پرداخت</th>
-                <th style={cellStyle}>شماره رزرو</th>
-                <th style={cellStyle}>وضعیت</th>
-               
-              </tr>
-            </thead>
-            <tbody>
-              
-              {paymentData !== "No files found for the specified ReserveId" && paymentData.map((item,index) => (
-                <>
-                <tr key={item.id}>
-                  <td style={cellStyle}>{index +1}</td>
-                  <td onClick={()=>downloadReceit(item.id)}  style={{...cellStyle, cursor:"pointer"}}>دانلود</td>
-                  <td style={cellStyle}>{item.reserveId}</td>
-                  <td style={cellStyle}>{item.isConfirmed === "false" ? <span>در صف بررسی</span> : <span>تایید شده</span>}</td>
-                  
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        {paymentData && paymentData.length > 0 ? (
+          <div>
+            <table style={tableStyle}>
+              <thead>
+                <tr>
+                  <th style={cellStyle}>ردیف</th>
+                  <th style={cellStyle}>رسید پرداخت</th>
+                  <th style={cellStyle}>شماره رزرو</th>
+                  <th style={cellStyle}>وضعیت</th>
                 </tr>
-                
-
-                </>
-              ))}
-            </tbody>
-            
-          </table>
-          
-          
-        </div>
-      ) : (
-        <p>No data available</p>
-      )}
-  </div>
-
-</>
+              </thead>
+              <tbody>
+                {paymentData !== "No files found for the specified ReserveId" && paymentData.map((item, index) => (
+                  <tr key={item.id}>
+                    <td style={cellStyle}>{index + 1}</td>
+                    <td onClick={() => downloadReceit(item.id)} style={{ ...cellStyle, cursor: "pointer" }}>دانلود</td>
+                    <td style={cellStyle}>{item.reserveId}</td>
+                    <td style={cellStyle}>{item.isConfirmed === "false" ? <span>در صف بررسی</span> : <span>تایید شده</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p>No data available</p>
+        )}
+      </div>
+    </>
   );
 }
 
