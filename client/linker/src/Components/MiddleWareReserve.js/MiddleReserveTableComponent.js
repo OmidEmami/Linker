@@ -7,6 +7,8 @@ import axios from 'axios';
 import { notify } from '../toast';
 import { useSelector } from "react-redux";
 import LoadingComp from '../LoadingComp';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 
 const MiddleReserveTableComponent = ({ data }) => {
@@ -78,6 +80,10 @@ const MiddleReserveTableComponent = ({ data }) => {
         {
           Header:'تاریخ درخواست',
           accessor :'RequestDate'
+      },
+      {
+        Header: 'مبدا رزرو',
+        accessor :'ReserveOrigin'
       },
         {
             Header:'شماره تاریانا',
@@ -264,7 +270,22 @@ const getReceits = async(id) =>{
     }
 }
   const cancelSingleRoom = async(popupData)=>{
-    try{
+    confirmAlert({
+      title: 'تایید کنسل کردن این اتاق',
+      message: 'ایا مطمئن هستید؟',
+      buttons: [
+        {
+          label: 'بله',
+          onClick: () => cancelReserve()
+        },
+        {
+          label: 'خیر',
+          onClick: () => null
+        }
+      ]
+    });
+    const cancelReserve = async()=>{
+try{
       setIsLoading(true)
       const response = await axios.post('https://gmhotel.ir/api/cancelsignlemiddle',{
         Tariana : popupData.Tariana
@@ -275,6 +296,8 @@ const getReceits = async(id) =>{
       notify('خطا','error')
       setIsLoading(false)
     }
+    }
+    
   }
   return (
     <div style={{ textAlign: 'center' }}>

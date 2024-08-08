@@ -28,4 +28,28 @@
   .customFileInput:hover {
     background-color: #e8e8e8;
   }
+  .fileInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   
+  .customFileInput {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 1rem 1rem;
+    background-color: #f9f9f9;
+  }
+  
+  /* Add media queries */
+  @media (max-width: 768px) {
+    .fileInputContainer {
+      width: 100%;
+    }
+  
+    .customFileInput {
+      width: 100%;
+      text-align: center;
+    }
+  }
